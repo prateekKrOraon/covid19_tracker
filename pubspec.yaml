@@ -1,0 +1,39 @@
+name: covid19_tracker
+description: An app to track no of covid19 patients in india.
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  http: ^0.12.0+2
+  intl:
+  fl_chart: ^0.9.0
+  flutter_icons: ^1.1.0
+  url_launcher:
+  dynamic_theme: ^1.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+
+flutter:
+
+  uses-material-design: true
+
+
+  fonts:
+    - family: Stalemate
+      fonts:
+        - asset: fonts/Stalemate-Regular.ttf
+    - family: Quicksand
+      fonts:
+        - asset: fonts/Quicksand-Regular.ttf
+    - family: NotoSansSC
+      fonts:
+        - asset: fonts/NotoSansSC-Regular.otf
