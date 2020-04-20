@@ -1,5 +1,6 @@
 import 'package:covid19_tracker/constants/app_constants.dart';
 import 'package:covid19_tracker/screens/resources_screen.dart';
+import 'package:covid19_tracker/screens/update_log.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'about_screen.dart';
@@ -33,6 +34,17 @@ class _HomeState extends State<Home> {
     ),
     BottomNavigationBarItem(
       icon: Icon(
+        AntDesign.clockcircleo,
+      ),
+      title: Text(
+        "Updates",
+        style: TextStyle(
+          fontFamily: kQuickSand,
+        ),
+      ),
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(
         AntDesign.linechart,
       ),
       title: Text(
@@ -44,7 +56,7 @@ class _HomeState extends State<Home> {
     ),
     BottomNavigationBarItem(
       icon: Icon(
-        AntDesign.eyeo,
+        AntDesign.eye,
       ),
       title: Text(
         "Resources",
@@ -68,6 +80,7 @@ class _HomeState extends State<Home> {
 
   final _body = <Widget>[
     Dashboard(),
+    UpdatesScreen(),
     ChartsScreen(),
     ResourcesScreen(),
     AboutScreen(),
@@ -85,7 +98,7 @@ class _HomeState extends State<Home> {
         unselectedItemColor: Theme.of(context).unselectedWidgetColor,
         items: _bottomNavItems,
         currentIndex: _currentTabIndex,
-        type: BottomNavigationBarType.fixed,
+        type: BottomNavigationBarType.shifting,
         onTap: (int index){
           setState(() {
             _currentTabIndex = index;

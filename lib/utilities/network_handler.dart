@@ -84,4 +84,9 @@ class NetworkHandler{
     return jsonDecode(res.body);
   }
 
+  Future getUpdateLogs()async{
+    var res = await http.get(updateLogLink);
+    return jsonDecode(res.body);
+  }
+
 }
