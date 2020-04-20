@@ -151,7 +151,6 @@ class _DashboardState extends State<Dashboard>{
                                 onTap: (){
                                   setState(() {
                                     print("starting refresh");
-                                    RawData.refresh();
                                     StateWiseData.refresh();
                                     print("pressed");
                                   });

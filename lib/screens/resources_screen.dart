@@ -78,8 +78,6 @@ class _ResourcesScreenState extends State<ResourcesScreen>{
           }
         });
 
-        print(stateWiseResources["Delhi"][0].name);
-
         stateWiseResources.forEach((_,v){
           v.sort((a,b)=> a.city.compareTo(b.city));
         });
