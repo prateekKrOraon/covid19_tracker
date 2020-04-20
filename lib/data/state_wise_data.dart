@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:covid19_tracker/utilities/network_handler.dart';
-import 'package:async/async.dart';
 
 
 class StateWiseData{

@@ -18,6 +18,7 @@ class ResourcesScreen extends StatefulWidget{
 class _ResourcesScreenState extends State<ResourcesScreen>{
 
   NetworkHandler _networkHandler;
+  double textScaleFactor = 1;
 
   @override
   void initState() {
@@ -28,16 +29,33 @@ class _ResourcesScreenState extends State<ResourcesScreen>{
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    if(size.width <= 360){
+      textScaleFactor = 0.75;
+    }
+
     ThemeData theme = Theme.of(context);
     return FutureBuilder(
       future: ResourcesList.getInstance(),
       builder: (BuildContext context, snapshot){
         if(!snapshot.hasData){
           return Container(
-            height: size.height*0.3,
+            height: double.infinity,
             width: size.width,
-            child: Center(
-              child: CircularProgressIndicator(),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Center(
+                  child: CircularProgressIndicator(),
+                ),
+                SizedBox(height: 10,),
+                Text(
+                  'This might take some time...',
+                  style: TextStyle(
+                    fontFamily: kNotoSansSc,
+                  ),
+                ),
+              ],
             ),
           );
         }
@@ -118,7 +136,7 @@ class _ResourcesScreenState extends State<ResourcesScreen>{
                           Text(
                             resources[index].city,
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 16*textScaleFactor,
                               fontFamily: kNotoSansSc,
                               color: Theme.of(context).accentColor,
                               fontWeight: FontWeight.bold,
@@ -128,7 +146,7 @@ class _ResourcesScreenState extends State<ResourcesScreen>{
                           Text(
                             resources[index].category,
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 18*textScaleFactor,
                               fontFamily: kNotoSansSc,
                               fontWeight: FontWeight.bold,
                             ),
@@ -145,7 +163,7 @@ class _ResourcesScreenState extends State<ResourcesScreen>{
                                 child: Text(
                                   resources[index].name,
                                   style: TextStyle(
-                                    fontSize: 16,
+                                    fontSize: 16*textScaleFactor,
                                     fontFamily: kNotoSansSc,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -165,7 +183,7 @@ class _ResourcesScreenState extends State<ResourcesScreen>{
                                 child: Text(
                                   resources[index].description,
                                   style: TextStyle(
-                                    fontSize: 14,
+                                    fontSize: 14*textScaleFactor,
                                     fontFamily: kNotoSansSc,
                                   ),
                                 ),
@@ -190,7 +208,7 @@ class _ResourcesScreenState extends State<ResourcesScreen>{
                                     resources[index].contactWeb,
                                     maxLines: 2,
                                     style: TextStyle(
-                                      fontSize: 14,
+                                      fontSize: 14*textScaleFactor,
                                       fontFamily: kNotoSansSc,
                                       color: kBlueColor,
                                       fontStyle: FontStyle.italic,
@@ -249,7 +267,7 @@ class _ResourcesScreenState extends State<ResourcesScreen>{
                 item.toString(),
                 maxLines: 2,
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 14*textScaleFactor,
                   fontFamily: kNotoSansSc,
                   color: kBlueColor,
                   fontStyle: FontStyle.italic

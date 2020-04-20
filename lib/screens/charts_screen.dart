@@ -1,6 +1,4 @@
-import 'package:covid19_tracker/constants/colors.dart';
 import 'package:covid19_tracker/screens/daily_case_time_chart_screen.dart';
-import 'package:covid19_tracker/screens/demographics.dart';
 import 'package:covid19_tracker/screens/total_case_time_chart_screen.dart';
 import 'package:flutter/material.dart';
 

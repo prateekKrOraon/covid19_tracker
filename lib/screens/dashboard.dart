@@ -1,13 +1,11 @@
 import 'package:covid19_tracker/constants/api_constants.dart';
 import 'package:covid19_tracker/constants/colors.dart';
 import 'package:covid19_tracker/data/raw_data.dart';
-import 'package:covid19_tracker/data/resources_data.dart';
 import 'package:covid19_tracker/screens/sources_list.dart';
 import 'package:covid19_tracker/screens/state_data_screen.dart';
 import 'package:covid19_tracker/constants/app_constants.dart';
 import 'package:covid19_tracker/utilities/network_handler.dart';
 import 'package:covid19_tracker/data/state_wise_data.dart';
-import 'package:covid19_tracker/utilities/resources.dart';
 import 'package:covid19_tracker/utilities/sorting.dart';
 import 'package:covid19_tracker/utilities/state_data.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +41,7 @@ class _DashboardState extends State<Dashboard>{
       textScaleFactor = 0.75;
     }
     return FutureBuilder(
-      future: Future.wait([StateWiseData.getInstance(),ResourcesList.getInstance()]),
+      future: StateWiseData.getInstance(),
       builder: (context,snapshot){
         if(snapshot.hasError){
           return SizedBox(height: 10.0,);
@@ -66,7 +64,7 @@ class _DashboardState extends State<Dashboard>{
           );
         }
 
-        Map map = snapshot.data[0];
+        Map map = snapshot.data;
         String lastUpdateStr = map[kStateWise][0][kLastUpdated].toString();
 
         DateTime lastUpdate = DateTime(

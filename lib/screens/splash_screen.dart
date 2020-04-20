@@ -1,8 +1,5 @@
 import 'package:covid19_tracker/constants/app_constants.dart';
 import 'package:covid19_tracker/constants/colors.dart';
-import 'package:covid19_tracker/data/raw_data.dart';
-import 'package:covid19_tracker/data/state_wise_data.dart';
-import 'package:covid19_tracker/utilities/network_handler.dart';
 import 'package:flutter/material.dart';
 import 'home.dart';
 
@@ -37,7 +34,7 @@ class _SplashScreenState extends State<SplashScreen>{
           children: <Widget>[
             SizedBox(),
             Text(
-              'Covid-19 Tracker',
+              'COVID-19 Tracker',
               style: TextStyle(
                   fontFamily: kQuickSand,
                   fontSize: 30,
