@@ -11,12 +11,12 @@ Android application to provide real-time tally of COVID-19 patients in india. It
 * Data represented through line charts and bar graphs for 14 days, 30 days and since beginning.
 * State wise information of COVID-19 testing labs, Helpline numbers, Fundraisers and other public welfare organistaions such as door-step delivery of essentials etc. available with their contact information.
 * Light and Dark theme available.
+* Available languages: English and Hindi.
 
 Note: All data is fetched from Crowdsourced patient database which are verified by group of volunteers.
 
 ## Features to be added
 * State wise tested patient information.
-* Hindi language support.
 
 ## Problems
 * Feel free to put up a pull request or open an issue.
