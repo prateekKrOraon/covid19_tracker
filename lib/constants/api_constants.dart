@@ -5,7 +5,7 @@ String stateWiseDailyLink = "https://api.covid19india.org/states_daily.json";
 String stateWiseTestLink = "https://api.covid19india.org/state_test_data.json";
 String sourcesLink = "https://api.covid19india.org/sources_list.json";
 String resourcesListLink = 'https://api.covid19india.org/resources/resources.json';
-String updateLogLink = "https://api.covid19india.org/updatelog/log.json";
+String updateLogLink = "https://course-finder-prateek.000webhostapp.com/covid19_tracker/services/getUpdateLog.php";
 String crowdSourcedDatabaseLink = "https://docs.google.com/spreadsheets/u/1/d/e/2PACX-1vSz8Qs1gE_IYpzlkFkCXGcL_BqR8hZieWVi-rphN1gfrO3H4lDtVZs4kd0C3P8Y9lhsT1rhoB-Q_cP4/pubhtml";
 String developerPrateekGitHubLink = "https://github.com/prateekKrOraon";
 String covid19IndiaAPILink = "http://api.covid19india.org";
@@ -32,6 +32,7 @@ String kTotalRecovered = 'totalrecovered';
 String kTotalDeaths = 'totaldeceased';
 String kTested = 'tested';
 String kTotalIndividualTested = 'totalindividualstested';
+String kTotalSamplesTested = 'totalsamplestested';
 String kSource = 'source';
 String kUpdateTimeStamp = 'updatetimestamp';
 

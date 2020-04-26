@@ -1,13 +1,26 @@
+import 'dart:collection';
+
 import 'package:covid19_tracker/constants/api_constants.dart';
 import 'package:covid19_tracker/constants/colors.dart';
 import 'package:covid19_tracker/constants/app_constants.dart';
+import 'package:covid19_tracker/constants/language_constants.dart';
+import 'package:covid19_tracker/data/raw_data.dart';
+import 'package:covid19_tracker/data/update_log.dart';
+import 'package:covid19_tracker/localization/app_localization.dart';
 import 'package:covid19_tracker/screens/open_source_licenses.dart';
 import 'package:covid19_tracker/utilities/network_handler.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 
+typedef void LocaleChangeCallback(Locale locale);
+
 class AboutScreen extends StatefulWidget{
+
+  final LocaleChangeCallback onLocaleChange;
+
+  AboutScreen({this.onLocaleChange});
+
   @override
   _AboutScreenState createState() {
     return _AboutScreenState();
@@ -31,6 +44,7 @@ class _AboutScreenState extends State<AboutScreen>{
 
     theme = Theme.of(context);
     darkTheme = theme.brightness == Brightness.dark?true:false;
+    AppLocalizations lang = AppLocalizations.of(context);
 
     if(MediaQuery.of(context).size.width<=360){
       textScaleFactor=0.75;
@@ -44,17 +58,15 @@ class _AboutScreenState extends State<AboutScreen>{
             children: <Widget>[
               SizedBox(height: 10,),
               Text(
-                "COVID-19 TRACKER, INDIA",
+                lang.translate(kAppTitleLang),
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
                   fontSize: 30*textScaleFactor,
                   fontFamily: kQuickSand,
                 ),
               ),
               Text(
-                "Powered by api.covid19india.org",
+                lang.translate(kAppSubTitleLang),
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
                   color: kGreyColor,
                   fontFamily: kQuickSand,
                 ),
@@ -77,11 +89,10 @@ class _AboutScreenState extends State<AboutScreen>{
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       Text(
-                        'Source',
+                        lang.translate(kSourceLang),
                         style: TextStyle(
                           fontSize: 25*textScaleFactor,
                           fontFamily: kQuickSand,
-                          fontWeight: FontWeight.bold,
                         ),
                       ),
                       InkWell(
@@ -100,7 +111,7 @@ class _AboutScreenState extends State<AboutScreen>{
                               SizedBox(width: 30,),
                               Expanded(
                                 child: Text(
-                                  'Croudsourced patient database',
+                                  lang.translate(kCrowdSrcDBLang),
                                   style: TextStyle(
                                     fontSize: 16*textScaleFactor,
                                   ),
@@ -166,11 +177,10 @@ class _AboutScreenState extends State<AboutScreen>{
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       Text(
-                        'Developer',
+                        lang.translate(kDeveloperLang),
                         style: TextStyle(
                           fontSize: 25*textScaleFactor,
                           fontFamily: kQuickSand,
-                          fontWeight: FontWeight.bold,
                         ),
                       ),
                       InkWell(
@@ -190,7 +200,7 @@ class _AboutScreenState extends State<AboutScreen>{
                               SizedBox(width: 30,),
                               Expanded(
                                 child: Text(
-                                  'Prateek Kumar Oraon',
+                                  lang.translate(kDeveloperNameLang),
                                   style: TextStyle(
                                       fontSize: 16*textScaleFactor,
                                   ),
@@ -226,11 +236,10 @@ class _AboutScreenState extends State<AboutScreen>{
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       Text(
-                        'Application',
+                        lang.translate(kApplicationLang),
                         style: TextStyle(
                           fontSize: 25*textScaleFactor,
                           fontFamily: kQuickSand,
-                          fontWeight: FontWeight.bold,
                         ),
                       ),
                       Container(
@@ -246,14 +255,14 @@ class _AboutScreenState extends State<AboutScreen>{
                             SizedBox(width: 30,),
                             Expanded(
                               child: Text(
-                                'Version',
+                                lang.translate(kVersionLang),
                                 style: TextStyle(
                                   fontSize: 16*textScaleFactor,
                                 ),
                               ),
                             ),
                             Text(
-                              '1.0.0',
+                              '1.3.0',
                               style: TextStyle(
                                 fontSize: 16*textScaleFactor,
                               ),
@@ -274,7 +283,7 @@ class _AboutScreenState extends State<AboutScreen>{
                             SizedBox(width: 30,),
                             Expanded(
                               child: Text(
-                                darkTheme?'Light Theme':'Dark Theme',
+                                darkTheme?lang.translate(kLightThemeLang):lang.translate(kDarkThemeLang),
                                 style: TextStyle(
                                   fontSize: 16*textScaleFactor,
                                 ),
@@ -291,6 +300,112 @@ class _AboutScreenState extends State<AboutScreen>{
                               },
                             )
                           ],
+                        ),
+                      ),
+                      InkWell(
+                        onTap: (){
+                          showDialog<Map<String,String>>(
+                            context: context,
+                            builder: (BuildContext context){
+                              return SimpleDialog(
+                                title: Text(
+                                  lang.translate(kChooseLanguageLang),
+                                  style: TextStyle(
+                                    fontFamily: kQuickSand,
+                                  ),
+                                ),
+                                children: <Widget>[
+                                  ListTile(
+                                    title: Text(
+                                      "English - US",
+                                      style: TextStyle(
+                                        fontFamily: kQuickSand,
+                                      ),
+                                    ),
+                                    trailing: Container(
+                                      height: 20,
+                                      width: 20,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10),
+                                        ),
+                                        border: Border.all(
+                                          width: 2,
+                                          color: theme.accentColor,
+                                        ),
+                                        color: lang.locale.languageCode == "en"?theme.accentColor:Colors.transparent,
+                                      ),
+                                    ),
+                                    onTap: (){
+                                      Map<String,String> map = {
+                                        "lang_code":"en",
+                                        "country_code":"US",
+                                      };
+                                      Navigator.pop(context,map);
+                                    },
+                                  ),
+                                  ListTile(
+                                    title: Text(
+                                      "हिन्दी - भारत",
+                                      style: TextStyle(
+                                        fontFamily: kQuickSand,
+                                      ),
+                                    ),
+                                    trailing: Container(
+                                      height: 20,
+                                      width: 20,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(10),
+                                        ),
+                                        border: Border.all(
+                                          width: 2,
+                                          color: theme.accentColor,
+                                        ),
+                                        color: lang.locale.languageCode == "hi"?theme.accentColor:Colors.transparent,
+                                      ),
+                                    ),
+                                    onTap: (){
+                                      Map<String,String> map = {
+                                        "lang_code":"hi",
+                                        "country_code":"IN",
+                                      };
+                                      Navigator.pop(context,map);
+                                    },
+                                  ),
+                                ],
+                              );
+                            }
+                          ).then((Map<String,String> returnVal){
+                            if(returnVal != null){
+                              widget.onLocaleChange(Locale(returnVal["lang_code"],returnVal["country_code"]));
+                              setState(() {
+                                UpdateLog.refresh(returnVal["lang_code"]);
+                              });
+                            }
+                          });
+                        },
+                        child: Container(
+                          height: 56,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              SizedBox(width: 30,),
+                              Icon(
+                                MaterialCommunityIcons.translate,
+                                color: theme.accentColor,
+                              ),
+                              SizedBox(width: 30,),
+                              Expanded(
+                                child: Text(
+                                  lang.translate(kChangeLanguageLang),
+                                  style: TextStyle(
+                                    fontSize: 16*textScaleFactor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -315,11 +430,10 @@ class _AboutScreenState extends State<AboutScreen>{
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       Text(
-                        'License',
+                        lang.translate(kLicenseLang),
                         style: TextStyle(
                           fontSize: 25*textScaleFactor,
                           fontFamily: kQuickSand,
-                          fontWeight: FontWeight.bold,
                         ),
                       ),
                       InkWell(
@@ -344,7 +458,7 @@ class _AboutScreenState extends State<AboutScreen>{
                               SizedBox(width: 30,),
                               Expanded(
                                 child: Text(
-                                  'Open Source Licenses',
+                                  lang.translate(kOpenSrcLang),
                                   style: TextStyle(
                                     fontSize: 16*textScaleFactor,
                                   ),

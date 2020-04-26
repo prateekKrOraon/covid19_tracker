@@ -1,4 +1,6 @@
 import 'package:covid19_tracker/constants/app_constants.dart';
+import 'package:covid19_tracker/constants/language_constants.dart';
+import 'package:covid19_tracker/localization/app_localization.dart';
 import 'package:covid19_tracker/screens/resources_screen.dart';
 import 'package:covid19_tracker/screens/update_log.dart';
 import 'package:flutter/material.dart';
@@ -7,10 +9,13 @@ import 'about_screen.dart';
 import 'charts_screen.dart';
 import 'dashboard.dart';
 
-class Home extends StatefulWidget {
-  Home({Key key, this.title}) : super(key: key);
+typedef void LocaleChangeCallback(Locale locale);
 
-  final String title;
+class Home extends StatefulWidget {
+
+  final LocaleChangeCallback onLocaleChange;
+
+  Home({Key key,this.onLocaleChange}) : super(key: key);
 
   @override
   _HomeState createState() => _HomeState();
@@ -20,74 +25,77 @@ class _HomeState extends State<Home> {
 
   int _currentTabIndex = 0;
 
-  final List<BottomNavigationBarItem> _bottomNavItems = <BottomNavigationBarItem>[
-    BottomNavigationBarItem(
-      icon: Icon(
-        AntDesign.home,
-      ),
-      title: Text(
-        "Dashboard",
-        style: TextStyle(
-          fontFamily: kQuickSand,
-        ),
-      ),
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(
-        AntDesign.clockcircleo,
-      ),
-      title: Text(
-        "Updates",
-        style: TextStyle(
-          fontFamily: kQuickSand,
-        ),
-      ),
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(
-        AntDesign.linechart,
-      ),
-      title: Text(
-        "Trends",
-        style: TextStyle(
-          fontFamily: kQuickSand,
-        ),
-      ),
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(
-        AntDesign.eye,
-      ),
-      title: Text(
-        "Resources",
-        style: TextStyle(
-          fontFamily: kQuickSand,
-        ),
-      ),
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(
-        AntDesign.infocirlceo,
-      ),
-      title: Text(
-        "About",
-        style: TextStyle(
-          fontFamily: kQuickSand,
-        ),
-      ),
-    ),
-  ];
-
-  final _body = <Widget>[
-    Dashboard(),
-    UpdatesScreen(),
-    ChartsScreen(),
-    ResourcesScreen(),
-    AboutScreen(),
-  ];
-
   @override
   Widget build(BuildContext context) {
+
+    AppLocalizations lang = AppLocalizations.of(context);
+
+    List<BottomNavigationBarItem> _bottomNavItems = <BottomNavigationBarItem>[
+      BottomNavigationBarItem(
+        icon: Icon(
+          AntDesign.home,
+        ),
+        title: Text(
+          lang.translate(kDashboardLang),
+          style: TextStyle(
+            fontFamily: kQuickSand,
+          ),
+        ),
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(
+          AntDesign.clockcircleo,
+        ),
+        title: Text(
+          lang.translate(kUpdatesLang),
+          style: TextStyle(
+            fontFamily: kQuickSand,
+          ),
+        ),
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(
+          AntDesign.linechart,
+        ),
+        title: Text(
+          lang.translate(kTrendsLang),
+          style: TextStyle(
+            fontFamily: kQuickSand,
+          ),
+        ),
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(
+          AntDesign.eyeo,
+        ),
+        title: Text(
+          lang.translate(kResourcesLang),
+          style: TextStyle(
+            fontFamily: kQuickSand,
+          ),
+        ),
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(
+          AntDesign.infocirlceo,
+        ),
+        title: Text(
+          lang.translate(kAboutLang),
+          style: TextStyle(
+            fontFamily: kQuickSand,
+          ),
+        ),
+      ),
+    ];
+
+    List<Widget> _body = <Widget>[
+      Dashboard(),
+      UpdatesScreen(),
+      ChartsScreen(),
+      ResourcesScreen(),
+      AboutScreen(onLocaleChange: widget.onLocaleChange,),
+    ];
+
     return Scaffold(
       body: SafeArea(
         child: _body[_currentTabIndex],

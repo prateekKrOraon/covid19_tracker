@@ -3,6 +3,8 @@ import 'dart:math' as math;
 import 'package:covid19_tracker/constants/api_constants.dart';
 import 'package:covid19_tracker/constants/colors.dart';
 import 'package:covid19_tracker/constants/app_constants.dart';
+import 'package:covid19_tracker/constants/language_constants.dart';
+import 'package:covid19_tracker/localization/app_localization.dart';
 import 'package:covid19_tracker/utilities/data_range.dart';
 import 'package:covid19_tracker/data/state_wise_data.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -29,6 +31,7 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
+    AppLocalizations lang = AppLocalizations.of(context);
 
     theme = Theme.of(context);
 
@@ -106,11 +109,11 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
 
         print(totalCnf);
         if(dataRange == DataRange.BEGINNING){
-          dataRangeStr = "Since 30 Jan 2020";
+          dataRangeStr = lang.translate(kSinceBeginningLang);
         }else if(dataRange == DataRange.MONTH){
-          dataRangeStr = "Last 30 days";
+          dataRangeStr = lang.translate(kLast30DaysLang);
         }else if(dataRange == DataRange.TWO_WEEK){
-          dataRangeStr = "Last 14 days";
+          dataRangeStr = lang.translate(kLast14DaysLang);
         }
 
 
@@ -121,11 +124,10 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 Text(
-                  'Scale Modes',
+                  lang.translate(kScalingModesLang),
                   style: TextStyle(
                     fontFamily: kQuickSand,
                     fontSize: 25*textScaleFactor,
-                    fontWeight: FontWeight.bold,
                   ),
                 ),
 //                SizedBox(height: 10,),
@@ -158,7 +160,7 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                   children: <Widget>[
                     Expanded(
                       child: Text(
-                        'Uniform Scale',
+                        lang.translate(kUniformScaleLang),
                         style: TextStyle(
                           color: kGreyColor,
                           fontFamily: kNotoSansSc,
@@ -184,7 +186,7 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                   children: <Widget>[
                     Expanded(
                       child: Text(
-                        'Showing data',
+                        lang.translate(kShowingDataLang),
                         style: TextStyle(
                           color: kGreyColor,
                           fontFamily: kNotoSansSc,
@@ -221,10 +223,9 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                                 ),
                                 child: Center(
                                   child: Text(
-                                    'Beginning',
+                                    lang.translate(kBeginningLang),
                                     style: TextStyle(
                                       fontFamily: kQuickSand,
-                                      fontWeight: FontWeight.bold,
                                       color: dataRange != DataRange.BEGINNING?
                                       theme.brightness == Brightness.light?Colors.black:Colors.white:
                                       theme.brightness == Brightness.light?Colors.white:Colors.black,
@@ -249,10 +250,9 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                                 ),
                                 child: Center(
                                   child: Text(
-                                    '1 Month',
+                                    lang.translate(k1MonthLang),
                                     style: TextStyle(
                                       fontFamily: kQuickSand,
-                                      fontWeight: FontWeight.bold,
                                       color: dataRange != DataRange.MONTH?
                                       theme.brightness == Brightness.light?Colors.black:Colors.white:
                                       theme.brightness == Brightness.light?Colors.white:Colors.black,
@@ -281,10 +281,9 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                                 ),
                                 child: Center(
                                   child: Text(
-                                    '2 Week',
+                                    lang.translate(k2WeekLang),
                                     style: TextStyle(
                                       fontFamily: kQuickSand,
-                                      fontWeight: FontWeight.bold,
                                       color: dataRange != DataRange.TWO_WEEK?
                                       theme.brightness == Brightness.light?Colors.black:Colors.white:
                                       theme.brightness == Brightness.light?Colors.white:Colors.black,
@@ -302,9 +301,8 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                 ),
                 SizedBox(height: 20,),
                 Text(
-                  "Last updated on $lastUpdate\2020",
+                  "${lang.translate(kLastUpdatedAtLang)}: $lastUpdate\2020",
                   style: TextStyle(
-                    fontWeight: FontWeight.bold,
                     color: kGreenColor,
                     fontSize: 16*textScaleFactor,
                     fontFamily: kQuickSand,
@@ -329,11 +327,10 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
                           Text(
-                            'Confirmed Cases',
+                            lang.translate(kConfirmedLang),
                             style: TextStyle(
                               fontFamily: kQuickSand,
                               fontSize: 25*textScaleFactor,
-                              fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
@@ -342,7 +339,6 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                               color: kGreyColor,
                               fontFamily: kQuickSand,
                               fontSize: 16*textScaleFactor,
-                              fontWeight: FontWeight.bold,
                             ),
                           ),
                           SizedBox(height: 20,),
@@ -371,11 +367,10 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
                           Text(
-                            'Recoveries',
+                            lang.translate(kRecoveredLang),
                             style: TextStyle(
                               fontFamily: kQuickSand,
                               fontSize: 25*textScaleFactor,
-                              fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
@@ -384,7 +379,6 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                               color: kGreyColor,
                               fontFamily: kQuickSand,
                               fontSize: 16*textScaleFactor,
-                              fontWeight: FontWeight.bold,
                             ),
                           ),
                           SizedBox(height: 20,),
@@ -413,11 +407,10 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
                           Text(
-                            'Deaths',
+                            lang.translate(kDeathsLang),
                             style: TextStyle(
                               fontFamily: kQuickSand,
                               fontSize: 25*textScaleFactor,
-                              fontWeight: FontWeight.bold,
                             ),
                           ),
                           Text(
@@ -426,7 +419,6 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                               color: kGreyColor,
                               fontFamily: kQuickSand,
                               fontSize: 16*textScaleFactor,
-                              fontWeight: FontWeight.bold,
                             ),
                           ),
                           SizedBox(height: 20,),

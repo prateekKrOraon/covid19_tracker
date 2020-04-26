@@ -2,7 +2,9 @@ import 'dart:collection';
 import 'package:covid19_tracker/constants/api_constants.dart';
 import 'package:covid19_tracker/constants/app_constants.dart';
 import 'package:covid19_tracker/constants/colors.dart';
+import 'package:covid19_tracker/constants/language_constants.dart';
 import 'package:covid19_tracker/data/resources_data.dart';
+import 'package:covid19_tracker/localization/app_localization.dart';
 import 'package:covid19_tracker/utilities/network_handler.dart';
 import 'package:covid19_tracker/utilities/resources.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +52,7 @@ class _ResourcesScreenState extends State<ResourcesScreen>{
                 ),
                 SizedBox(height: 10,),
                 Text(
-                  'This might take some time...',
+                  AppLocalizations.of(context).translate(kLoadingMessageLang),
                   style: TextStyle(
                     fontFamily: kNotoSansSc,
                   ),
@@ -103,15 +105,19 @@ class _ResourcesScreenState extends State<ResourcesScreen>{
 
     List<Widget> list = List();
 
+    AppLocalizations lang = AppLocalizations.of(context);
     List<String> keys = map.keys.toList()..sort();
 
     for(int i = 0; i<keys.length; i++){
       List<Resources> resources = map[keys[i]];
+
       list.add(
         Container(
           child: ListView.builder(
             itemCount: map[keys[i]].length,
             itemBuilder: (BuildContext context,int index){
+              String cityName = lang.translate(resources[index].city.toLowerCase().replaceAll(" ", "_"));
+              String category = lang.translate(resources[index].category.toLowerCase().replaceAll(" ", "_"));
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 4),
                 child: Material(
@@ -132,7 +138,7 @@ class _ResourcesScreenState extends State<ResourcesScreen>{
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
                           Text(
-                            resources[index].city,
+                            cityName==null?"${resources[index].city}":cityName,
                             style: TextStyle(
                               fontSize: 16*textScaleFactor,
                               fontFamily: kNotoSansSc,
@@ -142,7 +148,7 @@ class _ResourcesScreenState extends State<ResourcesScreen>{
                           ),
                           SizedBox(height: 5,),
                           Text(
-                            resources[index].category,
+                            category==null?"${resources[index].category}":category,
                             style: TextStyle(
                               fontSize: 18*textScaleFactor,
                               fontFamily: kNotoSansSc,
@@ -288,8 +294,13 @@ class _ResourcesScreenState extends State<ResourcesScreen>{
 
     for(int i = 0; i<keys.length;i++){
 
+      print(keys[i]);
       list.add(
-        Tab(text: keys[i].toString(),),
+        Tab(
+          text: AppLocalizations
+              .of(context)
+              .translate(keys[i].toString().toLowerCase().replaceAll(" ", "_"),),
+        ),
       );
     }
 

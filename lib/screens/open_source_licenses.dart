@@ -1,5 +1,7 @@
 import 'package:covid19_tracker/constants/app_constants.dart';
 import 'package:covid19_tracker/constants/colors.dart';
+import 'package:covid19_tracker/constants/language_constants.dart';
+import 'package:covid19_tracker/localization/app_localization.dart';
 import 'package:covid19_tracker/utilities/network_handler.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +36,14 @@ class _OpenSourceLicensesState extends State<OpenSourceLicenses>{
         "Covid-19 Tracker",
         "https://github.com/prateekKrOraon/covid19_tracker",
         "MIT License\n\nCopyright (c) 2020 Prateek Kumar Oraon\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.",
+      ),
+    );
+
+    licenses.add(
+      License(
+        "Covid-19 Tracker App Icon",
+        "https://www.freepik.com/free-photos-vectors/logo",
+        "Logo vector created by freepik - www.freepik.com"
       ),
     );
 
@@ -98,11 +108,10 @@ class _OpenSourceLicensesState extends State<OpenSourceLicenses>{
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Open Soure Licenses",
+          AppLocalizations.of(context).translate(kOpenSrcLang),
           textAlign: TextAlign.start,
           style: TextStyle(
             fontFamily: kQuickSand,
-            fontWeight: FontWeight.bold,
             color: Theme.of(context).brightness == Brightness.light?Colors.black:Colors.white,
           ),
         ),
@@ -110,6 +119,80 @@ class _OpenSourceLicensesState extends State<OpenSourceLicenses>{
       body: ListView.builder(
         itemCount: licenses.length,
         itemBuilder: (BuildContext context, int index){
+
+          if(index == 1){
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal:8.0,vertical: 4),
+              child: Material(
+                borderRadius: BorderRadius.all(
+                    Radius.circular(10)
+                ),
+                color: Theme.of(context).backgroundColor,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(
+                        Radius.circular(10)
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        Text(
+                          licenses[index].name,
+                          style: TextStyle(
+                            fontFamily: kNotoSansSc,
+                            fontSize: 24*textScaleFactor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Divider(
+                          color: kGreyColor,
+                        ),
+                        GestureDetector(
+                          onTap: (){
+                            NetworkHandler.getInstance().launchInBrowser(licenses[index].url);
+                          },
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Image(
+                                image: AssetImage(
+                                  'assets/app_icon.png'
+                                ),
+                                height: 20,
+                                width: 20,
+                              ),
+                              SizedBox(width: 10,),
+                              Expanded(
+                                child: Text(
+                                  "Link",
+                                  style: TextStyle(
+                                    fontFamily: kNotoSansSc,
+                                    fontSize: 16*textScaleFactor,
+                                    color: kBlueColor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 8,),
+                        Text(
+                          licenses[index].license,
+                          style: TextStyle(
+                            fontFamily: kNotoSansSc,
+                            fontSize: 14*textScaleFactor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }
 
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal:8.0,vertical: 4),

@@ -1,4 +1,4 @@
-package in.ac.nitsikkim.covid19_tracker;
+package com.tracker.covid19_india.covid19_tracker;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
