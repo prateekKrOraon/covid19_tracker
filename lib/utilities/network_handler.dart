@@ -84,8 +84,9 @@ class NetworkHandler{
     return jsonDecode(res.body);
   }
 
-  Future getUpdateLogs()async{
-    var res = await http.get(updateLogLink);
+  Future getUpdateLogs(String langCode)async{
+    Map<String,String> header = {"Accept":"application/json"};
+    var res = await http.post(updateLogLink,headers: header,body: {"language_code":langCode});
     return jsonDecode(res.body);
   }
 

@@ -1,6 +1,7 @@
 import 'package:covid19_tracker/constants/api_constants.dart';
 import 'package:covid19_tracker/constants/colors.dart';
-import 'package:covid19_tracker/data/raw_data.dart';
+import 'package:covid19_tracker/constants/language_constants.dart';
+import 'package:covid19_tracker/localization/app_localization.dart';
 import 'package:covid19_tracker/screens/sources_list.dart';
 import 'package:covid19_tracker/screens/state_data_screen.dart';
 import 'package:covid19_tracker/constants/app_constants.dart';
@@ -35,11 +36,14 @@ class _DashboardState extends State<Dashboard>{
 
   @override
   Widget build(BuildContext context) {
+
+    AppLocalizations lang = AppLocalizations.of(context);
     theme = Theme.of(context);
     Size size = MediaQuery.of(context).size;
     if(size.width<=360.0){
       textScaleFactor = 0.75;
     }
+
     return FutureBuilder(
       future: StateWiseData.getInstance(),
       builder: (context,snapshot){
@@ -55,7 +59,7 @@ class _DashboardState extends State<Dashboard>{
         if(snapshot.hasError){
           return Center(
             child: Text(
-              "Some Error Occurred",
+              lang.translate(kSnapshotErrorLang),
               style: TextStyle(
                 fontFamily: kNotoSansSc,
                 fontSize: 20*textScaleFactor,
@@ -93,7 +97,7 @@ class _DashboardState extends State<Dashboard>{
          for(int i = 1;i<stateWise.length;i++){
            Map state = stateWise[i];
            stateList.add(
-             StateInfo.fromMap(state),
+             StateInfo.fromMap(context,state),
            );
          }
 
@@ -120,7 +124,6 @@ class _DashboardState extends State<Dashboard>{
          }
 
 
-
         return SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
@@ -137,9 +140,8 @@ class _DashboardState extends State<Dashboard>{
                           children: <Widget>[
                             Expanded(
                               child: Text(
-                                "COVID-19 TRACKER, INDIA",
+                                lang.translate(kAppTitleLang),
                                 style: TextStyle(
-                                  fontWeight: FontWeight.bold,
                                   fontSize: 30*textScaleFactor,
                                   fontFamily: kQuickSand,
                                 ),
@@ -150,9 +152,7 @@ class _DashboardState extends State<Dashboard>{
                               child: InkWell(
                                 onTap: (){
                                   setState(() {
-                                    print("starting refresh");
                                     StateWiseData.refresh();
-                                    print("pressed");
                                   });
                                 },
                                 child: Container(
@@ -167,18 +167,16 @@ class _DashboardState extends State<Dashboard>{
                           ],
                         ),
                         Text(
-                          "Powered by api.covid19india.org",
+                          lang.translate(kAppSubTitleLang),
                           style: TextStyle(
-                            fontWeight: FontWeight.bold,
                             color: kGreyColor,
                             fontFamily: kQuickSand,
                           ),
                         ),
                         SizedBox(height: 8,),
                         Text(
-                          "Last updated at: ${DateFormat("d MMM, ").add_jm().format(lastUpdate)} IST",
+                          "${lang.translate(kLastUpdatedAtLang)}: ${DateFormat("d MMM, ").add_jm().format(lastUpdate)} IST",
                           style: TextStyle(
-                            fontWeight: FontWeight.bold,
                             color: kGreenColor,
                             fontSize: 16*textScaleFactor,
                             fontFamily: kQuickSand,
@@ -215,11 +213,10 @@ class _DashboardState extends State<Dashboard>{
                                       crossAxisAlignment: CrossAxisAlignment.stretch,
                                       children: <Widget>[
                                         Text(
-                                          'TOTAL CONFIRMED CASES',
+                                          lang.translate(kTotalCnfLang),
                                           style: TextStyle(
-                                            fontWeight: FontWeight.bold,
                                             color: kRedColor,
-                                            fontSize: 12*textScaleFactor,
+                                            fontSize: 14*textScaleFactor,
                                             fontFamily: kQuickSand,
                                           ),
                                         ),
@@ -229,7 +226,6 @@ class _DashboardState extends State<Dashboard>{
                                             Text(
                                               map[kStateWise][0][kConfirmed],
                                               style: TextStyle(
-                                                fontWeight: FontWeight.bold,
                                                 color: kRedColor,
                                                 fontSize: 24*textScaleFactor,
                                                 fontFamily: kQuickSand,
@@ -239,7 +235,6 @@ class _DashboardState extends State<Dashboard>{
                                             Text(
                                               "(+${map[kStateWise][0][kDeltaConfirmed]})",
                                               style: TextStyle(
-                                                fontWeight: FontWeight.bold,
                                                 color: kRedColor,
                                                 fontSize: 16*textScaleFactor,
                                                 fontFamily: kQuickSand,
@@ -274,11 +269,10 @@ class _DashboardState extends State<Dashboard>{
                                       crossAxisAlignment: CrossAxisAlignment.stretch,
                                       children: <Widget>[
                                         Text(
-                                          'TOTAL ACTIVE CASES',
+                                          lang.translate(kTotalActvLang),
                                           style: TextStyle(
-                                            fontWeight: FontWeight.bold,
                                             color: kBlueColor,
-                                            fontSize: 12*textScaleFactor,
+                                            fontSize: 14*textScaleFactor,
                                             fontFamily: kQuickSand,
                                           ),
                                         ),
@@ -286,7 +280,6 @@ class _DashboardState extends State<Dashboard>{
                                         Text(
                                           map[kStateWise][0][kActive],
                                           style: TextStyle(
-                                              fontWeight: FontWeight.bold,
                                               color: kBlueColor,
                                               fontSize: 24*textScaleFactor,
                                             fontFamily: kQuickSand,
@@ -325,11 +318,10 @@ class _DashboardState extends State<Dashboard>{
                                       crossAxisAlignment: CrossAxisAlignment.stretch,
                                       children: <Widget>[
                                         Text(
-                                          'TOTAL RECOVERED',
+                                          lang.translate(kTotalRecLang),
                                           style: TextStyle(
-                                            fontWeight: FontWeight.bold,
                                             color: kGreenColor,
-                                            fontSize: 12*textScaleFactor,
+                                            fontSize: 14*textScaleFactor,
                                             fontFamily: kQuickSand,
                                           ),
                                         ),
@@ -339,7 +331,6 @@ class _DashboardState extends State<Dashboard>{
                                             Text(
                                               map[kStateWise][0][kRecovered],
                                               style: TextStyle(
-                                                fontWeight: FontWeight.bold,
                                                 color: kGreenColor,
                                                 fontSize: 24*textScaleFactor,
                                                 fontFamily: kQuickSand,
@@ -349,7 +340,6 @@ class _DashboardState extends State<Dashboard>{
                                             Text(
                                               "(+${map[kStateWise][0][kDeltaRecovered]})",
                                               style: TextStyle(
-                                                fontWeight: FontWeight.bold,
                                                 color: kGreenColor,
                                                 fontSize: 16*textScaleFactor,
                                                 fontFamily: kQuickSand,
@@ -385,11 +375,10 @@ class _DashboardState extends State<Dashboard>{
                                       crossAxisAlignment: CrossAxisAlignment.stretch,
                                       children: <Widget>[
                                         Text(
-                                          'TOTAL DEATHS',
+                                          lang.translate(kTotalDetLang),
                                           style: TextStyle(
-                                            fontWeight: FontWeight.bold,
                                             color: Colors.grey,
-                                            fontSize: 12*textScaleFactor,
+                                            fontSize: 14*textScaleFactor,
                                             fontFamily: kQuickSand,
                                           ),
                                         ),
@@ -399,7 +388,6 @@ class _DashboardState extends State<Dashboard>{
                                             Text(
                                               map[kStateWise][0][kDeaths],
                                               style: TextStyle(
-                                                fontWeight: FontWeight.bold,
                                                 color: Colors.grey,
                                                 fontSize: 24*textScaleFactor,
                                                 fontFamily: kQuickSand,
@@ -409,7 +397,6 @@ class _DashboardState extends State<Dashboard>{
                                             Text(
                                               "(+${map[kStateWise][0][kDeltaDeaths]})",
                                               style: TextStyle(
-                                                fontWeight: FontWeight.bold,
                                                 color: Colors.grey,
                                                 fontSize: 16*textScaleFactor,
                                                 fontFamily: kQuickSand,
@@ -452,21 +439,19 @@ class _DashboardState extends State<Dashboard>{
                                 children: <Widget>[
                                   Expanded(
                                     child: Text(
-                                      'TOTAL TESTED',
+                                      latestTestedData[kTotalIndividualTested]==""?lang.translate(kTotalSampleTestedLang):lang.translate(kTotalTestedLang),
                                       style: TextStyle(
                                         fontFamily: kQuickSand,
                                         fontSize: 24*textScaleFactor,
-                                        fontWeight: FontWeight.bold,
                                         color: kDarkBlueColor,
                                       ),
                                     ),
                                   ),
                                   Expanded(
                                     child: Text(
-                                      latestTestedData[kTotalIndividualTested],
+                                      latestTestedData[kTotalIndividualTested]==""?latestTestedData[kTotalSamplesTested]:latestTestedData[kTotalIndividualTested],
                                       textAlign: TextAlign.end,
                                       style: TextStyle(
-                                        fontWeight: FontWeight.bold,
                                         color: kDarkBlueColor,
                                         fontSize: 24*textScaleFactor,
                                         fontFamily: kQuickSand,
@@ -480,11 +465,10 @@ class _DashboardState extends State<Dashboard>{
                                 children: <Widget>[
                                   Expanded(
                                     child: Text(
-                                      'Last Updated at ${DateFormat("d MMM, ").add_jm().format(testedLastUpdate)}',
+                                      '${lang.translate(kLastUpdatedAtLang)} ${testedLastUpdate.millisecondsSinceEpoch>DateTime.now().millisecondsSinceEpoch?"\t--\t":DateFormat("d MMM, ").add_jm().format(testedLastUpdate)}',
                                       style: TextStyle(
                                         fontFamily: kQuickSand,
                                         fontSize: 14*textScaleFactor,
-                                        fontWeight: FontWeight.bold,
                                         color: kGreenColor,
                                       ),
                                     ),
@@ -499,9 +483,8 @@ class _DashboardState extends State<Dashboard>{
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: <Widget>[
                                           Text(
-                                            "Source",
+                                            lang.translate(kSourceLang),
                                             style: TextStyle(
-                                              fontWeight: FontWeight.bold,
                                               color: kGreyColor,
                                               fontSize: 12*textScaleFactor,
                                               fontFamily: kNotoSansSc,
@@ -543,13 +526,12 @@ class _DashboardState extends State<Dashboard>{
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
                           Text(
-                            "STATE WISE DATA",
+                            lang.translate(kMainTableTitleLang),
                             textAlign: TextAlign.start,
                             style: TextStyle(
                               fontFamily: kNotoSansSc,
                               color: kGreyColor,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16*textScaleFactor,
+                              fontSize: 18*textScaleFactor,
                             ),
                           ),
                           SizedBox(height: 5,),
@@ -558,12 +540,11 @@ class _DashboardState extends State<Dashboard>{
                             children: <Widget>[
                               Expanded(
                                 child: Text(
-                                  "COMPILED FROM STATE GOVT. NUMBERS AND VERIFIED SOURCES",
+                                  lang.translate(kMainTableNoteLang),
                                   textAlign: TextAlign.start,
                                   style: TextStyle(
                                     fontFamily: kNotoSansSc,
                                     color: kGreyColor,
-                                    fontWeight: FontWeight.bold,
                                     fontSize: 12*textScaleFactor,
                                   ),
                                 ),
@@ -589,9 +570,8 @@ class _DashboardState extends State<Dashboard>{
                                       ),
                                       SizedBox(width: 5,),
                                       Text(
-                                        "Know more",
+                                        lang.translate(kKnowMoreLang),
                                         style: TextStyle(
-                                          fontWeight: FontWeight.bold,
                                           color: kGreyColor,
                                           fontSize: 12*textScaleFactor,
                                           fontFamily: kNotoSansSc,
@@ -659,9 +639,8 @@ class _DashboardState extends State<Dashboard>{
                                                   ):SizedBox(),
                                                   SizedBox(width: 5,),
                                                   Text(
-                                                    "State/UT",
+                                                    lang.translate(kStateUTLang),
                                                     style: TextStyle(
-                                                      fontWeight: FontWeight.bold,
                                                       fontFamily: kQuickSand,
                                                       fontSize: 14*textScaleFactor,
                                                     ),
@@ -709,11 +688,10 @@ class _DashboardState extends State<Dashboard>{
                                                   ):SizedBox(),
                                                   SizedBox(width: 5,),
                                                   Text(
-                                                    "Confirmed",
+                                                    lang.translate(kConfirmedLang),
                                                     textAlign: TextAlign.end,
                                                     style: TextStyle(
                                                       color: kRedColor,
-                                                      fontWeight: FontWeight.bold,
                                                       fontFamily: kQuickSand,
                                                       fontSize: 14*textScaleFactor,
                                                     ),
@@ -761,11 +739,10 @@ class _DashboardState extends State<Dashboard>{
                                                   ):SizedBox(),
                                                   SizedBox(width: 5,),
                                                   Text(
-                                                    "Active",
+                                                    lang.translate(kActiveLang),
                                                     textAlign: TextAlign.end,
                                                     style: TextStyle(
                                                       color: kBlueColor,
-                                                      fontWeight: FontWeight.bold,
                                                       fontFamily: kQuickSand,
                                                       fontSize: 14*textScaleFactor,
                                                     ),
@@ -813,11 +790,10 @@ class _DashboardState extends State<Dashboard>{
                                                   ):SizedBox(),
                                                   SizedBox(width: 5,),
                                                   Text(
-                                                    "Recovered",
+                                                    lang.translate(kRecoveredLang),
                                                     textAlign: TextAlign.end,
                                                     style: TextStyle(
                                                       color: kGreenColor,
-                                                      fontWeight: FontWeight.bold,
                                                       fontFamily: kQuickSand,
                                                       fontSize: 14*textScaleFactor,
                                                     ),
@@ -865,11 +841,10 @@ class _DashboardState extends State<Dashboard>{
                                                   ):SizedBox(),
                                                   SizedBox(width: 5,),
                                                   Text(
-                                                    "Deaths",
+                                                    lang.translate(kDeathsLang),
                                                     textAlign: TextAlign.end,
                                                     style: TextStyle(
                                                       color: Colors.grey,
-                                                      fontWeight: FontWeight.bold,
                                                       fontFamily: kQuickSand,
                                                       fontSize: 14*textScaleFactor,
                                                     ),
@@ -899,6 +874,7 @@ class _DashboardState extends State<Dashboard>{
                                     MaterialPageRoute(
                                       builder: (BuildContext context) => StateData(
                                         name: stateList[index-1].stateName,
+                                        displayName: stateList[index-1].displayName,
                                         stateCode: stateList[index-1].stateCode,
                                         confirmed: stateList[index-1].confirmed.toString(),
                                         recovered: stateList[index-1].recovered.toString(),
@@ -947,7 +923,7 @@ class _DashboardState extends State<Dashboard>{
                                                 SizedBox(width: 5,),
                                                 Expanded(
                                                   child: Text(
-                                                    stateList[index-1].stateName,
+                                                    stateList[index-1].displayName,
                                                     style: TextStyle(
                                                       fontFamily: kNotoSansSc,
                                                       fontSize: 12*textScaleFactor,

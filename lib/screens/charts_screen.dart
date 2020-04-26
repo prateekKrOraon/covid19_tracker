@@ -1,3 +1,5 @@
+import 'package:covid19_tracker/constants/language_constants.dart';
+import 'package:covid19_tracker/localization/app_localization.dart';
 import 'package:covid19_tracker/screens/daily_case_time_chart_screen.dart';
 import 'package:covid19_tracker/screens/total_case_time_chart_screen.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +28,7 @@ class _ChartScreenState extends State<ChartsScreen> with SingleTickerProviderSta
   Widget build(BuildContext context) {
 
     ThemeData themeData = Theme.of(context);
+    AppLocalizations lang = AppLocalizations.of(context);
 
     return DefaultTabController(
       length: _tabPages.length,
@@ -34,8 +37,8 @@ class _ChartScreenState extends State<ChartsScreen> with SingleTickerProviderSta
         appBar: TabBar(
           indicatorColor: themeData.accentColor,
           tabs: <Widget>[
-            Tab(text: 'Commulative',),
-            Tab(text: 'Daily'),
+            Tab(text: lang.translate(kCumulativeLang),),
+            Tab(text: lang.translate(kDailyLang)),
           ],
         ),
         body: TabBarView(

@@ -2,9 +2,12 @@
 import 'package:covid19_tracker/constants/api_constants.dart';
 import 'package:covid19_tracker/constants/colors.dart';
 import 'package:covid19_tracker/constants/app_constants.dart';
+import 'package:covid19_tracker/constants/language_constants.dart';
+import 'package:covid19_tracker/localization/app_localization.dart';
 import 'package:covid19_tracker/utilities/district.dart';
 import 'package:covid19_tracker/utilities/network_handler.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:intl/intl.dart';
@@ -12,10 +15,11 @@ import 'dart:math' as math;
 
 class StateData extends StatefulWidget{
 
-  StateData({this.name,this.stateCode, this.confirmed, this.active, this.recovered,
+  StateData({this.name,this.displayName,this.stateCode, this.confirmed, this.active, this.recovered,
       this.deaths, this.deltaCnf, this.deltaRec, this.deltaDet,this.lastUpdated,this.stateNotes});
 
   final String name;
+  final String displayName;
   final String confirmed;
   final String active;
   final String recovered;
@@ -38,6 +42,7 @@ class _StateDataState extends State<StateData>{
   ThemeData theme;
 
   String name = "";
+  String displayName = "";
   String confirmed = "";
   String active = "";
   String recovered = "";
@@ -61,6 +66,7 @@ class _StateDataState extends State<StateData>{
   void initState() {
     _networkHandler = NetworkHandler.getInstance();
     name = widget.name;
+    displayName = widget.displayName;
     stateCode = widget.stateCode;
     confirmed = widget.confirmed;
     active = widget.active;
@@ -78,6 +84,7 @@ class _StateDataState extends State<StateData>{
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
+    AppLocalizations lang = AppLocalizations.of(context);
     theme = Theme.of(context);
 
     if(size.width<=360){
@@ -94,23 +101,22 @@ class _StateDataState extends State<StateData>{
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
+                  padding: EdgeInsets.symmetric(horizontal: 6),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       Text(
-                        name,
+                        displayName,
                         style: TextStyle(
                           fontFamily: kQuickSand,
-                          fontWeight: FontWeight.bold,
                           fontSize: 30*textScaleFactor,
                         ),
                       ),
                       Text(
-                        "Last update at: ${DateFormat("d MMM, ").add_jm().format(lastUpdated)}",
+                        "${lang.translate(kLastUpdatedAtLang)}: ${DateFormat("d MMM, ").add_jm().format(lastUpdated)}",
                         style: TextStyle(
                           fontFamily: kQuickSand,
-                          fontWeight: FontWeight.bold,
                           fontSize: 14*textScaleFactor,
                           color: Colors.green,
                         ),
@@ -146,11 +152,10 @@ class _StateDataState extends State<StateData>{
                                     crossAxisAlignment: CrossAxisAlignment.stretch,
                                     children: <Widget>[
                                       Text(
-                                        'TOTAL CONFIRMED CASES',
+                                        lang.translate(kTotalCnfLang),
                                         style: TextStyle(
-                                          fontWeight: FontWeight.bold,
                                           color: kRedColor,
-                                          fontSize: 12*textScaleFactor,
+                                          fontSize: 14*textScaleFactor,
                                           fontFamily: kQuickSand,
                                         ),
                                       ),
@@ -160,7 +165,6 @@ class _StateDataState extends State<StateData>{
                                           Text(
                                             confirmed,
                                             style: TextStyle(
-                                              fontWeight: FontWeight.bold,
                                               color: kRedColor,
                                               fontSize: 24*textScaleFactor,
                                               fontFamily: kQuickSand,
@@ -170,7 +174,6 @@ class _StateDataState extends State<StateData>{
                                           Text(
                                             "(+$deltaCnf)",
                                             style: TextStyle(
-                                              fontWeight: FontWeight.bold,
                                               color: kRedColor,
                                               fontSize: 16*textScaleFactor,
                                               fontFamily: kQuickSand,
@@ -205,11 +208,10 @@ class _StateDataState extends State<StateData>{
                                     crossAxisAlignment: CrossAxisAlignment.stretch,
                                     children: <Widget>[
                                       Text(
-                                        'TOTAL ACTIVE CASES',
+                                        lang.translate(kTotalActvLang),
                                         style: TextStyle(
-                                          fontWeight: FontWeight.bold,
                                           color: kBlueColor,
-                                          fontSize: 12*textScaleFactor,
+                                          fontSize: 14*textScaleFactor,
                                           fontFamily: kQuickSand,
                                         ),
                                       ),
@@ -217,7 +219,6 @@ class _StateDataState extends State<StateData>{
                                       Text(
                                         active,
                                         style: TextStyle(
-                                          fontWeight: FontWeight.bold,
                                           color: kBlueColor,
                                           fontSize: 24*textScaleFactor,
                                           fontFamily: kQuickSand,
@@ -256,11 +257,10 @@ class _StateDataState extends State<StateData>{
                                     crossAxisAlignment: CrossAxisAlignment.stretch,
                                     children: <Widget>[
                                       Text(
-                                        'TOTAL RECOVERED',
+                                        lang.translate(kTotalRecLang),
                                         style: TextStyle(
-                                          fontWeight: FontWeight.bold,
                                           color: kGreenColor,
-                                          fontSize: 12*textScaleFactor,
+                                          fontSize: 14*textScaleFactor,
                                           fontFamily: kQuickSand,
                                         ),
                                       ),
@@ -270,7 +270,6 @@ class _StateDataState extends State<StateData>{
                                           Text(
                                             recovered,
                                             style: TextStyle(
-                                              fontWeight: FontWeight.bold,
                                               color: kGreenColor,
                                               fontSize: 24*textScaleFactor,
                                               fontFamily: kQuickSand,
@@ -280,7 +279,6 @@ class _StateDataState extends State<StateData>{
                                           Text(
                                             "(+$deltaRec)",
                                             style: TextStyle(
-                                              fontWeight: FontWeight.bold,
                                               color: kGreenColor,
                                               fontSize: 16*textScaleFactor,
                                               fontFamily: kQuickSand,
@@ -316,11 +314,10 @@ class _StateDataState extends State<StateData>{
                                     crossAxisAlignment: CrossAxisAlignment.stretch,
                                     children: <Widget>[
                                       Text(
-                                        'TOTAL DEATHS',
+                                        lang.translate(kTotalDetLang),
                                         style: TextStyle(
-                                          fontWeight: FontWeight.bold,
                                           color: Colors.grey,
-                                          fontSize: 12*textScaleFactor,
+                                          fontSize: 14*textScaleFactor,
                                           fontFamily: kQuickSand,
                                         ),
                                       ),
@@ -330,7 +327,6 @@ class _StateDataState extends State<StateData>{
                                           Text(
                                             deaths,
                                             style: TextStyle(
-                                              fontWeight: FontWeight.bold,
                                               color: Colors.grey,
                                               fontSize: 24*textScaleFactor,
                                               fontFamily: kQuickSand,
@@ -340,7 +336,6 @@ class _StateDataState extends State<StateData>{
                                           Text(
                                             "(+$deltaDet)",
                                             style: TextStyle(
-                                              fontWeight: FontWeight.bold,
                                               color: Colors.grey,
                                               fontSize: 16*textScaleFactor,
                                               fontFamily: kQuickSand,
@@ -388,7 +383,7 @@ class _StateDataState extends State<StateData>{
                         height: size.height*0.3,
                         child: Center(
                           child: Text(
-                            'Could not fetch data',
+                            lang.translate(kSnapshotErrorLang),
                             style: TextStyle(
                               fontSize: 20*textScaleFactor,
                               fontFamily: kQuickSand,
@@ -411,7 +406,7 @@ class _StateDataState extends State<StateData>{
                         height: size.height*0.3,
                         child: Center(
                           child: Text(
-                            'Nothing to show',
+                            lang.translate(kSnapshotEmptyLang),
                             style: TextStyle(
                               fontSize: 20*textScaleFactor,
                               fontFamily: kNotoSansSc,
@@ -427,7 +422,7 @@ class _StateDataState extends State<StateData>{
                         height: size.height*0.3,
                         child: Center(
                           child: Text(
-                            'Nothing to show',
+                            lang.translate(kSnapshotEmptyLang),
                             style: TextStyle(
                               fontSize: 20*textScaleFactor,
                               fontFamily: kNotoSansSc,
@@ -446,9 +441,10 @@ class _StateDataState extends State<StateData>{
                     districtData.forEach((map){
                       //not adding unknown cases now... to be added later at the end of the sorted list
                       if('Unknown' != map[kDistrict].toString()) {
+                        String name = lang.translate(map[kDistrict].toString().toLowerCase().replaceAll(" ", "_"));
                         districts.add(
                           District(
-                            map[kDistrict],
+                            name==null?"${map[kDistrict]}":name,
                             map[kConfirmed],
                             map[kDelta][kConfirmed],
                           ),
@@ -463,7 +459,7 @@ class _StateDataState extends State<StateData>{
                     if(districtData[districtData.length-1][kDistrict] == 'Unknown'){
                       districts.add(
                         District(
-                          districtData[districtData.length-1][kDistrict],
+                          lang.translate(districtData[districtData.length-1][kDistrict].toString().toLowerCase().replaceAll(" ", "_")),
                           districtData[districtData.length-1][kConfirmed],
                           districtData[districtData.length-1][kDelta][kConfirmed],
                         ),
@@ -607,29 +603,29 @@ class _StateDataState extends State<StateData>{
                     List<Widget> lineChartLayouts = List();
 
                     lineChartLayouts.add(
-                      _getLineChartLayout('Confirmed Cases',cnfSpots, totalCnf.toDouble(), (dailyReport.length~/3)),
+                      _getLineChartLayout(lang.translate(kConfirmedLang),cnfSpots, totalCnf.toDouble(), (dailyReport.length~/3)),
                     );
 
                     lineChartLayouts.add(
-                      _getLineChartLayout('Recoveries',recSpots, totalRec.toDouble(), (dailyReport.length~/3)),
+                      _getLineChartLayout(lang.translate(kRecoveredLang),recSpots, totalRec.toDouble(), (dailyReport.length~/3)),
                     );
 
                     lineChartLayouts.add(
-                      _getLineChartLayout('Deaths',detSpots, totalDet.toDouble(), (dailyReport.length~/3)),
+                      _getLineChartLayout(lang.translate(kDeathsLang),detSpots, totalDet.toDouble(), (dailyReport.length~/3)),
                     );
 
                     List<Widget> barChartLayouts = List();
 
                     barChartLayouts.add(
-                      _getBarChartLayout('Daily Confirmed Cases', dailyConfirmedChartGroup, (dailyHighestCnf+100).toDouble(),range~/3),
+                      _getBarChartLayout(lang.translate(kDailyCnfLang), dailyConfirmedChartGroup, (dailyHighestCnf+100).toDouble(),range~/3),
                     );
 
                     barChartLayouts.add(
-                      _getBarChartLayout('Daily Recovered Cases', dailyRecChartGroup, (dailyHighestRec+100).toDouble(),range~/3),
+                      _getBarChartLayout(lang.translate(kDailyRecLang), dailyRecChartGroup, (dailyHighestRec+100).toDouble(),range~/3),
                     );
 
                     barChartLayouts.add(
-                      _getBarChartLayout('Daily Deaths', dailyDetChartGroup, (dailyHighestDet+100).toDouble(),range~/3),
+                      _getBarChartLayout(lang.translate(kDailyDetLang), dailyDetChartGroup, (dailyHighestDet+100).toDouble(),range~/3),
                     );
 
 
@@ -663,36 +659,33 @@ class _StateDataState extends State<StateData>{
                                       children: <Widget>[
                                         Expanded(
                                           child: Text(
-                                            'DISRICT',
+                                            lang.translate(kDistrictLang),
                                             style: TextStyle(
                                               color: kGreyColor,
-                                              fontWeight: FontWeight.bold,
                                               fontFamily: kQuickSand,
-                                              fontSize: 12*textScaleFactor,
+                                              fontSize: 14*textScaleFactor,
                                             ),
                                           ),
                                         ),
                                         Expanded(
                                           child: Text(
-                                            'CONFIRMED',
+                                            lang.translate(kConfirmedLang),
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
-                                              fontWeight: FontWeight.bold,
                                               fontFamily: kQuickSand,
                                               color: Colors.red,
-                                              fontSize: 12*textScaleFactor,
+                                              fontSize: 14*textScaleFactor,
                                             ),
                                           ),
                                         ),
                                         Expanded(
                                           child: Text(
-                                            'INCREASE',
+                                            lang.translate(kIncreaseLang),
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
-                                              fontWeight: FontWeight.bold,
                                               fontFamily: kQuickSand,
                                               color: Colors.red,
-                                              fontSize: 12*textScaleFactor,
+                                              fontSize: 14*textScaleFactor,
                                             ),
                                           ),
                                         ),
@@ -718,7 +711,10 @@ class _StateDataState extends State<StateData>{
                                             children: <Widget>[
                                               Container(
                                                 padding: EdgeInsets.only(top: 10,left: 6,right: 6),
-                                                height: 30,
+                                                constraints:BoxConstraints(
+                                                  minHeight: 30,
+                                                  maxHeight: 56,
+                                                ),
                                                 child: Row(
                                                   children: <Widget>[
                                                     Expanded(
@@ -726,8 +722,7 @@ class _StateDataState extends State<StateData>{
                                                         districtName,
                                                         style: TextStyle(
                                                           fontFamily: kQuickSand,
-                                                          fontSize: 12*textScaleFactor,
-                                                          fontWeight: FontWeight.bold,
+                                                          fontSize: 14*textScaleFactor,
                                                         ),
                                                       ),
                                                     ),
@@ -737,8 +732,7 @@ class _StateDataState extends State<StateData>{
                                                         textAlign: TextAlign.center,
                                                         style: TextStyle(
                                                           fontFamily: kQuickSand,
-                                                          fontSize: 12*textScaleFactor,
-                                                          fontWeight: FontWeight.bold,
+                                                          fontSize: 14*textScaleFactor,
                                                         ),
                                                       ),
                                                     ),
@@ -749,8 +743,7 @@ class _StateDataState extends State<StateData>{
                                                         style: TextStyle(
                                                           fontFamily: kQuickSand,
                                                           color: Colors.red,
-                                                          fontSize: 12*textScaleFactor,
-                                                          fontWeight: FontWeight.bold,
+                                                          fontSize: 14*textScaleFactor,
                                                         ),
                                                       ),
                                                     )
@@ -771,44 +764,45 @@ class _StateDataState extends State<StateData>{
                           ),
                         ),
                         SizedBox(height: 20,),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  'Spread Trends',
-                                  style: TextStyle(
-                                    fontFamily: kQuickSand,
-                                    fontSize: 25*textScaleFactor,
-                                    fontWeight: FontWeight.bold,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    lang.translate(kSpreadTrendsLang),
+                                    style: TextStyle(
+                                      fontFamily: kQuickSand,
+                                      fontSize: 25*textScaleFactor,
+                                    ),
                                   ),
-                                ),
-                                Text(
-                                  'Last 30 days',
-                                  style: TextStyle(
-                                    color: Colors.grey[500],
-                                    fontFamily: kQuickSand,
-                                    fontSize: 14*textScaleFactor,
-                                    fontWeight: FontWeight.bold,
+                                  Text(
+                                    lang.translate(kLast30DaysLang),
+                                    style: TextStyle(
+                                      color: Colors.grey[500],
+                                      fontFamily: kQuickSand,
+                                      fontSize: 16*textScaleFactor,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10,),
-                              child: Container(
-                                height: 20,
-                                width: 20,
-                                child: Center(
-                                  child: Icon(
-                                    SimpleLineIcons.arrow_right,
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 10,),
+                                child: Container(
+                                  height: 20,
+                                  width: 20,
+                                  child: Center(
+                                    child: Icon(
+                                      SimpleLineIcons.arrow_right,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                         SizedBox(height: 20,),
                         Container(
@@ -886,7 +880,6 @@ class _StateDataState extends State<StateData>{
                       style: TextStyle(
                         fontFamily: kQuickSand,
                         fontSize: 25*textScaleFactor,
-                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     SizedBox(height: 20,),
@@ -927,7 +920,6 @@ class _StateDataState extends State<StateData>{
                       style: TextStyle(
                         fontFamily: kQuickSand,
                         fontSize: 25*textScaleFactor,
-                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     SizedBox(height: 20,),

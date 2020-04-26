@@ -1,6 +1,8 @@
 import 'package:covid19_tracker/constants/api_constants.dart';
 import 'package:covid19_tracker/constants/colors.dart';
 import 'package:covid19_tracker/constants/app_constants.dart';
+import 'package:covid19_tracker/constants/language_constants.dart';
+import 'package:covid19_tracker/localization/app_localization.dart';
 import 'package:covid19_tracker/utilities/data_source.dart';
 import 'package:covid19_tracker/utilities/network_handler.dart';
 import 'package:flutter/cupertino.dart';
@@ -25,6 +27,8 @@ class _SourcesListScreen extends State<SourcesListScreen>{
     theme = Theme.of(context);
     Size size = MediaQuery.of(context).size;
 
+    AppLocalizations lang = AppLocalizations.of(context);
+
     if(size.width<=360){
       textScaleFactor = 0.75;
     }
@@ -32,9 +36,8 @@ class _SourcesListScreen extends State<SourcesListScreen>{
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Sources',
+          lang.translate(kSourcesLang),
           style: TextStyle(
-            fontWeight: FontWeight.bold,
             fontFamily: kQuickSand,
             color: theme.brightness == Brightness.light?Colors.black:Colors.white,
           ),
@@ -51,6 +54,18 @@ class _SourcesListScreen extends State<SourcesListScreen>{
                 return Center(child: CircularProgressIndicator(),);
               }
 
+              if(snapshot.hasError){
+                return Center(
+                  child: Text(
+                    lang.translate(kSnapshotErrorLang),
+                    style: TextStyle(
+                      fontFamily: kNotoSansSc,
+                      fontSize: 20*textScaleFactor,
+                    ),
+                  ),
+                );
+              }
+
               Map data = snapshot.data;
 
               List sourceList = data[kSourceList];
@@ -61,7 +76,7 @@ class _SourcesListScreen extends State<SourcesListScreen>{
                 Map map = sourceList[i];
                 if(map[kRegion] == kGeneralSource || map[kRegion] == kTestingSource){
                   stateSources.add(
-                    Source.fromMap(map),
+                    Source.fromMap(context,map),
                   );
                 }
               }
@@ -69,7 +84,7 @@ class _SourcesListScreen extends State<SourcesListScreen>{
               sourceList.forEach((map){
                 if(map[kRegion] != kGeneralSource && map[kRegion] != kTestingSource){
                   stateSources.add(
-                    Source.fromMap(map),
+                    Source.fromMap(context,map),
                   );
                 }
               });
@@ -143,10 +158,9 @@ class _SourcesListScreen extends State<SourcesListScreen>{
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  'Source ${i+1}:',
+                  "${AppLocalizations.of(context).translate("source_${i+1}")}:",
                   style: TextStyle(
                     fontFamily: kNotoSansSc,
-                    fontWeight: FontWeight.bold,
                     color: kGreyColor,
                     fontSize: 14*textScaleFactor,
                   ),

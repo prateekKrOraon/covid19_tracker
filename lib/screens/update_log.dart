@@ -1,7 +1,9 @@
 import 'package:covid19_tracker/constants/api_constants.dart';
 import 'package:covid19_tracker/constants/app_constants.dart';
 import 'package:covid19_tracker/constants/colors.dart';
+import 'package:covid19_tracker/constants/language_constants.dart';
 import 'package:covid19_tracker/data/update_log.dart';
+import 'package:covid19_tracker/localization/app_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:intl/intl.dart';
@@ -22,6 +24,7 @@ class _UpdatesScreenState extends State<UpdatesScreen>{
 
     Size size = MediaQuery.of(context).size;
     ThemeData theme = Theme.of(context);
+    AppLocalizations lang = AppLocalizations.of(context);
 
     if(size.width <= 360){
       textScaleFactor = 0.75;
@@ -29,8 +32,35 @@ class _UpdatesScreenState extends State<UpdatesScreen>{
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
+      appBar: AppBar(
+        backgroundColor: theme.scaffoldBackgroundColor,
+        title:Container(
+          padding: EdgeInsets.symmetric(horizontal: 16,vertical: 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Text(
+                lang.translate(kRecentUpdatesLang),
+                style: TextStyle(
+                  fontFamily: kQuickSand,
+                  fontSize: 18*textScaleFactor,
+                  color: theme.brightness == Brightness.light?Colors.black:Colors.white,
+                ),
+              ),
+              Text(
+                lang.translate(kRecentUpdatesSubTitleLang),
+                style: TextStyle(
+                  fontFamily: kQuickSand,
+                  fontSize: 12*textScaleFactor,
+                  color: theme.brightness == Brightness.light?Colors.black:Colors.white,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
       body: FutureBuilder(
-        future: Future.wait([UpdateLog.getInstance()]),
+        future: Future.wait([UpdateLog.getInstance(lang.locale.languageCode)]),
         builder: (BuildContext context,snapshot){
 
           if(!snapshot.hasData){
@@ -45,7 +75,7 @@ class _UpdatesScreenState extends State<UpdatesScreen>{
             return Container(
               height: double.infinity,
               child: Text(
-                'Some Error Occurred',
+                lang.translate(kSnapshotErrorLang),
                 style: TextStyle(
                   fontFamily: kNotoSansSc,
                   color: theme.accentColor,
@@ -61,10 +91,10 @@ class _UpdatesScreenState extends State<UpdatesScreen>{
             DateTime.now().year,
             DateTime.now().month,
             DateTime.now().day,
-            2
           ).millisecondsSinceEpoch;
 
           for(int i = (updatesData.length-1);i>=0;i--){
+            print(updatesData[i]);
             Map map = updatesData[i];
             if(map[kTimestamp]*1000 < today){
               break;
@@ -78,7 +108,7 @@ class _UpdatesScreenState extends State<UpdatesScreen>{
           if(updates.isEmpty){
             return Center(
               child: Text(
-                'No new updates for today',
+                lang.translate(kNoUpdatesLang),
                 style: TextStyle(
                   fontFamily: kNotoSansSc,
                   fontWeight: FontWeight.bold,
@@ -91,29 +121,6 @@ class _UpdatesScreenState extends State<UpdatesScreen>{
           return SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 16,vertical: 8),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Text(
-                        "Recent Updates",
-                        style: TextStyle(
-                          fontFamily: kQuickSand,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18*textScaleFactor,
-                        ),
-                      ),
-                      Text(
-                        "As per covid19india.org",
-                        style: TextStyle(
-                          fontFamily: kQuickSand,
-                          fontSize: 12*textScaleFactor,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
                 ListView.builder(
                   physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
