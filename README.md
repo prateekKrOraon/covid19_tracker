@@ -38,13 +38,19 @@ APK can be downloaded from [here](https://github.com/prateekKrOraon/covid-19-tra
 * Global data: [corona.lmao.ninja](https://corona.lmao.ninja) and [covidapi.info](https://covidapi.info)
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 43e103f... Readme updated
 ## Special thanks
 Special thanks to these two guys for testing the app and giving feedback, suggestions and ideas. This app would have been a mess without you.
 * [Udaishya Yadav](https://github.com/udaishya)
 * [Pokala Anirudh](https://github.com/pokalaanirudh)
 
+<<<<<<< HEAD
 =======
 >>>>>>> 3ed0282... License changed, Readme updated, code refactoring and bug fixing
+=======
+>>>>>>> 43e103f... Readme updated
 ## Disclaimer
 
 COVID-19 Tracker does not collect any personal data, nor does it require access to Bluetooth, and is in no way meant to be an alternative to Aarogya Setu launched by Govt. of India. Aarogya Setu provides government guidelines to fight the pandemic and makes it easier to backtrack potential COVID-19 cases. It is strongly recommended that you download Aarogya Setu too.
@@ -75,3 +81,4 @@ COVID-19 Tracker does not collect any personal data, nor does it require access 
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
+
