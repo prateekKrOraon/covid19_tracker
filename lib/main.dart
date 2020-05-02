@@ -1,3 +1,4 @@
+import 'package:covid19_tracker/constants/app_constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:covid19_tracker/data/theme_data.dart';
 import 'package:covid19_tracker/localization/app_localization.dart';
@@ -17,6 +18,7 @@ class MyApp extends StatefulWidget{
 }
 
 class _MyAppState extends State<MyApp>{
+
   SpecifiedLocalizationDelegate _localeOverrideDelegate;
 
   @override
@@ -26,15 +28,18 @@ class _MyAppState extends State<MyApp>{
     _localeOverrideDelegate = SpecifiedLocalizationDelegate(null);
   }
 
+
+  // function to save current locale information in shared preferences
   onLocaleChange(Locale locale)async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       _localeOverrideDelegate = SpecifiedLocalizationDelegate(locale);
     });
-    await prefs.setString("language_code", locale.languageCode);
-    await prefs.setString("country_code",locale.countryCode);
+    await prefs.setString(kLangCode, locale.languageCode);
+    await prefs.setString(kCountryCode,locale.countryCode);
   }
 
+  // get current saved locale from shared preferences
   initLocale()async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String langCode = prefs.getString("language_code");
@@ -44,9 +49,9 @@ class _MyAppState extends State<MyApp>{
     }
   }
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
     return DynamicTheme(
       defaultBrightness: Brightness.light,
       data: (brightness) => getTheme(brightness),

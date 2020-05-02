@@ -5,8 +5,9 @@ import 'package:covid19_tracker/constants/language_constants.dart';
 import 'package:covid19_tracker/data/update_log.dart';
 import 'package:covid19_tracker/localization/app_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
 import 'package:intl/intl.dart';
+
+import '../error_screen.dart';
 
 class UpdatesScreen extends StatefulWidget{
   @override
@@ -60,31 +61,36 @@ class _UpdatesScreenState extends State<UpdatesScreen>{
         ),
       ),
       body: FutureBuilder(
-        future: Future.wait([UpdateLog.getInstance(lang.locale.languageCode)]),
+        future: UpdateLog.getInstance(lang.locale.languageCode),
         builder: (BuildContext context,snapshot){
 
-          if(!snapshot.hasData){
-            return Container(
-              height: double.infinity,
-              child: Center(
-                child: CircularProgressIndicator(),
+          if(snapshot.connectionState == ConnectionState.waiting){
+            return Center(child: CircularProgressIndicator(),);
+          }
+          if(snapshot.hasError){
+            return Center(
+              child: ErrorScreen(
+                onClickRetry: (){
+                  setState(() {
+                    UpdateLog.refresh(lang.locale.languageCode);
+                  });
+                },
               ),
             );
           }
-          if(snapshot.hasError){
-            return Container(
-              height: double.infinity,
-              child: Text(
-                lang.translate(kSnapshotErrorLang),
-                style: TextStyle(
-                  fontFamily: kNotoSansSc,
-                  color: theme.accentColor,
-                ),
+          if(!snapshot.hasData){
+            return Center(
+              child: ErrorScreen(
+                onClickRetry: (){
+                  setState(() {
+                    UpdateLog.refresh(lang.locale.languageCode);
+                  });
+                },
               ),
             );
           }
 
-          List updatesData = snapshot.data[0];
+          List updatesData = snapshot.data;
           List<UpdateModel> updates = List();
 
           int today = DateTime(
@@ -94,7 +100,6 @@ class _UpdatesScreenState extends State<UpdatesScreen>{
           ).millisecondsSinceEpoch;
 
           for(int i = (updatesData.length-1);i>=0;i--){
-            print(updatesData[i]);
             Map map = updatesData[i];
             if(map[kTimestamp]*1000 < today){
               break;

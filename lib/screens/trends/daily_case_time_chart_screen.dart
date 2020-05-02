@@ -4,11 +4,13 @@ import 'package:covid19_tracker/constants/colors.dart';
 import 'package:covid19_tracker/constants/app_constants.dart';
 import 'package:covid19_tracker/constants/language_constants.dart';
 import 'package:covid19_tracker/localization/app_localization.dart';
-import 'package:covid19_tracker/utilities/data_range.dart';
+import 'package:covid19_tracker/utilities/helpers/data_range.dart';
 import 'package:covid19_tracker/data/state_wise_data.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
+import '../error_screen.dart';
 
 class DailyCaseTimeChart extends StatefulWidget{
 
@@ -43,8 +45,30 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
       future: StateWiseData.getInstance(),
       builder:(BuildContext context, snapshot){
 
-        if(!snapshot.hasData){
+        if(snapshot.connectionState == ConnectionState.waiting){
           return Center(child: CircularProgressIndicator(),);
+        }
+        if(snapshot.hasError){
+          return Center(
+            child: ErrorScreen(
+              onClickRetry: (){
+                setState(() {
+                  StateWiseData.refresh();
+                });
+              },
+            ),
+          );
+        }
+        if(!snapshot.hasData){
+          return Center(
+            child: ErrorScreen(
+              onClickRetry: (){
+                setState(() {
+                  StateWiseData.refresh();
+                });
+              },
+            ),
+          );
         }
 
         Map map = snapshot.data;
@@ -92,6 +116,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
           dailyConfirmedChartGroup.add(
             BarChartGroupData(
                 x: i,
+              showingTooltipIndicators: [],
                 barRods: [
                   BarChartRodData(
                       y: currentCnf,
@@ -109,6 +134,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
           dailyRecChartGroup.add(
             BarChartGroupData(
                 x: i,
+              showingTooltipIndicators: [],
                 barRods: [
                   BarChartRodData(
                       y: currentRec,
@@ -126,6 +152,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
           dailyDetChartGroup.add(
             BarChartGroupData(
                 x: i,
+                showingTooltipIndicators: [],
                 barRods: [
                   BarChartRodData(
                       y: currentDet,
@@ -155,12 +182,14 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
           dataRangeStr = lang.translate(kLast14DaysLang);
         }
 
+
         return SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
+                SizedBox(height: 8,),
                 Text(
                   lang.translate(kScalingModesLang),
                   style: TextStyle(
@@ -326,7 +355,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
                               fontSize: 16*textScaleFactor,
                             ),
                           ),
-                          SizedBox(height: 20,),
+                          SizedBox(height: 10,),
                           _getBarChart(dailyConfirmedChartGroup, dailyHighestCnf+200),
                         ],
                       ),
@@ -366,7 +395,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
                               fontSize: 16*textScaleFactor,
                             ),
                           ),
-                          SizedBox(height: 20,),
+                          SizedBox(height: 10,),
                           _getBarChart(dailyRecChartGroup, dailyHighestRec+200),
                         ],
                       ),
@@ -406,7 +435,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
                               fontSize: 16*textScaleFactor,
                             ),
                           ),
-                          SizedBox(height: 20,),
+                          SizedBox(height: 10,),
                           _getBarChart(dailyDetChartGroup, dailyHighestDet+10),
                         ],
                       ),
@@ -423,9 +452,9 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
 
   Widget _getBarChart(List<BarChartGroupData> barGroups,double highest){
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(6),
       child: AspectRatio(
-        aspectRatio: 2,
+        aspectRatio: 1.8,
         child: BarChart(
           BarChartData(
             barTouchData: BarTouchData(
@@ -433,7 +462,17 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
               touchTooltipData: BarTouchTooltipData(
                 tooltipBgColor: kAccentColor,
               ),
-              touchCallback: (BarTouchResponse response){}
+              touchCallback: (BarTouchResponse response){
+                setState(() {
+                  if (response.spot != null &&
+                      response.touchInput is! FlPanEnd &&
+                      response.touchInput is! FlLongPressEnd) {
+                    //touchedIndex = barTouchResponse.spot.touchedBarGroupIndex;
+                  } else {
+                    //touchedIndex = -1;
+                  }
+                });
+              }
             ),
             borderData: FlBorderData(
               show: true,

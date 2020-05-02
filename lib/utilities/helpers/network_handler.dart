@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'dart:convert';
 import 'package:covid19_tracker/constants/api_constants.dart';
+import 'package:covid19_tracker/constants/app_constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart' as browser;
 
@@ -86,7 +87,39 @@ class NetworkHandler{
 
   Future getUpdateLogs(String langCode)async{
     Map<String,String> header = {"Accept":"application/json"};
-    var res = await http.post(updateLogLink,headers: header,body: {"language_code":langCode});
+    var res = await http.post(updateLogLink,headers: header,body: {kLangCode:langCode});
+    return jsonDecode(res.body);
+  }
+
+  Future getCountryWiseData()async{
+    var res = await http.get(countryWiseDataUrl);
+    return jsonDecode(res.body);
+  }
+
+  Future getWorldData()async{
+    var res = await http.get(worldDataUrl);
+    return jsonDecode(res.body);
+  }
+
+  Future getCountryData(String country)async{
+    var res = await http.get("$countryDataUrl$country");
+    return jsonDecode(res.body);
+  }
+
+  Future getGlobalTimeSeriesData()async{
+    var res = await http.get(globalTimeSeriesLink);
+    return jsonDecode(res.body);
+  }
+
+  Future getFAQs(String langCode)async{
+    Map<String,String> header = {"Accept":"application/json"};
+    var res = await http.post(faqsLink,headers: header,body: {kLangCode:langCode});
+    return jsonDecode(res.body);
+  }
+
+  Future checkForUpdates(String version)async{
+    Map<String,String> header = {"Accept":"application/json"};
+    var res = await http.post(checkForUpdateLink,headers: header,body: {kVersion:version});
     return jsonDecode(res.body);
   }
 
