@@ -1,5 +1,11 @@
+/*
+*
+* Used for translating the app from the language
+* JSON file present in lang package
+*
+*/
+
 import 'dart:convert';
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

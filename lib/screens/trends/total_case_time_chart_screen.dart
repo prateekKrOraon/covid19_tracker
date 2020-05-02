@@ -5,11 +5,13 @@ import 'package:covid19_tracker/constants/colors.dart';
 import 'package:covid19_tracker/constants/app_constants.dart';
 import 'package:covid19_tracker/constants/language_constants.dart';
 import 'package:covid19_tracker/localization/app_localization.dart';
-import 'package:covid19_tracker/utilities/data_range.dart';
+import 'package:covid19_tracker/utilities/helpers/data_range.dart';
 import 'package:covid19_tracker/data/state_wise_data.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
+import '../error_screen.dart';
 
 class TotalCaseTimeChart extends StatefulWidget{
   @override
@@ -25,6 +27,7 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
   String dataRange = DataRange.MONTH;
   double textScaleFactor = 1;
 
+  int touchedIndex;
   ThemeData theme;
 
   @override
@@ -43,8 +46,30 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
       future: StateWiseData.getInstance(),
       builder: (BuildContext context, snapshot){
 
-        if(!snapshot.hasData){
+        if(snapshot.connectionState == ConnectionState.waiting){
           return Center(child: CircularProgressIndicator(),);
+        }
+        if(snapshot.hasError){
+          return Center(
+            child: ErrorScreen(
+              onClickRetry: (){
+                setState(() {
+                  StateWiseData.refresh();
+                });
+              },
+            ),
+          );
+        }
+        if(!snapshot.hasData){
+          return Center(
+            child: ErrorScreen(
+              onClickRetry: (){
+                setState(() {
+                  StateWiseData.refresh();
+                });
+              },
+            ),
+          );
         }
 
         Map map = snapshot.data;
@@ -107,7 +132,6 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
 
         String dataRangeStr = "";
 
-        print(totalCnf);
         if(dataRange == DataRange.BEGINNING){
           dataRangeStr = lang.translate(kSinceBeginningLang);
         }else if(dataRange == DataRange.MONTH){
@@ -123,6 +147,139 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
+                SizedBox(height: 10,),
+                Text(
+                  "${lang.translate(kLastUpdatedAtLang)}: $lastUpdate\2020",
+                  style: TextStyle(
+                    color: kGreenColor,
+                    fontSize: 16*textScaleFactor,
+                    fontFamily: kQuickSand,
+                  ),
+                ),
+                SizedBox(height: 10,),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical:8.0,horizontal: 16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        lang.translate(kTotalCnfLang),
+                        style: TextStyle(
+                          fontFamily: kQuickSand,
+                          fontSize: 25*textScaleFactor,
+                          color: kRedColor,
+                        ),
+                      ),
+                      Text(
+                        map[kStateWise][0][kConfirmed],
+                        style: TextStyle(
+                          fontFamily: kQuickSand,
+                          fontSize: 25*textScaleFactor,
+                          color: kRedColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 16,),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child:Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Container(
+                        width: size.width*0.4,
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Container(
+                                    height: 15,
+                                    width: 15,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(8,),
+                                        ),
+                                        color: kBlueColor
+                                    ),
+                                  ),
+                                  SizedBox(width: 5,),
+                                  Text(
+                                    lang.translate(kActiveLang),
+                                    style: TextStyle(
+                                      fontFamily: kQuickSand,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Container(
+                                    height: 15,
+                                    width: 15,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(8,),
+                                        ),
+                                        color: kGreenColor
+                                    ),
+                                  ),
+                                  SizedBox(width: 5,),
+                                  Text(
+                                    lang.translate(kRecoveredLang),
+                                    style: TextStyle(
+                                      fontFamily: kQuickSand,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  Container(
+                                    height: 15,
+                                    width: 15,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(8,),
+                                        ),
+                                        color: Colors.grey
+                                    ),
+                                  ),
+                                  SizedBox(width: 5,),
+                                  Text(
+                                    lang.translate(kDeathsLang),
+                                    style: TextStyle(
+                                      fontFamily: kQuickSand,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Center(
+                        child: _getPieChart(
+                          double.parse(map[kStateWise][0][kConfirmed]),
+                          double.parse(map[kStateWise][0][kActive]),
+                          double.parse(map[kStateWise][0][kRecovered]),
+                          double.parse(map[kStateWise][0][kDeaths]),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 8,),
                 Text(
                   lang.translate(kScalingModesLang),
                   style: TextStyle(
@@ -300,15 +457,6 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                   ],
                 ),
                 SizedBox(height: 20,),
-                Text(
-                  "${lang.translate(kLastUpdatedAtLang)}: $lastUpdate\2020",
-                  style: TextStyle(
-                    color: kGreenColor,
-                    fontSize: 16*textScaleFactor,
-                    fontFamily: kQuickSand,
-                  ),
-                ),
-                SizedBox(height: 10,),
                 Material(
                   borderRadius: BorderRadius.all(
                     Radius.circular(10),
@@ -341,7 +489,7 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                               fontSize: 16*textScaleFactor,
                             ),
                           ),
-                          SizedBox(height: 20,),
+                          SizedBox(height: 5,),
                           _getLineChart(totalCnfSpots, totalCnf, caseTime.length),
                         ],
                       ),
@@ -381,7 +529,7 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                               fontSize: 16*textScaleFactor,
                             ),
                           ),
-                          SizedBox(height: 20,),
+                          SizedBox(height: 5,),
                           _getLineChart(totalRecSpots, uniformScale?totalCnf:totalRec, caseTime.length),
                         ],
                       ),
@@ -421,7 +569,7 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                               fontSize: 16*textScaleFactor,
                             ),
                           ),
-                          SizedBox(height: 20,),
+                          SizedBox(height: 5,),
                           _getLineChart(totalDetSpots, uniformScale?totalCnf:totalDet, caseTime.length),
                         ],
                       ),
@@ -434,6 +582,79 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
         );
       },
     );
+  }
+
+
+  Widget _getPieChart(double confirmed, double active, double recovered, double deaths){
+
+    Size size = MediaQuery.of(context).size;
+    AppLocalizations lang = AppLocalizations.of(context);
+
+    return PieChart(
+      PieChartData(
+          centerSpaceRadius: size.width*0.125,
+          sectionsSpace: 0,
+          pieTouchData: PieTouchData(
+            enabled: true,
+            touchCallback: (PieTouchResponse response){
+              setState(() {
+                if (response.touchInput is FlLongPressEnd ||
+                    response.touchInput is FlPanEnd) {
+                  touchedIndex = -1;
+                } else {
+                  touchedIndex = response.touchedSectionIndex;
+                }
+              });
+            }
+          ),
+          borderData: FlBorderData(
+            show: false,
+          ),
+          startDegreeOffset: 0,
+          sections: [
+            PieChartSectionData(
+              value: active,
+              color: kBlueColor,
+              title: touchedIndex == 0?"${active.toInt()}":"${((active/confirmed)*100).toString().substring(0,4)}%",
+              titlePositionPercentageOffset: touchedIndex ==0 ?1.4:0.5,
+              titleStyle: TextStyle(
+                fontFamily: kQuickSand,
+                fontSize: touchedIndex == 0?20:12,
+                color: theme.brightness == Brightness.light?Colors.black:Colors.white,
+              ),
+              showTitle: true,
+              radius: touchedIndex == 0?size.width*0.17:size.width*0.15,
+            ),
+            PieChartSectionData(
+              value: recovered,
+              color: kGreenColor,
+              title: touchedIndex == 1?"${recovered.toInt()}":"${((recovered/confirmed)*100).toString().substring(0,4)}%",
+              titlePositionPercentageOffset: touchedIndex == 1?1.4:0.5,
+              titleStyle: TextStyle(
+                fontFamily: kQuickSand,
+                fontSize: touchedIndex == 1?20:12,
+                color: theme.brightness == Brightness.light?Colors.black:Colors.white,
+              ),
+              radius: touchedIndex == 1?size.width*0.17:size.width*0.15,
+              showTitle: true,
+            ),
+            PieChartSectionData(
+              value: deaths,
+              color: Colors.grey,
+              title: touchedIndex == 2?"${deaths.toInt()}":"${((deaths/confirmed)*100).toString().substring(0,4)}%",
+              titlePositionPercentageOffset: touchedIndex == 2?1.5:0.5,
+              titleStyle: TextStyle(
+                fontFamily: kQuickSand,
+                fontSize: touchedIndex == 2?20:12,
+                color: theme.brightness == Brightness.light?Colors.black:Colors.white,
+              ),
+              radius: touchedIndex == 2?size.width*0.17:size.width*0.15,
+              showTitle: true,
+            ),
+          ]
+      ),
+    );
+
   }
 
   Widget _getLineChart(List<FlSpot> spots,double total,int maxX){
@@ -465,9 +686,9 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
 
 
     return Padding(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(6),
       child: AspectRatio(
-        aspectRatio: 2,
+        aspectRatio: 1.8,
         child: LineChart(
           LineChartData(
             lineTouchData: LineTouchData(
@@ -501,7 +722,7 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                 rightTitles: SideTitles(
                   showTitles: true,
                   interval: logarithmic?math.log(sideInterval)*multiplier:sideInterval,
-                  reservedSize: total<1000?20:30,
+                  reservedSize: total<1000?20:20,
                   textStyle: TextStyle(
                     fontSize: 10*textScaleFactor,
                     color: theme.brightness == Brightness.light?Colors.black:Colors.white,

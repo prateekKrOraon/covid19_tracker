@@ -1,11 +1,19 @@
+/*
+*
+* Information for states of India
+*
+*/
 
 import 'package:covid19_tracker/constants/api_constants.dart';
 import 'package:covid19_tracker/constants/colors.dart';
 import 'package:covid19_tracker/constants/app_constants.dart';
 import 'package:covid19_tracker/constants/language_constants.dart';
 import 'package:covid19_tracker/localization/app_localization.dart';
-import 'package:covid19_tracker/utilities/district.dart';
-import 'package:covid19_tracker/utilities/network_handler.dart';
+import 'package:covid19_tracker/utilities/custom_widgets/custom_widgets.dart';
+import 'package:covid19_tracker/utilities/models/district.dart';
+import 'package:covid19_tracker/utilities/helpers/network_handler.dart';
+import 'package:covid19_tracker/utilities/helpers/sorting.dart';
+import 'package:covid19_tracker/utilities/models/state_data.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,23 +21,13 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:intl/intl.dart';
 import 'dart:math' as math;
 
+import '../../error_screen.dart';
+
 class StateData extends StatefulWidget{
 
-  StateData({this.name,this.displayName,this.stateCode, this.confirmed, this.active, this.recovered,
-      this.deaths, this.deltaCnf, this.deltaRec, this.deltaDet,this.lastUpdated,this.stateNotes});
+  StateData({this.stateInfo});
 
-  final String name;
-  final String displayName;
-  final String confirmed;
-  final String active;
-  final String recovered;
-  final String deaths;
-  final String deltaCnf;
-  final String deltaRec;
-  final String deltaDet;
-  final DateTime lastUpdated;
-  final String stateCode;
-  final String stateNotes;
+  final StateInfo stateInfo;
 
   @override
   _StateDataState createState() {
@@ -41,18 +39,7 @@ class _StateDataState extends State<StateData>{
 
   ThemeData theme;
 
-  String name = "";
-  String displayName = "";
-  String confirmed = "";
-  String active = "";
-  String recovered = "";
-  String deaths = "";
-  String deltaCnf = "";
-  String deltaRec = "";
-  String deltaDet = "";
-  String stateCode = "";
-  DateTime lastUpdated;
-  String stateNotes = "";
+  StateInfo stateInfo;
   bool logarithmic = false;
 
   static const String LINE_CHART = 'line_chart';
@@ -62,21 +49,14 @@ class _StateDataState extends State<StateData>{
 
   double textScaleFactor = 1;
 
+  SortingOrder sortingOrder;
+
   @override
   void initState() {
     _networkHandler = NetworkHandler.getInstance();
-    name = widget.name;
-    displayName = widget.displayName;
-    stateCode = widget.stateCode;
-    confirmed = widget.confirmed;
-    active = widget.active;
-    recovered = widget.recovered;
-    deaths = widget.deaths;
-    deltaCnf = widget.deltaCnf;
-    deltaRec = widget.deltaRec;
-    deltaDet = widget.deltaDet;
-    lastUpdated = widget.lastUpdated;
-    stateNotes = widget.stateNotes;
+
+    this.stateInfo = widget.stateInfo;
+    sortingOrder = SortingOrder();
     super.initState();
   }
 
@@ -107,14 +87,14 @@ class _StateDataState extends State<StateData>{
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       Text(
-                        displayName,
+                        stateInfo.displayName,
                         style: TextStyle(
                           fontFamily: kQuickSand,
                           fontSize: 30*textScaleFactor,
                         ),
                       ),
                       Text(
-                        "${lang.translate(kLastUpdatedAtLang)}: ${DateFormat("d MMM, ").add_jm().format(lastUpdated)}",
+                        "${lang.translate(kLastUpdatedAtLang)}: ${DateFormat("d MMM, ").add_jm().format(stateInfo.lastUpdated)}",
                         style: TextStyle(
                           fontFamily: kQuickSand,
                           fontSize: 14*textScaleFactor,
@@ -132,103 +112,18 @@ class _StateDataState extends State<StateData>{
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Expanded(
-                            child: Material(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10),
-                              ),
-                              elevation: 2,
-                              color: theme.backgroundColor,
-                              child: Container(
-                                decoration:BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                                    children: <Widget>[
-                                      Text(
-                                        lang.translate(kTotalCnfLang),
-                                        style: TextStyle(
-                                          color: kRedColor,
-                                          fontSize: 14*textScaleFactor,
-                                          fontFamily: kQuickSand,
-                                        ),
-                                      ),
-                                      SizedBox(height: 16,),
-                                      Row(
-                                        children: <Widget>[
-                                          Text(
-                                            confirmed,
-                                            style: TextStyle(
-                                              color: kRedColor,
-                                              fontSize: 24*textScaleFactor,
-                                              fontFamily: kQuickSand,
-                                            ),
-                                          ),
-                                          SizedBox(width: 10,),
-                                          Text(
-                                            "(+$deltaCnf)",
-                                            style: TextStyle(
-                                              color: kRedColor,
-                                              fontSize: 16*textScaleFactor,
-                                              fontFamily: kQuickSand,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
+                          DashboardTile(
+                            mainTitle: lang.translate(kTotalCnfLang),
+                            value: stateInfo.confirmed.toString(),
+                            delta: stateInfo.deltaCnf.toString(),
+                            color: kRedColor,
                           ),
                           SizedBox(width: 10,),
-                          Expanded(
-                            child: Material(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10),
-                              ),
-                              elevation: 2,
-                              color: theme.backgroundColor,
-                              child: Container(
-                                decoration:BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                                    children: <Widget>[
-                                      Text(
-                                        lang.translate(kTotalActvLang),
-                                        style: TextStyle(
-                                          color: kBlueColor,
-                                          fontSize: 14*textScaleFactor,
-                                          fontFamily: kQuickSand,
-                                        ),
-                                      ),
-                                      SizedBox(height: 16,),
-                                      Text(
-                                        active,
-                                        style: TextStyle(
-                                          color: kBlueColor,
-                                          fontSize: 24*textScaleFactor,
-                                          fontFamily: kQuickSand,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
+                          DashboardTile(
+                            mainTitle: lang.translate(kTotalActvLang),
+                            value: stateInfo.active.toString(),
+                            delta: "",
+                            color: kBlueColor,
                           ),
                         ],
                       ),
@@ -237,124 +132,25 @@ class _StateDataState extends State<StateData>{
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          Expanded(
-                            child: Material(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10),
-                              ),
-                              elevation: 2,
-                              color: theme.backgroundColor,
-                              child: Container(
-                                decoration:BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                                    children: <Widget>[
-                                      Text(
-                                        lang.translate(kTotalRecLang),
-                                        style: TextStyle(
-                                          color: kGreenColor,
-                                          fontSize: 14*textScaleFactor,
-                                          fontFamily: kQuickSand,
-                                        ),
-                                      ),
-                                      SizedBox(height: 16,),
-                                      Row(
-                                        children: <Widget>[
-                                          Text(
-                                            recovered,
-                                            style: TextStyle(
-                                              color: kGreenColor,
-                                              fontSize: 24*textScaleFactor,
-                                              fontFamily: kQuickSand,
-                                            ),
-                                          ),
-                                          SizedBox(width: 10,),
-                                          Text(
-                                            "(+$deltaRec)",
-                                            style: TextStyle(
-                                              color: kGreenColor,
-                                              fontSize: 16*textScaleFactor,
-                                              fontFamily: kQuickSand,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
+                          DashboardTile(
+                            mainTitle: lang.translate(kTotalRecLang),
+                            value: stateInfo.recovered.toString(),
+                            delta: stateInfo.deltaRec.toString(),
+                            color: kGreenColor,
                           ),
                           SizedBox(width: 10,),
-                          Expanded(
-                            child: Material(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10),
-                              ),
-                              elevation: 2,
-                              color: theme.backgroundColor,
-                              child: Container(
-                                decoration:BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                                    children: <Widget>[
-                                      Text(
-                                        lang.translate(kTotalDetLang),
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 14*textScaleFactor,
-                                          fontFamily: kQuickSand,
-                                        ),
-                                      ),
-                                      SizedBox(height: 16,),
-                                      Row(
-                                        children: <Widget>[
-                                          Text(
-                                            deaths,
-                                            style: TextStyle(
-                                              color: Colors.grey,
-                                              fontSize: 24*textScaleFactor,
-                                              fontFamily: kQuickSand,
-                                            ),
-                                          ),
-                                          SizedBox(width: 10,),
-                                          Text(
-                                            "(+$deltaDet)",
-                                            style: TextStyle(
-                                              color: Colors.grey,
-                                              fontSize: 16*textScaleFactor,
-                                              fontFamily: kQuickSand,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
+                          DashboardTile(
+                            mainTitle: lang.translate(kTotalDetLang),
+                            value: stateInfo.deaths.toString(),
+                            delta: stateInfo.deltaRec.toString(),
+                            color: kGreyColor,
                           ),
                         ],
                       )
                     ],
                   ),
                 ),
-                stateNotes!=""?Padding(
+                stateInfo.stateNotes!=""?Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 6,),
                   child: Container(
                     child: Column(
@@ -362,7 +158,7 @@ class _StateDataState extends State<StateData>{
                       children: <Widget>[
                         SizedBox(height: 10,),
                         Text(
-                          "Note: $stateNotes",
+                          "Note: ${stateInfo.stateNotes}",
                           style: TextStyle(
                             fontFamily: kNotoSansSc,
                             fontSize: 14*textScaleFactor,
@@ -375,60 +171,31 @@ class _StateDataState extends State<StateData>{
                 ):SizedBox(),
                 SizedBox(height: 10,),
                 FutureBuilder(
-                  //TODO: Main builder
-                  future: Future.wait([_networkHandler.getStateData(name),_networkHandler.getStatesDaily()]),
+                  future: Future.wait([_networkHandler.getStateData(stateInfo.stateName),_networkHandler.getStatesDaily()]),
                   builder: (BuildContext context, snapshot){
-                    if(snapshot.hasError){
-                      return Container(
-                        height: size.height*0.3,
-                        child: Center(
-                          child: Text(
-                            lang.translate(kSnapshotErrorLang),
-                            style: TextStyle(
-                              fontSize: 20*textScaleFactor,
-                              fontFamily: kQuickSand,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ),
-                      );
-                    }
                     if(snapshot.connectionState == ConnectionState.waiting){
-                      return Container(
-                        height: size.height*0.3,
-                        child: Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      );
-                    }
-                    if(!snapshot.hasData){
-                      return Container(
-                        height: size.height*0.3,
-                        child: Center(
-                          child: Text(
-                            lang.translate(kSnapshotEmptyLang),
-                            style: TextStyle(
-                              fontSize: 20*textScaleFactor,
-                              fontFamily: kNotoSansSc,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ),
-                      );
+                      return Container(height:size.width,child: Center(child: CircularProgressIndicator(),));
                     }
 
-                    if(snapshot.data[0] == null){
-                      return Container(
-                        height: size.height*0.3,
-                        child: Center(
-                          child: Text(
-                            lang.translate(kSnapshotEmptyLang),
-                            style: TextStyle(
-                              fontSize: 20*textScaleFactor,
-                              fontFamily: kNotoSansSc,
-                              color: Colors.grey,
-                            ),
-                          ),
+                    if(snapshot.hasError){
+                      return Center(
+                        child: ErrorScreen(
+                          onClickRetry: (){
+                            setState(() {
+                              // Future builder will rebuild itself and check for future.
+                            });
+                          },
+                        ),
+                      );
+                    }
+                    if(snapshot.data[0]==null){
+                      return Center(
+                        child: ErrorScreen(
+                          onClickRetry: (){
+                            setState(() {
+                              //Future builder will rebuild itself and check for future.
+                            });
+                          },
                         ),
                       );
                     }
@@ -443,10 +210,9 @@ class _StateDataState extends State<StateData>{
                       if('Unknown' != map[kDistrict].toString()) {
                         String name = lang.translate(map[kDistrict].toString().toLowerCase().replaceAll(" ", "_"));
                         districts.add(
-                          District(
-                            name==null?"${map[kDistrict]}":name,
-                            map[kConfirmed],
-                            map[kDelta][kConfirmed],
+                          District.fromMap(
+                            context,
+                            map,
                           ),
                         );
                       }
@@ -458,11 +224,8 @@ class _StateDataState extends State<StateData>{
                     //unknown cases is appended at the end of the sorted list is there is any
                     if(districtData[districtData.length-1][kDistrict] == 'Unknown'){
                       districts.add(
-                        District(
-                          lang.translate(districtData[districtData.length-1][kDistrict].toString().toLowerCase().replaceAll(" ", "_")),
-                          districtData[districtData.length-1][kConfirmed],
-                          districtData[districtData.length-1][kDelta][kConfirmed],
-                        ),
+
+                        District.fromMap(context, districtData[districtData.length-1]),
                       );
                     }
 
@@ -498,7 +261,7 @@ class _StateDataState extends State<StateData>{
                     for(int i =dailyReport.length-90; i<dailyReport.length; i++){
                       Map day = dailyReport[i];
                       if(i%3==0){
-                        String str = day[stateCode.toLowerCase()];
+                        String str = day[stateInfo.stateCode.toLowerCase()];
                         int currentCnf = 0;
                         if(str != ""){
                           currentCnf = int.parse(str);
@@ -532,7 +295,7 @@ class _StateDataState extends State<StateData>{
                         );
                       }
                       if(i%3==1){
-                        String str = day[stateCode.toLowerCase()];
+                        String str = day[stateInfo.stateCode.toLowerCase()];
                         int currentRec = 0;
                         if(str!=""){
                           currentRec = int.parse(str);
@@ -565,7 +328,7 @@ class _StateDataState extends State<StateData>{
                         );
                       }
                       if(i%3==2){
-                        String str = day[stateCode.toLowerCase()];
+                        String str = day[stateInfo.stateCode.toLowerCase()];
                         int currentDet = 0;
                         if(str != "") {
                           currentDet = int.parse(str);
@@ -648,54 +411,9 @@ class _StateDataState extends State<StateData>{
                             child: Column(
                               children: <Widget>[
                                 Center(
-                                  child: Container(
-                                    padding: EdgeInsets.all(6),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(10),
-                                        )
-                                    ),
-                                    child: Row(
-                                      children: <Widget>[
-                                        Expanded(
-                                          child: Text(
-                                            lang.translate(kDistrictLang),
-                                            style: TextStyle(
-                                              color: kGreyColor,
-                                              fontFamily: kQuickSand,
-                                              fontSize: 14*textScaleFactor,
-                                            ),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: Text(
-                                            lang.translate(kConfirmedLang),
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontFamily: kQuickSand,
-                                              color: Colors.red,
-                                              fontSize: 14*textScaleFactor,
-                                            ),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: Text(
-                                            lang.translate(kIncreaseLang),
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontFamily: kQuickSand,
-                                              color: Colors.red,
-                                              fontSize: 14*textScaleFactor,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+
+                                  child: TableHeaderStatic(lang.translate(kDistrictLang),),
                                 ),
-                                SizedBox(height: 5,),
-                                Container(height: 1,color: kGreyColor,),
-                                SizedBox(height: 5,),
                                 Center(
                                   child: Container(
                                     child: ListView.builder(
@@ -704,22 +422,21 @@ class _StateDataState extends State<StateData>{
                                         itemCount: districts.length,
                                         itemBuilder:(BuildContext context,int index){
                                           District district = districts[index];
-                                          int disDeltaCnf = district.deltaCnf;
-                                          String districtName = district.name;
-                                          int confirmed = district.confirmed;
                                           return Column(
                                             children: <Widget>[
+                                              SizedBox(height:5,),
                                               Container(
-                                                padding: EdgeInsets.only(top: 10,left: 6,right: 6),
+                                                padding: EdgeInsets.only(left: 6,right: 6),
                                                 constraints:BoxConstraints(
                                                   minHeight: 30,
-                                                  maxHeight: 56,
+                                                  maxHeight: 76,
                                                 ),
                                                 child: Row(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: <Widget>[
                                                     Expanded(
                                                       child: Text(
-                                                        districtName,
+                                                        district.name,
                                                         style: TextStyle(
                                                           fontFamily: kQuickSand,
                                                           fontSize: 14*textScaleFactor,
@@ -727,32 +444,101 @@ class _StateDataState extends State<StateData>{
                                                       ),
                                                     ),
                                                     Expanded(
-                                                      child: Text(
-                                                        confirmed.toString(),
-                                                        textAlign: TextAlign.center,
-                                                        style: TextStyle(
-                                                          fontFamily: kQuickSand,
-                                                          fontSize: 14*textScaleFactor,
-                                                        ),
+                                                      child: Column(
+                                                        mainAxisSize: MainAxisSize.min,
+                                                        children: <Widget>[
+                                                          Text(
+                                                            district.confirmed.toString(),
+                                                            textAlign: TextAlign.center,
+                                                            style: TextStyle(
+                                                              fontFamily: kQuickSand,
+                                                              fontSize: 14*textScaleFactor,
+                                                            ),
+                                                          ),
+                                                          SizedBox(height: 3,),
+                                                          Text(
+                                                            district.deltaCnf==0?"":"(+${district.deltaCnf})",
+                                                            textAlign: TextAlign.center,
+                                                            style: TextStyle(
+                                                              fontFamily: kQuickSand,
+                                                              color: kRedColor,
+                                                              fontSize: 12*textScaleFactor,
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
                                                     ),
                                                     Expanded(
-                                                      child: Text(
-                                                        disDeltaCnf==0?"":"+$disDeltaCnf",
-                                                        textAlign: TextAlign.center,
-                                                        style: TextStyle(
-                                                          fontFamily: kQuickSand,
-                                                          color: Colors.red,
-                                                          fontSize: 14*textScaleFactor,
-                                                        ),
+                                                      child: Column(
+                                                        mainAxisSize: MainAxisSize.min,
+                                                        children: <Widget>[
+                                                          Text(
+                                                            district.active.toString(),
+                                                            textAlign: TextAlign.center,
+                                                            style: TextStyle(
+                                                              fontFamily: kQuickSand,
+                                                              fontSize: 14*textScaleFactor,
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
-                                                    )
+                                                    ),
+                                                    Expanded(
+                                                      child: Column(
+                                                        mainAxisSize: MainAxisSize.min,
+                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                        children: <Widget>[
+                                                          Text(
+                                                            district.recovered.toString(),
+                                                            textAlign: TextAlign.center,
+                                                            style: TextStyle(
+                                                              fontFamily: kQuickSand,
+                                                              fontSize: 14*textScaleFactor,
+                                                            ),
+                                                          ),
+                                                          SizedBox(height: 3,),
+                                                          Text(
+                                                            district.deltaRec==0?"":"(+${district.deltaRec})",
+                                                            textAlign: TextAlign.center,
+                                                            style: TextStyle(
+                                                              fontFamily: kQuickSand,
+                                                              color: kGreenColor,
+                                                              fontSize: 12*textScaleFactor,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      child: Column(
+                                                        mainAxisSize: MainAxisSize.min,
+                                                        children: <Widget>[
+                                                          Text(
+                                                            district.deaths.toString(),
+                                                            textAlign: TextAlign.center,
+                                                            style: TextStyle(
+                                                              fontFamily: kQuickSand,
+                                                              fontSize: 14*textScaleFactor,
+                                                            ),
+                                                          ),
+                                                          SizedBox(height: 3,),
+                                                          Text(
+                                                            district.deltaDet==0?"":"(+${district.deltaDet})",
+                                                            textAlign: TextAlign.center,
+                                                            style: TextStyle(
+                                                              fontFamily: kQuickSand,
+                                                              color: Colors.grey,
+                                                              fontSize: 12*textScaleFactor,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
                                                   ],
                                                 ),
                                               ),
-                                              SizedBox(height: 5,),
+                                              SizedBox(height:5,),
                                               Container(height: 1,color: theme.brightness == Brightness.light?kGreyColorLight:Colors.grey[800],),
-                                              SizedBox(height: 5,),
                                             ],
                                           );
                                         }
@@ -936,7 +722,7 @@ class _StateDataState extends State<StateData>{
 
   Widget _getBarChart(List<BarChartGroupData> barGroups,double highest,int maxX){
     return Padding(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(6),
       child: AspectRatio(
         aspectRatio: 2,
         child: BarChart(
@@ -1010,7 +796,7 @@ class _StateDataState extends State<StateData>{
 
   Widget _getLineChart(List<FlSpot> spots,double total,int maxX){
     return Padding(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.all(6),
       child: AspectRatio(
         aspectRatio: 2,
         child: LineChart(

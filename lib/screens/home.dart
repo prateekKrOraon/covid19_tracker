@@ -1,13 +1,17 @@
+import 'dart:collection';
 import 'package:covid19_tracker/constants/app_constants.dart';
+import 'package:covid19_tracker/constants/colors.dart';
 import 'package:covid19_tracker/constants/language_constants.dart';
 import 'package:covid19_tracker/localization/app_localization.dart';
-import 'package:covid19_tracker/screens/resources_screen.dart';
-import 'package:covid19_tracker/screens/update_log.dart';
+import 'package:covid19_tracker/screens/resources/resources_screen.dart';
+import 'package:covid19_tracker/screens/updates/update_log_screen.dart';
+import 'package:covid19_tracker/utilities/helpers/network_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'about_screen.dart';
-import 'charts_screen.dart';
-import 'dashboard.dart';
+import 'package:package_info/package_info.dart';
+import 'about/about_screen.dart';
+import 'trends/charts_screen.dart';
+import 'dashboard/dashboard.dart';
 
 typedef void LocaleChangeCallback(Locale locale);
 
@@ -24,6 +28,30 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
 
   int _currentTabIndex = 0;
+  PackageInfo packageInfo;
+  Map<String,dynamic> update = HashMap();
+  bool isUpdateAvailable = false;
+
+  @override
+  initState(){
+    checkForUpdate();
+    super.initState();
+  }
+
+  //function to check for updates
+  // sends current version of application
+  checkForUpdate()async{
+    packageInfo = await PackageInfo.fromPlatform();
+    if(packageInfo != null){
+      Map<String,dynamic> map = await NetworkHandler.getInstance().checkForUpdates(packageInfo.version);
+      if(map != null && map['update']){
+        setState((){
+          update = map;
+          isUpdateAvailable = true;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,8 +104,37 @@ class _HomeState extends State<Home> {
         ),
       ),
       BottomNavigationBarItem(
-        icon: Icon(
-          AntDesign.infocirlceo,
+        icon: Container(
+          width: 30,
+          child: Stack(
+            children: <Widget>[
+              Icon(
+                AntDesign.infocirlceo,
+              ),
+              Positioned(
+                right: 0,
+                child:isUpdateAvailable?Container(
+                  width: 15,
+                  height: 15,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
+                    ),
+                    color: kRedColor,
+                  ),
+                  child: Center(
+                    child: Text(
+                      'N',
+                      style: TextStyle(
+                          fontFamily: kQuickSand,
+                          fontSize: 8
+                      ),
+                    ),
+                  ),
+                ):SizedBox(),
+              )
+            ],
+          ),
         ),
         title: Text(
           lang.translate(kAboutLang),
@@ -93,7 +150,7 @@ class _HomeState extends State<Home> {
       UpdatesScreen(),
       ChartsScreen(),
       ResourcesScreen(),
-      AboutScreen(onLocaleChange: widget.onLocaleChange,),
+      AboutScreen(onLocaleChange: widget.onLocaleChange,update:update),
     ];
 
     return Scaffold(

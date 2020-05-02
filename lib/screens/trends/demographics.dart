@@ -1,3 +1,12 @@
+/*
+*
+* Not in use anymore
+* As size of the Raw data is increasing rapidly and complete information was not available
+*
+*/
+
+
+
 import 'package:covid19_tracker/constants/api_constants.dart';
 import 'package:covid19_tracker/constants/colors.dart';
 import 'package:covid19_tracker/constants/app_constants.dart';
@@ -55,7 +64,6 @@ class _DemographicsScreenState extends State<DemographicsScreen>{
             males++;
           }
           if(patient[kAgeBracket] != ''){
-            print(patient[kAgeBracket]);
             try{
               int age = int.parse(patient[kAgeBracket]);
               if(age>=0 && age<=10){

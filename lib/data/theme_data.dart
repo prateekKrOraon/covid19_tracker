@@ -1,3 +1,9 @@
+/*
+*
+* Contains information for the theme
+*
+ */
+
 import 'package:covid19_tracker/constants/app_constants.dart';
 import 'package:covid19_tracker/constants/colors.dart';
 import 'package:flutter/material.dart';

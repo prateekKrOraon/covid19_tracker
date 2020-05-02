@@ -1,7 +1,7 @@
 import 'package:covid19_tracker/constants/language_constants.dart';
 import 'package:covid19_tracker/localization/app_localization.dart';
-import 'package:covid19_tracker/screens/daily_case_time_chart_screen.dart';
-import 'package:covid19_tracker/screens/total_case_time_chart_screen.dart';
+import 'package:covid19_tracker/screens/trends/daily_case_time_chart_screen.dart';
+import 'package:covid19_tracker/screens/trends/total_case_time_chart_screen.dart';
 import 'package:flutter/material.dart';
 
 class ChartsScreen extends StatefulWidget{

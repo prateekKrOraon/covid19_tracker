@@ -1,6 +1,16 @@
+/*
+*
+* saves raw data form api.covid19india.org
+*
+* Not in use anymore as Raw data size is increasing rapidly and
+* complete information is not available
+*
+ */
+
+
 import 'dart:async';
 
-import 'package:covid19_tracker/utilities/network_handler.dart';
+import 'package:covid19_tracker/utilities/helpers/network_handler.dart';
 
 class RawData{
 

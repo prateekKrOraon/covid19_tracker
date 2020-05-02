@@ -10,13 +10,13 @@ class SortingOrder{
   static const int DET_DEC = 8;
   static const int DET_INC = 9;
 
-  static int _order = CNF_DEC;
+  int _order = CNF_DEC;
 
-  static bool checkOrder(int order){
+  bool checkOrder(int order){
     return _order == order;
   }
 
-  static setOrder(int order){
+  setOrder(int order){
     _order = order;
   }
 

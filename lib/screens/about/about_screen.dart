@@ -1,25 +1,27 @@
-import 'dart:collection';
-
 import 'package:covid19_tracker/constants/api_constants.dart';
-import 'package:covid19_tracker/constants/colors.dart';
 import 'package:covid19_tracker/constants/app_constants.dart';
+import 'package:covid19_tracker/constants/colors.dart';
 import 'package:covid19_tracker/constants/language_constants.dart';
-import 'package:covid19_tracker/data/raw_data.dart';
 import 'package:covid19_tracker/data/update_log.dart';
 import 'package:covid19_tracker/localization/app_localization.dart';
-import 'package:covid19_tracker/screens/open_source_licenses.dart';
-import 'package:covid19_tracker/utilities/network_handler.dart';
+import 'package:covid19_tracker/screens/about/open_source_licenses.dart';
+import 'package:covid19_tracker/screens/about/preventions_screen.dart';
+import 'package:covid19_tracker/screens/about/symptoms_screen.dart';
+import 'package:covid19_tracker/utilities/helpers/network_handler.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+
+import 'faqs_screen.dart';
 
 typedef void LocaleChangeCallback(Locale locale);
 
 class AboutScreen extends StatefulWidget{
 
   final LocaleChangeCallback onLocaleChange;
+  final Map<String,dynamic> update;
 
-  AboutScreen({this.onLocaleChange});
+  AboutScreen({this.onLocaleChange,this.update});
 
   @override
   _AboutScreenState createState() {
@@ -33,10 +35,20 @@ class _AboutScreenState extends State<AboutScreen>{
   double textScaleFactor = 1;
   ThemeData theme;
   bool darkTheme;
+  Map<String,dynamic> update;
+  bool isUpdateAvailable = false;
 
   @override
   void initState() {
     _networkHandler = NetworkHandler.getInstance();
+    this.update = widget.update;
+    if(update.containsKey('update')){
+      if(update['update']){
+        setState(() {
+          isUpdateAvailable = true;
+        });
+      }
+    }
     super.initState();
   }
   @override
@@ -49,29 +61,185 @@ class _AboutScreenState extends State<AboutScreen>{
     if(MediaQuery.of(context).size.width<=360){
       textScaleFactor=0.75;
     }
+
     return SingleChildScrollView(
       child: Container(
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              SizedBox(height: 10,),
+              SizedBox(height: 20,),
+              Image(
+                height: 100,
+                width: 100,
+                image: AssetImage('assets/app_icon_large.png'),
+              ),
+              SizedBox(height: 16,),
               Text(
-                lang.translate(kAppTitleLang),
+                lang.translate(kAppNameLang),
                 style: TextStyle(
                   fontSize: 30*textScaleFactor,
                   fontFamily: kQuickSand,
                 ),
               ),
-              Text(
-                lang.translate(kAppSubTitleLang),
-                style: TextStyle(
-                  color: kGreyColor,
-                  fontFamily: kQuickSand,
+              SizedBox(height: 16,),
+              Center(
+                child: Material(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                  elevation: 2,
+                  color: theme.backgroundColor,
+                  child: InkWell(
+                    onTap: (){
+                      _networkHandler.launchInBrowser("https://github.com/prateekKrOraon/covid19_tracker");
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width*0.3,
+                      padding: EdgeInsets.symmetric(vertical: 16,horizontal: 8,),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(
+                            AntDesign.github,
+                            color: theme.accentColor,
+                          ),
+                          SizedBox(width: 10,),
+                          Text(
+                            lang.translate(kGitHubLang),
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontFamily: kQuickSand,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
               ),
-              SizedBox(height: 30,),
+              SizedBox(height: 16,),
+              Material(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
+                ),
+                elevation: 2,
+                color: theme.backgroundColor,
+                child: Container(
+                  padding: EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Text(
+                        lang.translate(kCOVID19Lang),
+                        style: TextStyle(
+                          fontSize: 25*textScaleFactor,
+                          fontFamily: kQuickSand,
+                        ),
+                      ),
+                      InkWell(
+                        onTap: (){
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => FAQsScreen(),
+                              )
+                          );
+                        },
+                        child: Container(
+                          height: 56,
+                          child: Row(
+                            children: <Widget>[
+                              SizedBox(width: 20,),
+                              Icon(
+                                AntDesign.questioncircleo,
+                                color: theme.accentColor,
+                              ),
+                              SizedBox(width: 30,),
+                              Expanded(
+                                child: Text(
+                                  lang.translate(kFAQsLang),
+                                  style: TextStyle(
+                                    fontSize: 16*textScaleFactor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: (){
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SymptomsScreen(),
+                              )
+                          );
+                        },
+                        child: Container(
+                          height: 56,
+                          child: Row(
+                            children: <Widget>[
+                              SizedBox(width: 20,),
+                              Icon(
+                                AntDesign.medicinebox,
+                                color: theme.accentColor,
+                              ),
+                              SizedBox(width: 30,),
+                              Expanded(
+                                child: Text(
+                                  lang.translate(kSymptomsLang),
+                                  style: TextStyle(
+                                    fontSize: 16*textScaleFactor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: (){
+                         Navigator.push(
+                           context,
+                           MaterialPageRoute(
+                             builder: (context) => PreventionsScreen(),
+                           )
+                         );
+                        },
+                        child: Container(
+                          height: 56,
+                          child: Row(
+                            children: <Widget>[
+                              SizedBox(width: 20,),
+                              Icon(
+                                MaterialCommunityIcons.block_helper,
+                                color: theme.accentColor,
+                              ),
+                              SizedBox(width: 30,),
+                              Expanded(
+                                child: Text(
+                                  lang.translate(kPreventionLang),
+                                  style: TextStyle(
+                                    fontSize: 16*textScaleFactor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 16,),
               Material(
                 borderRadius: BorderRadius.all(
                   Radius.circular(10),
@@ -103,7 +271,7 @@ class _AboutScreenState extends State<AboutScreen>{
                           height: 56,
                           child: Row(
                             children: <Widget>[
-                              SizedBox(width: 30,),
+                              SizedBox(width: 20,),
                               Icon(
                                 Icons.storage,
                                 color: theme.accentColor,
@@ -133,7 +301,7 @@ class _AboutScreenState extends State<AboutScreen>{
                           height: 56,
                           child: Row(
                             children: <Widget>[
-                              SizedBox(width: 30,),
+                              SizedBox(width: 20,),
                               Icon(
                                 Icons.web_asset,
                                 color: theme.accentColor,
@@ -144,6 +312,66 @@ class _AboutScreenState extends State<AboutScreen>{
                                   'api.covid19india.org',
                                   style: TextStyle(
                                       fontSize: 16*textScaleFactor,
+                                  ),
+                                ),
+                              ),
+                              Icon(
+                                Icons.launch,
+                                color: theme.accentColor,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: (){
+                          _networkHandler.launchInBrowser(coronaLMAONinjaAPILink);
+                        },
+                        child: Container(
+                          height: 56,
+                          child: Row(
+                            children: <Widget>[
+                              SizedBox(width: 20,),
+                              Icon(
+                                Icons.web_asset,
+                                color: theme.accentColor,
+                              ),
+                              SizedBox(width: 30,),
+                              Expanded(
+                                child: Text(
+                                  'corona.lmao.ninja',
+                                  style: TextStyle(
+                                    fontSize: 16*textScaleFactor,
+                                  ),
+                                ),
+                              ),
+                              Icon(
+                                Icons.launch,
+                                color: theme.accentColor,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: (){
+                          _networkHandler.launchInBrowser(covidAPILink);
+                        },
+                        child: Container(
+                          height: 56,
+                          child: Row(
+                            children: <Widget>[
+                              SizedBox(width: 20,),
+                              Icon(
+                                Icons.web_asset,
+                                color: theme.accentColor,
+                              ),
+                              SizedBox(width: 30,),
+                              Expanded(
+                                child: Text(
+                                  'covidapi.info',
+                                  style: TextStyle(
+                                    fontSize: 16*textScaleFactor,
                                   ),
                                 ),
                               ),
@@ -192,7 +420,7 @@ class _AboutScreenState extends State<AboutScreen>{
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              SizedBox(width: 30,),
+                              SizedBox(width: 20,),
                               Icon(
                                 AntDesign.github,
                                 color: theme.accentColor,
@@ -242,32 +470,73 @@ class _AboutScreenState extends State<AboutScreen>{
                           fontFamily: kQuickSand,
                         ),
                       ),
-                      Container(
-                        height: 56,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            SizedBox(width: 30,),
-                            Icon(
-                              AntDesign.infocirlceo,
-                              color: theme.accentColor,
-                            ),
-                            SizedBox(width: 30,),
-                            Expanded(
-                              child: Text(
-                                lang.translate(kVersionLang),
+                      InkWell(
+                        splashColor: Colors.transparent,
+                        onTap: (){
+                          if(isUpdateAvailable){
+                            _networkHandler.launchInBrowser(update['link']);
+                          }
+                        },
+                        child: Container(
+                          height: 56,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              SizedBox(width: 20,),
+                              Icon(
+                                AntDesign.infocirlceo,
+                                color: theme.accentColor,
+                              ),
+                              SizedBox(width: 30,),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(
+                                      lang.translate(kVersionLang),
+                                      style: TextStyle(
+                                        fontSize: 16*textScaleFactor,
+                                      ),
+                                    ),
+                                    isUpdateAvailable?Text(
+                                      "${lang.translate(kUpdateAvailableLang)} (v${update['version']}). ${lang.translate(kClickToDownloadLang)}",
+                                      style: TextStyle(
+                                        fontSize: 10*textScaleFactor,
+                                        color: theme.accentColor,
+                                      ),
+                                    ):SizedBox(),
+                                  ],
+                                ),
+                              ),
+                              isUpdateAvailable?Container(
+                                width: 20,
+                                height: 20,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(10),
+                                  ),
+                                  color: kRedColor,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'N',
+                                    style: TextStyle(
+                                      fontFamily: kQuickSand,
+                                      fontSize: 10
+                                    ),
+                                  ),
+                                ),
+                              ):SizedBox(),
+                              SizedBox(width: 5,),
+                              Text(
+                                '1.4.2',
                                 style: TextStyle(
                                   fontSize: 16*textScaleFactor,
                                 ),
                               ),
-                            ),
-                            Text(
-                              '1.3.0',
-                              style: TextStyle(
-                                fontSize: 16*textScaleFactor,
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       Container(
@@ -275,7 +544,7 @@ class _AboutScreenState extends State<AboutScreen>{
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
-                            SizedBox(width: 30,),
+                            SizedBox(width: 20,),
                             Icon(
                               darkTheme?Icons.brightness_2:Icons.brightness_5,
                               color: theme.accentColor,
@@ -390,7 +659,7 @@ class _AboutScreenState extends State<AboutScreen>{
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              SizedBox(width: 30,),
+                              SizedBox(width: 20,),
                               Icon(
                                 MaterialCommunityIcons.translate,
                                 color: theme.accentColor,
@@ -450,7 +719,7 @@ class _AboutScreenState extends State<AboutScreen>{
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              SizedBox(width: 30,),
+                              SizedBox(width: 20,),
                               Icon(
                                 MaterialCommunityIcons.license,
                                 color: theme.accentColor,

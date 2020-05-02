@@ -1,4 +1,4 @@
-import 'package:covid19_tracker/utilities/network_handler.dart';
+import 'package:covid19_tracker/utilities/helpers/network_handler.dart';
 
 class StateWiseData{
 

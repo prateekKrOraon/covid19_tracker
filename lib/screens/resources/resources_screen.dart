@@ -5,10 +5,11 @@ import 'package:covid19_tracker/constants/colors.dart';
 import 'package:covid19_tracker/constants/language_constants.dart';
 import 'package:covid19_tracker/data/resources_data.dart';
 import 'package:covid19_tracker/localization/app_localization.dart';
-import 'package:covid19_tracker/utilities/network_handler.dart';
-import 'package:covid19_tracker/utilities/resources.dart';
+import 'package:covid19_tracker/utilities/helpers/network_handler.dart';
+import 'package:covid19_tracker/utilities/models/resources.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import '../error_screen.dart';
 
 class ResourcesScreen extends StatefulWidget{
   @override
@@ -39,7 +40,8 @@ class _ResourcesScreenState extends State<ResourcesScreen>{
     return FutureBuilder(
       future: ResourcesList.getInstance(),
       builder: (BuildContext context, snapshot){
-        if(!snapshot.hasData){
+
+        if(snapshot.connectionState == ConnectionState.waiting){
           return Container(
             height: double.infinity,
             width: size.width,
@@ -58,6 +60,28 @@ class _ResourcesScreenState extends State<ResourcesScreen>{
                   ),
                 ),
               ],
+            ),
+          );
+        }
+        if(snapshot.hasError){
+          return Center(
+            child: ErrorScreen(
+              onClickRetry: (){
+                setState(() {
+                  ResourcesList.refresh();
+                });
+              },
+            ),
+          );
+        }
+        if(!snapshot.hasData){
+          return Center(
+            child: ErrorScreen(
+              onClickRetry: (){
+                setState(() {
+                  ResourcesList.refresh();
+                });
+              },
             ),
           );
         }
@@ -293,8 +317,6 @@ class _ResourcesScreenState extends State<ResourcesScreen>{
     List<String> keys = map.keys.toList()..sort();
 
     for(int i = 0; i<keys.length;i++){
-
-      print(keys[i]);
       list.add(
         Tab(
           text: AppLocalizations

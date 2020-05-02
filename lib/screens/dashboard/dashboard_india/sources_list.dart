@@ -1,12 +1,23 @@
+/*
+*
+* This screen shows the information of all the
+* verified sources of from where data is fed to
+* the crowdsourced database
+*
+*/
+
 import 'package:covid19_tracker/constants/api_constants.dart';
 import 'package:covid19_tracker/constants/colors.dart';
 import 'package:covid19_tracker/constants/app_constants.dart';
 import 'package:covid19_tracker/constants/language_constants.dart';
 import 'package:covid19_tracker/localization/app_localization.dart';
-import 'package:covid19_tracker/utilities/data_source.dart';
-import 'package:covid19_tracker/utilities/network_handler.dart';
+
+import 'package:covid19_tracker/utilities/models/data_source.dart';
+import 'package:covid19_tracker/utilities/helpers/network_handler.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../../error_screen.dart';
 
 class SourcesListScreen extends StatefulWidget{
   @override
@@ -49,9 +60,30 @@ class _SourcesListScreen extends State<SourcesListScreen>{
           child: FutureBuilder(
             future: NetworkHandler.getInstance().getSourceList(),
             builder: (BuildContext context, snapshot){
-
+              if(snapshot.connectionState == ConnectionState.waiting){
+                return Container(height:size.width,child: Center(child: CircularProgressIndicator(),));
+              }
+              if(snapshot.hasError){
+                return Center(
+                  child: ErrorScreen(
+                    onClickRetry: (){
+                      setState(() {
+                        //Future builder will rebuild itself and check for future
+                      });
+                    },
+                  ),
+                );
+              }
               if(!snapshot.hasData){
-                return Center(child: CircularProgressIndicator(),);
+                return Center(
+                  child: ErrorScreen(
+                    onClickRetry: (){
+                      setState(() {
+                        //Future builder will rebuild itself and check for future
+                      });
+                    },
+                  ),
+                );
               }
 
               if(snapshot.hasError){
