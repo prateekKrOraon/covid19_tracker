@@ -212,14 +212,14 @@ class _DashboardIndiaState extends State<DashboardIndia>{
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
                             DashboardTile(
-                              mainTitle: lang.translate(kTotalDetLang),
+                              mainTitle: lang.translate(kTotalRecLang),
                               value: map[kStateWise][0][kRecovered],
                               delta: map[kStateWise][0][kDeltaRecovered],
                               color: kGreenColor,
                             ),
                             SizedBox(width: 10,),
                             DashboardTile(
-                              mainTitle: lang.translate(kTotalRecLang),
+                              mainTitle: lang.translate(kTotalDetLang),
                               value: map[kStateWise][0][kDeaths],
                               delta: map[kStateWise][0][kDeltaDeaths],
                               color: Colors.grey,

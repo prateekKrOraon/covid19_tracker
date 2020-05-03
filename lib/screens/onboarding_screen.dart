@@ -205,7 +205,7 @@ class _OnboardingState extends State<Onboarding>{
           children: <Widget>[
             IntroViewsFlutter(
               _pages,
-              fullTransition: 150,
+              fullTransition: 200,
               onTapDoneButton: (){
                 goToDashboard();
               },

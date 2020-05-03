@@ -78,7 +78,6 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
           return Center(child: CircularProgressIndicator(),);
         }
         if(snapshot.hasError){
-          print(snapshot.error);
           return Center(
             child: ErrorScreen(
               onClickRetry: (){
@@ -92,7 +91,6 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
           );
         }
         if(!snapshot.hasData){
-          print("no data");
           return Center(
             child: ErrorScreen(
               onClickRetry: (){
@@ -121,7 +119,6 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
             Country.fromMap(context,map),
           );
         });
-        print(countryWiseData.length);
 
         List<Country> worstAffectedCountries = List();
 
