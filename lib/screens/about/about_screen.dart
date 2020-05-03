@@ -530,7 +530,7 @@ class _AboutScreenState extends State<AboutScreen>{
                               ):SizedBox(),
                               SizedBox(width: 5,),
                               Text(
-                                '1.4.2',
+                                '1.4.3',
                                 style: TextStyle(
                                   fontSize: 16*textScaleFactor,
                                 ),
