@@ -86,7 +86,7 @@ class _HomeState extends State<Home> {
           AntDesign.linechart,
         ),
         title: Text(
-          lang.translate(kTrendsLang),
+          lang.translate(kAnalysisLang),
           style: TextStyle(
             fontFamily: kQuickSand,
           ),

@@ -78,11 +78,13 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
         List<FlSpot> totalCnfSpots = List();
         List<FlSpot> totalRecSpots = List();
         List<FlSpot> totalDetSpots = List();
+        List<FlSpot> totalActiveSpots = List();
 
 
         double totalCnf = 0.0;
         double totalRec = 0.0;
         double totalDet = 0.0;
+        double totalAct = 0.0;
 
         int range = 0;
 
@@ -101,16 +103,24 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
           double currentCnf = double.parse(map[kTotalConfirmed]);
           double currentRec = double.parse(map[kTotalRecovered]);
           double currentDet = double.parse(map[kTotalDeaths]);
+          double currentAct = currentCnf-currentDet-currentRec;
           if(i==caseTime.length-1){
             totalCnf = currentCnf;
             totalRec = currentRec;
             totalDet = currentDet;
+            totalAct = currentAct;
           }
           totalCnfSpots.add(
               FlSpot(
                 i.toDouble(),
                 logarithmic?math.log(currentCnf)*math.log2e*1000:currentCnf,
               )
+          );
+          totalActiveSpots.add(
+            FlSpot(
+              i.toDouble(),
+              logarithmic?math.log(currentAct)*math.log2e*1000:currentAct,
+            )
           );
           totalRecSpots.add(
             FlSpot(
@@ -515,6 +525,46 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
                           Text(
+                            "Active",
+                            style: TextStyle(
+                              fontFamily: kQuickSand,
+                              fontSize: 25*textScaleFactor,
+                            ),
+                          ),
+                          Text(
+                            dataRangeStr,
+                            style: TextStyle(
+                              color: kGreyColor,
+                              fontFamily: kQuickSand,
+                              fontSize: 16*textScaleFactor,
+                            ),
+                          ),
+                          SizedBox(height: 5,),
+                          _getLineChart(totalActiveSpots, uniformScale?totalCnf:totalAct, caseTime.length),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20,),
+                Material(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                  color: theme.backgroundColor,
+                  elevation: 2,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          Text(
                             lang.translate(kRecoveredLang),
                             style: TextStyle(
                               fontFamily: kQuickSand,
@@ -670,8 +720,20 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
       bottomTitleInterval = 1;
     }
 
-    if(uniformScale && total>3000){
+    if(uniformScale && total>90000){
+      sideInterval = 20000;
+      multiplier = 1000;
+    }else if(uniformScale && total>40000){
+      sideInterval = 5000;
+      multiplier = 1000;
+    }else if(uniformScale && total>3000){
       sideInterval = 2000;
+      multiplier = 1000;
+    }else if(!uniformScale && total>90000){
+      sideInterval = 20000;
+      multiplier = 1000;
+    }else if(!uniformScale && total>40000){
+      sideInterval = 5000;
       multiplier = 1000;
     }else if(!uniformScale && total>3000){
       sideInterval = 2000;
@@ -773,7 +835,7 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
             lineBarsData: [
               LineChartBarData(
                 dotData: FlDotData(
-                  dotSize: 2,
+                  dotSize: dataRange == DataRange.BEGINNING?0:2,
                   strokeWidth: 0,
                 ),
                 isCurved: true,

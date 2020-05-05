@@ -76,10 +76,12 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
         double dailyHighestCnf = 0;
         double dailyHighestRec = 0;
         double dailyHighestDet = 0;
+        double dailyHighestAct = 0;
 
         List<BarChartGroupData> dailyConfirmedChartGroup = List();
         List<BarChartGroupData> dailyRecChartGroup = List();
         List<BarChartGroupData> dailyDetChartGroup = List();
+        List<BarChartGroupData> dailyActChartGroup = List();
 
         int range = 0;
 
@@ -100,6 +102,11 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
           double currentCnf = double.parse(map[kDailyConfirmed]);
           double currentRec = double.parse(map[kDailyRecovered]);
           double currentDet = double.parse(map[kDailyDeaths]);
+          double currentAct = currentCnf - currentRec - currentDet;
+
+          if(currentAct < 0){
+            currentAct = 0;
+          }
 
           if(currentCnf>dailyHighestCnf){
             dailyHighestCnf = currentCnf;
@@ -111,6 +118,10 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
 
           if(currentDet>dailyHighestDet){
             dailyHighestDet = currentDet;
+          }
+
+          if(currentAct>dailyHighestAct){
+            dailyHighestAct = currentAct;
           }
 
           dailyConfirmedChartGroup.add(
@@ -128,6 +139,24 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
                     width: dataRange == DataRange.BEGINNING?2:8,
                   ),
                 ],
+            ),
+          );
+
+          dailyActChartGroup.add(
+            BarChartGroupData(
+              x: i,
+              showingTooltipIndicators: [],
+              barRods: [
+                BarChartRodData(
+                  y: currentAct,
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(10),
+                    topLeft: Radius.circular(10),
+                  ),
+                  color: theme.accentColor,
+                  width: dataRange == DataRange.BEGINNING?2:8,
+                ),
+              ],
             ),
           );
 
@@ -357,6 +386,46 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
                           ),
                           SizedBox(height: 10,),
                           _getBarChart(dailyConfirmedChartGroup, dailyHighestCnf+200),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10,),
+                Material(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                  elevation: 2,
+                  color: theme.backgroundColor,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          Text(
+                            lang.translate(kActiveLang),
+                            style: TextStyle(
+                              fontFamily: kQuickSand,
+                              fontSize: 25*textScaleFactor,
+                            ),
+                          ),
+                          Text(
+                            dataRangeStr,
+                            style: TextStyle(
+                              color: kGreyColor,
+                              fontFamily: kQuickSand,
+                              fontSize: 16*textScaleFactor,
+                            ),
+                          ),
+                          SizedBox(height: 10,),
+                          _getBarChart(dailyActChartGroup, dailyHighestAct+200),
                         ],
                       ),
                     ),

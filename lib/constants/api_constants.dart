@@ -9,6 +9,8 @@ String stateWiseLink = "https://api.covid19india.org/data.json";
 String districtWiseLink = "https://api.covid19india.org/v2/state_district_wise.json";
 String rawDataLink = "https://api.covid19india.org/raw_data.json";
 String stateWiseDailyLink = "https://api.covid19india.org/states_daily.json";
+String zonesDataLink = "http://course-finder-prateek.000webhostapp.com/covid19_tracker/services/getZones.php";
+String statesDailyChangesLink = "http://course-finder-prateek.000webhostapp.com/covid19_tracker/services/getStatesDailyChanges.php";
 String stateWiseTestLink = "https://api.covid19india.org/state_test_data.json";
 String sourcesLink = "https://api.covid19india.org/sources_list.json";
 String resourcesListLink = 'https://api.covid19india.org/resources/resources.json';
@@ -19,7 +21,7 @@ String checkForUpdateLink = "https://course-finder-prateek.000webhostapp.com/cov
 //world data url
 String countryWiseDataUrl = "https://corona.lmao.ninja/v2/countries?sort=cases";
 String worldDataUrl = "https://corona.lmao.ninja/v2/all";
-String countryDataUrl = "https://corona.lmao.ninja/v2/historical/";
+String countryDataUrl = "https://covidapi.info/api/v1/country/";
 
 //Global time-series from 22-01-2020
 String globalTimeSeriesLink = "https://covidapi.info/api/v1/global/count";

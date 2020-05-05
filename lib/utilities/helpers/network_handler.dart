@@ -101,8 +101,8 @@ class NetworkHandler{
     return jsonDecode(res.body);
   }
 
-  Future getCountryData(String country)async{
-    var res = await http.get("$countryDataUrl$country");
+  Future getCountryData(String iso3)async{
+    var res = await http.get("$countryDataUrl$iso3");
     return jsonDecode(res.body);
   }
 
@@ -120,6 +120,17 @@ class NetworkHandler{
   Future checkForUpdates(String version)async{
     Map<String,String> header = {"Accept":"application/json"};
     var res = await http.post(checkForUpdateLink,headers: header,body: {kVersion:version});
+    return jsonDecode(res.body);
+  }
+
+  Future getZonesData(String stateCode)async{
+    Map<String,String> header = {"Accept":"application/json"};
+    var res = await http.post(zonesDataLink,headers: header,body: {'state_code':stateCode});
+    return jsonDecode(res.body);
+  }
+
+  Future getStatesDailyChanges()async{
+    var res = await http.get(statesDailyChangesLink);
     return jsonDecode(res.body);
   }
 

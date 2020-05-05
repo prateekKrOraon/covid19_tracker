@@ -29,11 +29,8 @@ class SIRD{
 
       deathsTimeSeries.add(double.parse(map[kTotalDeaths]));
 
-      infectedTimeSeries.add(
-          double.parse(map[kTotalConfirmed])
-              -recoveredTimeSeries[i]
-              -deathsTimeSeries[i]
-      );
+      double infected = double.parse(map[kTotalConfirmed])-recoveredTimeSeries[i]-deathsTimeSeries[i];
+      infectedTimeSeries.add(infected);
 
       dateTimeSeries.add(DateTime(
         2020,
@@ -129,7 +126,6 @@ class SIRD{
     _recovered = _recovered+dR.toInt();
     _deaths = _deaths+dD.toInt();
 
-    print("$sa\t$sb\t$sc\t$_susceptible");
 
     Map<String,double> map = HashMap();
     map[kTotalConfirmed] = _infectious+_recovered+_deaths;

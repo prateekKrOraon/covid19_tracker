@@ -2,7 +2,7 @@ import 'package:covid19_tracker/constants/api_constants.dart';
 import 'package:covid19_tracker/constants/app_constants.dart';
 import 'package:covid19_tracker/constants/colors.dart';
 import 'package:covid19_tracker/constants/language_constants.dart';
-import 'package:covid19_tracker/data/sird_model.dart';
+import 'file:///G:/stuff/AndroidStudioProjects/Flutter/MY_PROJECTS/covid19_tracker/lib/utilities/analytics/sird_model.dart';
 import 'package:covid19_tracker/data/state_wise_data.dart';
 import 'package:covid19_tracker/localization/app_localization.dart';
 import 'package:flutter/material.dart';
@@ -59,7 +59,6 @@ class _PredictionState extends State<Predictions>{
         Map map = snapshot.data;
 
         String lastUpdateStr = map[kStateWise][0][kLastUpdated].toString();
-        print(lastUpdateStr);
 
         DateTime lastUpdate = DateTime(
           int.parse(lastUpdateStr.substring(6,10)),
@@ -70,7 +69,6 @@ class _PredictionState extends State<Predictions>{
           int.parse(lastUpdateStr.substring(17,19)),
         );
 
-        //print(map);
         sird.parseData(map);
 
         List<Map<String,double>> predictedValues = sird.predict();
@@ -89,14 +87,14 @@ class _PredictionState extends State<Predictions>{
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Today's actual cases",
+                  lang.translate(kTodayActualCasesLang),
                   style: TextStyle(
                     fontFamily: kQuickSand,
                     fontSize: 24,
                   ),
                 ),
                 Text(
-                  "Last Updated at: ${DateFormat("d MMM, ").add_jm().format(lastUpdate)}",
+                  "${lang.translate(kLastUpdatedAtLang)}: ${DateFormat("d MMM, ").add_jm().format(lastUpdate)}",
                   style: TextStyle(
                     fontFamily: kQuickSand,
                     fontSize: 14,
@@ -265,7 +263,7 @@ class _PredictionState extends State<Predictions>{
                 ),
                 SizedBox(height: 24,),
                 Text(
-                  "5 Days Prediction",
+                  lang.translate(k5DaysPrediction),
                   style: TextStyle(
                     fontFamily: kQuickSand,
                     fontSize: 24,
@@ -273,7 +271,7 @@ class _PredictionState extends State<Predictions>{
                 ),
                 SizedBox(height: 8,),
                 Text(
-                  "The values are estimated as per SIRD epidemic model. These numbers are not accurate and are subjected to change over time.",
+                  lang.translate(kSIRDDisclaimer),
                   style: TextStyle(
                     fontFamily: kQuickSand,
                     fontSize: 16,
@@ -299,7 +297,7 @@ class _PredictionState extends State<Predictions>{
                           ),
                           SizedBox(width: 5,),
                           Text(
-                            "Know how it works.",
+                            lang.translate(kKnowHowItWorks),
                             style: TextStyle(
                               fontFamily: kQuickSand,
                               fontSize: 16,

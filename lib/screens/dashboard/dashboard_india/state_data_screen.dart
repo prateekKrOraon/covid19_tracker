@@ -8,6 +8,7 @@ import 'package:covid19_tracker/constants/api_constants.dart';
 import 'package:covid19_tracker/constants/colors.dart';
 import 'package:covid19_tracker/constants/app_constants.dart';
 import 'package:covid19_tracker/constants/language_constants.dart';
+import 'package:covid19_tracker/data/zones_data.dart';
 import 'package:covid19_tracker/localization/app_localization.dart';
 import 'package:covid19_tracker/utilities/custom_widgets/custom_widgets.dart';
 import 'package:covid19_tracker/utilities/models/district.dart';
@@ -158,7 +159,7 @@ class _StateDataState extends State<StateData>{
                       children: <Widget>[
                         SizedBox(height: 10,),
                         Text(
-                          "Note: ${stateInfo.stateNotes}",
+                          "Note:\n${stateInfo.stateNotes}\nThe colored dots represents zones",
                           style: TextStyle(
                             fontFamily: kNotoSansSc,
                             fontSize: 14*textScaleFactor,
@@ -171,7 +172,7 @@ class _StateDataState extends State<StateData>{
                 ):SizedBox(),
                 SizedBox(height: 10,),
                 FutureBuilder(
-                  future: Future.wait([_networkHandler.getStateData(stateInfo.stateName),_networkHandler.getStatesDaily()]),
+                  future: Future.wait([_networkHandler.getStateData(stateInfo.stateName),_networkHandler.getStatesDaily(),_networkHandler.getZonesData(stateInfo.stateCode)]),
                   builder: (BuildContext context, snapshot){
                     if(snapshot.connectionState == ConnectionState.waiting){
                       return Container(height:size.width,child: Center(child: CircularProgressIndicator(),));
@@ -202,6 +203,7 @@ class _StateDataState extends State<StateData>{
 
                     //Table data processing
                     Map districtWiseReport = snapshot.data[0];
+                    Map zones = snapshot.data[2];
                     List districtData = districtWiseReport[kDistrictData];
                     List<District> districts = List();
 
@@ -213,6 +215,7 @@ class _StateDataState extends State<StateData>{
                           District.fromMap(
                             context,
                             map,
+                            zones,
                           ),
                         );
                       }
@@ -224,8 +227,7 @@ class _StateDataState extends State<StateData>{
                     //unknown cases is appended at the end of the sorted list is there is any
                     if(districtData[districtData.length-1][kDistrict] == 'Unknown'){
                       districts.add(
-
-                        District.fromMap(context, districtData[districtData.length-1]),
+                        District.fromMap(context, districtData[districtData.length-1],zones),
                       );
                     }
 
@@ -434,6 +436,22 @@ class _StateDataState extends State<StateData>{
                                                 child: Row(
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: <Widget>[
+                                                    Container(
+                                                      width: 20,
+                                                      height: 20,
+                                                      child: Center(
+                                                        child: Container(
+                                                          height: 10,
+                                                          width: 10,
+                                                          decoration: BoxDecoration(
+                                                            borderRadius: BorderRadius.all(
+                                                              Radius.circular(5,),
+                                                            ),
+                                                            color: district.zone,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
                                                     Expanded(
                                                       child: Text(
                                                         district.name,

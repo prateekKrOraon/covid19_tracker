@@ -1,5 +1,6 @@
 import 'package:covid19_tracker/constants/language_constants.dart';
 import 'package:covid19_tracker/localization/app_localization.dart';
+import 'package:covid19_tracker/screens/trends/analytics.dart';
 import 'package:covid19_tracker/screens/trends/daily_case_time_chart_screen.dart';
 import 'package:covid19_tracker/screens/trends/predictions.dart';
 import 'package:covid19_tracker/screens/trends/total_case_time_chart_screen.dart';
@@ -23,6 +24,7 @@ class _ChartScreenState extends State<ChartsScreen> with SingleTickerProviderSta
   List<Widget> _tabPages = [
     TotalCaseTimeChart(),
     DailyCaseTimeChart(),
+    AnalyticsScreen(),
     Predictions(),
   ];
 
@@ -37,11 +39,13 @@ class _ChartScreenState extends State<ChartsScreen> with SingleTickerProviderSta
       child: Scaffold(
         backgroundColor: themeData.scaffoldBackgroundColor,
         appBar: TabBar(
+          isScrollable: true,
           indicatorColor: themeData.accentColor,
           tabs: <Widget>[
             Tab(text: lang.translate(kCumulativeLang),),
             Tab(text: lang.translate(kDailyLang)),
-            Tab(text: "Predictions",),
+            Tab(text: lang.translate(kMoreAnalysis),),
+            Tab(text: lang.translate(kPredictions),),
           ],
         ),
         body: TabBarView(
