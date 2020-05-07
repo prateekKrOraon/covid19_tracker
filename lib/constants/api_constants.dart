@@ -22,6 +22,7 @@ String checkForUpdateLink = "https://course-finder-prateek.000webhostapp.com/cov
 String countryWiseDataUrl = "https://corona.lmao.ninja/v2/countries?sort=cases";
 String worldDataUrl = "https://corona.lmao.ninja/v2/all";
 String countryDataUrl = "https://covidapi.info/api/v1/country/";
+String countryDataUrl2 = "https://corona.lmao.ninja/v2/countries/";
 
 //Global time-series from 22-01-2020
 String globalTimeSeriesLink = "https://covidapi.info/api/v1/global/count";

@@ -31,7 +31,7 @@ class DashboardIndia extends StatefulWidget{
 
 class _DashboardIndiaState extends State<DashboardIndia>{
 
-  double textScaleFactor = 1;
+  double scaleFactor = 1;
   SortingOrder sortingOrder;
 
   ThemeData theme;
@@ -51,8 +51,8 @@ class _DashboardIndiaState extends State<DashboardIndia>{
     AppLocalizations lang = AppLocalizations.of(context);
     theme = Theme.of(context);
     Size size = MediaQuery.of(context).size;
-    if(size.width<=360.0){
-      textScaleFactor = 0.75;
+    if(size.width<=400.0){
+      scaleFactor = 0.75;
     }
 
     return FutureBuilder(
@@ -161,7 +161,7 @@ class _DashboardIndiaState extends State<DashboardIndia>{
                             "${lang.translate(kLastUpdatedAtLang)}: ${DateFormat("d MMM, ").add_jm().format(lastUpdate)} IST",
                             style: TextStyle(
                               color: kGreenColor,
-                              fontSize: 16*textScaleFactor,
+                              fontSize: 16*scaleFactor,
                               fontFamily: kQuickSand,
                             ),
                           ),
@@ -183,7 +183,7 @@ class _DashboardIndiaState extends State<DashboardIndia>{
                       ],
                     ),
                   ),
-                  SizedBox(height: 16,),
+                  SizedBox(height: 16*scaleFactor,),
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 6),
                     child: Column(
@@ -197,7 +197,7 @@ class _DashboardIndiaState extends State<DashboardIndia>{
                               delta: map[kStateWise][0][kDeltaConfirmed],
                               color: kRedColor,
                             ),
-                            SizedBox(width: 10,),
+                            SizedBox(width: 10*scaleFactor,),
                             DashboardTile(
                               mainTitle: lang.translate(kTotalActvLang),
                               value: map[kStateWise][0][kActive],
@@ -206,7 +206,7 @@ class _DashboardIndiaState extends State<DashboardIndia>{
                             ),
                           ],
                         ),
-                        SizedBox(height: 10,),
+                        SizedBox(height: 10*scaleFactor,),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -217,7 +217,7 @@ class _DashboardIndiaState extends State<DashboardIndia>{
                               delta: map[kStateWise][0][kDeltaRecovered],
                               color: kGreenColor,
                             ),
-                            SizedBox(width: 10,),
+                            SizedBox(width: 10*scaleFactor,),
                             DashboardTile(
                               mainTitle: lang.translate(kTotalDetLang),
                               value: map[kStateWise][0][kDeaths],
@@ -229,7 +229,7 @@ class _DashboardIndiaState extends State<DashboardIndia>{
                       ],
                     ),
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(height: 10*scaleFactor,),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 6),
                     child: Material(
@@ -256,7 +256,7 @@ class _DashboardIndiaState extends State<DashboardIndia>{
                                       latestTestedData[kTotalIndividualTested]==""?lang.translate(kTotalSampleTestedLang):lang.translate(kTotalTestedLang),
                                       style: TextStyle(
                                         fontFamily: kQuickSand,
-                                        fontSize: 24*textScaleFactor,
+                                        fontSize: 24*scaleFactor,
                                         color: kDarkBlueColor,
                                       ),
                                     ),
@@ -267,14 +267,14 @@ class _DashboardIndiaState extends State<DashboardIndia>{
                                       textAlign: TextAlign.end,
                                       style: TextStyle(
                                         color: kDarkBlueColor,
-                                        fontSize: 24*textScaleFactor,
+                                        fontSize: 24*scaleFactor,
                                         fontFamily: kQuickSand,
                                       ),
                                     ),
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 5,),
+                              SizedBox(height: 5*scaleFactor,),
                               Row(
                                 children: <Widget>[
                                   Expanded(
@@ -282,7 +282,7 @@ class _DashboardIndiaState extends State<DashboardIndia>{
                                       '${lang.translate(kLastUpdatedAtLang)} ${testedLastUpdate.millisecondsSinceEpoch>DateTime.now().millisecondsSinceEpoch?"\t--\t":DateFormat("d MMM, ").add_jm().format(testedLastUpdate)}',
                                       style: TextStyle(
                                         fontFamily: kQuickSand,
-                                        fontSize: 14*textScaleFactor,
+                                        fontSize: 14*scaleFactor,
                                         color: kGreenColor,
                                       ),
                                     ),
@@ -300,15 +300,15 @@ class _DashboardIndiaState extends State<DashboardIndia>{
                                             lang.translate(kSourceLang),
                                             style: TextStyle(
                                               color: kGreyColor,
-                                              fontSize: 12*textScaleFactor,
+                                              fontSize: 12*scaleFactor,
                                               fontFamily: kNotoSansSc,
                                             ),
                                           ),
-                                          SizedBox(width: 5,),
+                                          SizedBox(width: 5*scaleFactor,),
                                           Icon(
                                             Icons.launch,
                                             color: kGreyColor,
-                                            size: 12*textScaleFactor,
+                                            size: 12*scaleFactor,
                                           )
                                         ],
                                       ),
@@ -322,7 +322,7 @@ class _DashboardIndiaState extends State<DashboardIndia>{
                       ),
                     ),
                   ),
-                  SizedBox(height: 24,),
+                  SizedBox(height: 24*scaleFactor,),
                   Material(
                     borderRadius: BorderRadius.all(
                       Radius.circular(10),
@@ -345,10 +345,10 @@ class _DashboardIndiaState extends State<DashboardIndia>{
                             style: TextStyle(
                               fontFamily: kNotoSansSc,
                               color: kGreyColor,
-                              fontSize: 18*textScaleFactor,
+                              fontSize: 18*scaleFactor,
                             ),
                           ),
-                          SizedBox(height: 5,),
+                          SizedBox(height: 5*scaleFactor,),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: <Widget>[
@@ -359,7 +359,7 @@ class _DashboardIndiaState extends State<DashboardIndia>{
                                   style: TextStyle(
                                     fontFamily: kNotoSansSc,
                                     color: kGreyColor,
-                                    fontSize: 12*textScaleFactor,
+                                    fontSize: 12*scaleFactor,
                                   ),
                                 ),
                               ),
@@ -380,22 +380,22 @@ class _DashboardIndiaState extends State<DashboardIndia>{
                                       Icon(
                                         AntDesign.infocirlceo,
                                         color: kGreyColor,
-                                        size: 14*textScaleFactor,
+                                        size: 14*scaleFactor,
                                       ),
-                                      SizedBox(width: 5,),
+                                      SizedBox(width: 5*scaleFactor,),
                                       Text(
                                         lang.translate(kKnowMoreLang),
                                         style: TextStyle(
                                           color: kGreyColor,
-                                          fontSize: 12*textScaleFactor,
+                                          fontSize: 12*scaleFactor,
                                           fontFamily: kNotoSansSc,
                                         ),
                                       ),
-                                      SizedBox(width: 5,),
+                                      SizedBox(width: 5*scaleFactor,),
                                       Icon(
                                         Icons.arrow_forward,
                                         color: kGreyColor,
-                                        size: 14*textScaleFactor,
+                                        size: 14*scaleFactor,
                                       ),
                                     ],
                                   ),

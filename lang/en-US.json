@@ -83,6 +83,7 @@
   "nagaland": "Nagaland",
   "dadra_and_nagar_haveli": "Dadra and Nagar Haveli",
   "daman_and_diu": "Daman and Diu",
+  "dadra_and_nagar_haveli_and_daman_and_diu": "Dadra and Nagar Haveli and Daman and Diu",
   "lakshadweep": "Lakshadweep",
   "pan_india": "PAN India",
   "since_30_jan_2020": "Since 30 Jan 2020",
@@ -245,6 +246,17 @@
   "5_days_prediction": "5 Days Prediction",
   "sird_disclaimer": "The values are estimated as per SIRD compartmental model of epidemiology. These numbers are not accurate and are subjected to change over time.",
   "know_how_it_works": "Know how it works",
+
+
+  "enter_iso3": "Enter ISO 3 Country Code",
+  "compare": "Compare",
+  "compare_error": "Some error occurred.\n\nMaybe your internet connection is down\nor\nEither the ISO 3 codes are not recognized or data not available for the country",
+  "how_to_compare": "Here you can compare spread trends of two countries. You have to provide ISO 3 code of the countries to compare.\nFor example ISO 3 code of India is IND and GBR for UK (Great Britain)",
+  "confirmed_cases": "Confirmed Cases",
+  "active_cases": "Active Cases",
+  "recovered_cases": "Recovered Cases",
+  "deceased_cases": "Deceased Cases",
+  "vs": "VS",
 
 
   "unknown": "Unknown",

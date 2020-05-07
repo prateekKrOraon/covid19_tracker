@@ -25,7 +25,7 @@ class AnalyticsScreen extends StatefulWidget{
 
 class _AnalyticsScreenState extends State<AnalyticsScreen>{
 
-  double textScaleFactor = 1;
+  double scaleFactor = 1;
   String dataRange = DataRange.BEGINNING;
   ThemeData theme;
   String dataRangeStr = "";
@@ -55,7 +55,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
     AppLocalizations lang = AppLocalizations.of(context);
 
     if(size.width <= 360){
-      textScaleFactor = 0.75;
+      scaleFactor = 0.75;
     }
 
     return FutureBuilder(
@@ -97,15 +97,19 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
         List<double> growthRatios = functions.growthRatio(functions.confirmedTimeSeries);
         List<double> growthRates = functions.gradient(functions.getLog(functions.confirmedTimeSeries));
         List<double> secondDerivative = functions.gradient(functions.gradient(functions.confirmedTimeSeries));
-        List<double> mortalityRates = functions.mortalityRate();
-        List<double> recoveryRates = functions.recoveryRate();
-        Map<String,int> cases = functions.getCases();
+        List<double> mortalityRates = functions.mortalityRate(functions.deathsTimeSeries,functions.confirmedTimeSeries);
+        List<double> recoveryRates = functions.recoveryRate(functions.recoveredTimeSeries,functions.confirmedTimeSeries);
+        Map<String,int> cases = functions.getCases(functions.confirmedTimeSeries);
         List<CaseModel> caseModel = List();
+        List<BarChartGroupData> stateGrowthRates = List();
+        List<BarChartGroupData> stateMortalityRates = List();
+        List<BarChartGroupData> stateRecoveryRates = List();
 
         Map statesDailyChanges = snapshot.data[1];
+        List confirmedDaily = statesDailyChanges[kConfirmed];
+
 
         List stateWise = map[kStateWise];
-
         List<StateInfo> stateInfo = List();
         for(int i = 1;i<stateWise.length;i++){
           Map state = stateWise[i];
@@ -120,9 +124,90 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
         double cnfHighest = 0;
         List<BarChartGroupData> stateRestBarGroup = List();
         double restHighest = 0;
+        double stateGrowthHighest = 0;
+        double stateRecRateHighest = 0;
+        double stateDetRateHighest = 0;
 
         for(int i=0;i<stateInfo.length;i++){
           StateInfo state = stateInfo[i];
+
+          int deaths = state.deaths;
+          int confirmed = state.confirmed;
+          int recovered = state.recovered;
+
+          if(confirmed==0){
+            confirmed = 1;
+          }
+
+          if((deaths/confirmed)*100>stateDetRateHighest){
+            stateDetRateHighest = (deaths/confirmed)*100;
+          }
+
+          stateMortalityRates.add(
+            BarChartGroupData(
+              showingTooltipIndicators: [],
+              x: i,
+              barRods: [
+                BarChartRodData(
+                  y: (deaths/confirmed)*100,
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(10),
+                    topLeft: Radius.circular(10),
+                  ),
+                  color: theme.accentColor,
+                  width: 6*scaleFactor,
+                ),
+              ],
+            ),
+          );
+
+          if((recovered/confirmed)*100>stateRecRateHighest){
+            stateRecRateHighest = (recovered/confirmed)*100;
+          }
+          stateRecoveryRates.add(
+            BarChartGroupData(
+              showingTooltipIndicators: [],
+              x: i,
+              barRods: [
+                BarChartRodData(
+                  y: (recovered/confirmed)*100,
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(10),
+                    topLeft: Radius.circular(10),
+                  ),
+                  color: theme.accentColor,
+                  width: 6*scaleFactor,
+                ),
+              ],
+            ),
+          );
+
+          int confirmedCasesToday = confirmedDaily[confirmedDaily.length-1][state.stateCode.toLowerCase()]-confirmedDaily[confirmedDaily.length-7][state.stateCode.toLowerCase()];
+          int confirmedCaseWeekAgo = confirmedDaily[confirmedDaily.length-7][state.stateCode.toLowerCase()];
+          if(confirmedCaseWeekAgo==0){
+            confirmedCaseWeekAgo=1;
+          }
+          if(((confirmedCasesToday/confirmedCaseWeekAgo)*100)/7>stateGrowthHighest){
+            stateGrowthHighest = ((confirmedCasesToday/confirmedCaseWeekAgo)*100)/7;
+          }
+
+          stateGrowthRates.add(
+            BarChartGroupData(
+              showingTooltipIndicators: [],
+              x: i,
+              barRods: [
+                BarChartRodData(
+                  y: ((confirmedCasesToday/confirmedCaseWeekAgo)*100)/7,
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(10),
+                    topLeft: Radius.circular(10),
+                  ),
+                  color: theme.accentColor,
+                  width: 6*scaleFactor,
+                ),
+              ],
+            ),
+          );
 
           if(state.confirmed>cnfHighest){
             cnfHighest = state.confirmed.toDouble();
@@ -140,10 +225,10 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                     topLeft: Radius.circular(10),
                   ),
                   color: theme.accentColor,
-                  width: 6,
+                  width: 6*scaleFactor,
                 ),
               ]
-            )
+            ),
           );
 
           if(state.active>restHighest){
@@ -168,7 +253,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                         topLeft: Radius.circular(10),
                       ),
                       color: kBlueColor,
-                      width: 4,
+                      width: 4*scaleFactor,
                     ),
                     BarChartRodData(
                       y: state.recovered.toDouble(),
@@ -177,7 +262,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                         topLeft: Radius.circular(10),
                       ),
                       color: kGreenColor,
-                      width: 4,
+                      width: 4*scaleFactor,
                     ),
                     BarChartRodData(
                       y: state.deaths.toDouble(),
@@ -186,7 +271,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                         topLeft: Radius.circular(10),
                       ),
                       color: Colors.grey,
-                      width: 4,
+                      width: 4*scaleFactor,
                     ),
                   ]
               ),
@@ -196,7 +281,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
         cases.forEach((key, value) {
           if(value !=0){
             caseModel.add(
-                CaseModel(key, value)
+                CaseModel(key, value),
             );
           }
         });
@@ -387,10 +472,11 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5,),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 16,),
+                SizedBox(height: 16*scaleFactor,),
                 _getSectionTitle(lang.translate(kGrowthMetricsLang)),
-                SizedBox(height: 16,),
+                SizedBox(height: 16*scaleFactor,),
                 Row(
                   children: <Widget>[
                     Expanded(
@@ -399,11 +485,11 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                         style: TextStyle(
                           color: kGreyColor,
                           fontFamily: kNotoSansSc,
-                          fontSize: 16*textScaleFactor,
+                          fontSize: 16*scaleFactor,
                         ),
                       ),
                     ),
-                    SizedBox(width: 10,),
+                    SizedBox(width: 10*scaleFactor,),
                     Material(
                       borderRadius: BorderRadius.all(
                         Radius.circular(10),
@@ -421,7 +507,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                                 });
                               },
                               child: Container(
-                                height: 35,
+                                height: 35*scaleFactor,
                                 padding: EdgeInsets.symmetric(horizontal: 8),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.only(
@@ -435,6 +521,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                                     lang.translate(kBeginningLang),
                                     style: TextStyle(
                                       fontFamily: kQuickSand,
+                                      fontSize: 14*scaleFactor,
                                       color: dataRange != DataRange.BEGINNING?
                                       theme.brightness == Brightness.light?Colors.black:Colors.white:
                                       theme.brightness == Brightness.light?Colors.white:Colors.black,
@@ -452,7 +539,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                                 });
                               },
                               child: Container(
-                                height: 35,
+                                height: 35*scaleFactor,
                                 padding: EdgeInsets.symmetric(horizontal: 8),
                                 decoration: BoxDecoration(
                                   color: dataRange != DataRange.MONTH?theme.backgroundColor:theme.accentColor,
@@ -462,6 +549,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                                     lang.translate(k1MonthLang),
                                     style: TextStyle(
                                       fontFamily: kQuickSand,
+                                      fontSize: 14*scaleFactor,
                                       color: dataRange != DataRange.MONTH?
                                       theme.brightness == Brightness.light?Colors.black:Colors.white:
                                       theme.brightness == Brightness.light?Colors.white:Colors.black,
@@ -479,7 +567,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                                 });
                               },
                               child: Container(
-                                height: 35,
+                                height: 35*scaleFactor,
                                 padding: EdgeInsets.symmetric(horizontal: 8),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.only(
@@ -493,6 +581,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                                     lang.translate(k2WeekLang),
                                     style: TextStyle(
                                       fontFamily: kQuickSand,
+                                      fontSize: 14*scaleFactor,
                                       color: dataRange != DataRange.TWO_WEEK?
                                       theme.brightness == Brightness.light?Colors.black:Colors.white:
                                       theme.brightness == Brightness.light?Colors.white:Colors.black,
@@ -505,12 +594,12 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                         ),
                       ),
                     ),
-                    SizedBox(width: 10,),
+                    SizedBox(width: 10*scaleFactor,),
                   ],
                 ),
-                SizedBox(height: 16,),
+                SizedBox(height: 16*scaleFactor,),
                 Container(
-                  height: size.width*0.9,
+                  height: size.width*0.85,
                   child: PageView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: growthMetricsList.length,
@@ -524,9 +613,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                   ),
                 ),
                 _getSectionTitle(lang.translate(kMoreLang)),
-                SizedBox(height: 16,),
+                SizedBox(height: 16*scaleFactor,),
                 Container(
-                  height: size.width*0.9,
+                  height: size.width*0.85,
                   child: PageView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: moreCharts.length,
@@ -540,7 +629,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                   ),
                 ),
                 _getSectionTitle(lang.translate(kDaysToReachLang),scroll: false),
-                SizedBox(height: 16,),
+                SizedBox(height: 16*scaleFactor,),
                 Material(
                   borderRadius: BorderRadius.all(
                     Radius.circular(10,),
@@ -559,7 +648,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                                 textAlign: TextAlign.left,
                                 style:TextStyle(
                                   fontFamily: kQuickSand,
-                                  fontSize: 20,
+                                  fontSize: 20*scaleFactor,
                                   color: theme.accentColor,
                                 ),
                               ),
@@ -570,7 +659,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                                 textAlign: TextAlign.center,
                                 style:TextStyle(
                                   fontFamily: kQuickSand,
-                                  fontSize: 20,
+                                  fontSize: 20*scaleFactor,
                                   color: theme.accentColor,
                                 ),
                               ),
@@ -581,7 +670,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                                 textAlign: TextAlign.center,
                                 style:TextStyle(
                                   fontFamily: kQuickSand,
-                                  fontSize: 20,
+                                  fontSize: 20*scaleFactor,
                                   color: theme.accentColor,
                                 ),
                               ),
@@ -592,7 +681,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                                 textAlign: TextAlign.center,
                                 style:TextStyle(
                                   fontFamily: kQuickSand,
-                                  fontSize: 20,
+                                  fontSize: 20*scaleFactor,
                                   color: theme.accentColor,
                                 ),
                               ),
@@ -601,6 +690,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                         ),
                         Divider(color: kGreyColor,),
                         ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: cases.length,
                           itemBuilder: (BuildContext context,int index){
@@ -625,7 +715,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                                           textAlign: TextAlign.left,
                                           style:TextStyle(
                                             fontFamily: kQuickSand,
-                                            fontSize: 16,
+                                            fontSize: 16*scaleFactor,
                                           ),
                                         ),
                                       ),
@@ -635,7 +725,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                                           textAlign: TextAlign.center,
                                           style:TextStyle(
                                             fontFamily: kQuickSand,
-                                            fontSize: 16,
+                                            fontSize: 16*scaleFactor,
                                           ),
                                         ),
                                       ),
@@ -645,7 +735,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                                           textAlign: TextAlign.center,
                                           style:TextStyle(
                                             fontFamily: kQuickSand,
-                                            fontSize: 16,
+                                            fontSize: 16*scaleFactor,
                                           ),
                                         ),
                                       ),
@@ -655,7 +745,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                                           textAlign: TextAlign.center,
                                           style:TextStyle(
                                             fontFamily: kQuickSand,
-                                            fontSize: 16,
+                                            fontSize: 16*scaleFactor,
                                           ),
                                         ),
                                       ),
@@ -671,9 +761,72 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                     ),
                   ),
                 ),
-                SizedBox(height: 48,),
+                SizedBox(height: 24*scaleFactor,),
+                _getSectionTitle("State Wise Avg. Growth Rates",scroll: false),
+                Text(
+                  "Growth rates are averged out for past seven days",
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontFamily: kQuickSand,
+                    fontSize: 16*scaleFactor,
+                    color: kGreyColor,
+                  ),
+                ),
+                SizedBox(height: 16*scaleFactor,),
+                Material(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10,),
+                  ),
+                  elevation: 2,
+                  color: theme.backgroundColor,
+                  child: Container(
+                    width: size.width,
+                    padding: EdgeInsets.all(10),
+                    child: _getBarChart(stateGrowthRates, stateGrowthHighest,stateInfo,numberData: true),
+                  ),
+                ),
+                SizedBox(height: 24*scaleFactor,),
+                _getSectionTitle("State Wise Recovery Rates",scroll: false),
+                SizedBox(height: 16*scaleFactor,),
+                Material(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10,),
+                  ),
+                  elevation: 2,
+                  color: theme.backgroundColor,
+                  child: Container(
+                    width: size.width,
+                    padding: EdgeInsets.all(10),
+                    child: _getBarChart(stateRecoveryRates, stateRecRateHighest,stateInfo,numberData: true),
+                  ),
+                ),
+                SizedBox(height: 24*scaleFactor,),
+                _getSectionTitle("State Wise Mortality Rates",scroll: false),
+                Text(
+                  "Growth rates are averged out for past seven days",
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontFamily: kQuickSand,
+                    fontSize: 16*scaleFactor,
+                    color: kGreyColor,
+                  ),
+                ),
+                SizedBox(height: 16*scaleFactor,),
+                Material(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10,),
+                  ),
+                  elevation: 2,
+                  color: theme.backgroundColor,
+                  child: Container(
+                    width: size.width,
+                    padding: EdgeInsets.all(10),
+                    child: _getBarChart(stateMortalityRates, stateDetRateHighest,stateInfo,numberData: true),
+                  ),
+                ),
+                SizedBox(height: 24*scaleFactor,),
                 _getSectionTitle(lang.translate(kStateWiseCnfCasesLang),scroll: false),
-                SizedBox(height: 16,),
+                SizedBox(height: 16*scaleFactor,),
                 Material(
                   borderRadius: BorderRadius.all(
                     Radius.circular(10,),
@@ -686,9 +839,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                     child: _getBarChart(stateCnfBarGroup, cnfHighest+1000,stateInfo),
                   ),
                 ),
-                SizedBox(height: 48,),
+                SizedBox(height: 24*scaleFactor,),
                 _getSectionTitle(lang.translate(kStateWiseCasesLang),scroll: false),
-                SizedBox(height: 16,),
+                SizedBox(height: 16*scaleFactor,),
                 Material(
                   borderRadius: BorderRadius.all(
                     Radius.circular(10,),
@@ -704,7 +857,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            SizedBox(height: 10,),
+                            SizedBox(height: 10*scaleFactor,),
                             Row(
                               children: [
                                 Expanded(
@@ -714,8 +867,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                                         mainAxisAlignment:MainAxisAlignment.center,
                                         children: [
                                           Container(
-                                            height: 15,
-                                            width: 15,
+                                            height: 15*scaleFactor,
+                                            width: 15*scaleFactor,
                                             decoration: BoxDecoration(
                                               borderRadius: BorderRadius.all(
                                                 Radius.circular(8,),
@@ -723,12 +876,12 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                                               color: kBlueColor,
                                             ),
                                           ),
-                                          SizedBox(width: 10,),
+                                          SizedBox(width: 10*scaleFactor,),
                                           Text(
                                             lang.translate(kActiveLang),
                                             style: TextStyle(
                                               fontFamily: kQuickSand,
-                                              fontSize: 16,
+                                              fontSize: 16*scaleFactor,
                                             ),
                                           ),
                                         ],
@@ -741,8 +894,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Container(
-                                        height: 15,
-                                        width: 15,
+                                        height: 15*scaleFactor,
+                                        width: 15*scaleFactor,
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.all(
                                             Radius.circular(8,),
@@ -750,12 +903,12 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                                           color: kGreenColor,
                                         ),
                                       ),
-                                      SizedBox(width: 10,),
+                                      SizedBox(width: 10*scaleFactor,),
                                       Text(
                                         lang.translate(kRecoveredLang),
                                         style: TextStyle(
                                           fontFamily: kQuickSand,
-                                          fontSize: 16,
+                                          fontSize: 16*scaleFactor,
                                         ),
                                       ),
                                     ],
@@ -766,8 +919,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Container(
-                                        height: 15,
-                                        width: 15,
+                                        height: 15*scaleFactor,
+                                        width: 15*scaleFactor,
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.all(
                                             Radius.circular(8,),
@@ -775,12 +928,12 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                                           color: Colors.grey,
                                         ),
                                       ),
-                                      SizedBox(width: 10,),
+                                      SizedBox(width: 10*scaleFactor,),
                                       Text(
                                         lang.translate(kDeaths),
                                         style: TextStyle(
                                           fontFamily: kQuickSand,
-                                          fontSize: 16,
+                                          fontSize: 16*scaleFactor,
                                         ),
                                       ),
                                     ],
@@ -788,11 +941,11 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                                 ),
                               ],
                             ),
-                            SizedBox(height: 10,),
+                            SizedBox(height: 10*scaleFactor,),
                             RotatedBox(
                               quarterTurns: 1,
                               child: Container(
-                                width: 800,
+                                width: 800*scaleFactor,
                                 child: _getBarChart(stateRestBarGroup, restHighest+1000,stateInfo,rotated: true),
                               ),
                             ),
@@ -804,8 +957,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                           child: Container(
                             padding: EdgeInsets.all(10),
                             constraints: BoxConstraints(
-                              minHeight: 50,
-                              minWidth: 100,
+                              minHeight: 50*scaleFactor,
+                              minWidth: 100*scaleFactor,
                             ),
                             decoration: BoxDecoration(
                               color: tooltipColor,
@@ -823,6 +976,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                                     style: TextStyle(
                                       fontFamily: kQuickSand,
                                       color: Colors.white,
+                                      fontSize: 16*scaleFactor
                                     ),
                                   ),
                                 ],
@@ -853,7 +1007,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
               title,
               style: TextStyle(
                 fontFamily: kQuickSand,
-                fontSize: 25*textScaleFactor,
+                fontSize: 25*scaleFactor,
               ),
             ),
           ],
@@ -861,11 +1015,12 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
         scroll?Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10,),
           child: Container(
-            height: 20,
-            width: 20,
+            height: 20*scaleFactor,
+            width: 20*scaleFactor,
             child: Center(
               child: Icon(
                 SimpleLineIcons.arrow_right,
+                size: 20*scaleFactor,
               ),
             ),
           ),
@@ -880,26 +1035,12 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
     this.tooltipColor = color;
     tooltipXPos = yPos.toDouble();
     tooltipYPos = xPos.toDouble();
-    print(xPos);
   }
 
-  Widget _getBarChart(List<BarChartGroupData> barGroups,double highest,List<StateInfo> list,{bool rotated=false}){
+  Widget _getBarChart(List<BarChartGroupData> barGroups,double highest,List<StateInfo> list,{bool rotated=false,bool numberData=false}){
 
-    double sideInterval = 1;
 
-    if(highest>50000){
-      sideInterval = 5000;
-    }else if(highest>25000){
-      sideInterval = 2500;
-    }else if(highest>20000){
-      sideInterval = 2500;
-    }else if(highest>10000){
-      sideInterval = 1000;
-    }else if(highest>1000){
-      sideInterval = 100;
-    }else if(highest>100){
-      sideInterval = 10;
-    }
+    double sideInterval = (highest/10).roundToDouble();
 
     return Padding(
       padding: const EdgeInsets.all(6),
@@ -911,9 +1052,10 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
               tooltipBgColor: theme.accentColor,
               getTooltipItem: (groupData,a,rodData,b){
                 return BarTooltipItem(
-                  "${list[groupData.x].displayName}\n${rodData.y}",
+                  "${list[groupData.x].displayName}\n${rodData.y.round()}",
                   TextStyle(
                     fontFamily: kQuickSand,
+                    fontSize: 16*scaleFactor,
                     color: theme.brightness==Brightness.light?Colors.white:Colors.black,
                   ),
                 );
@@ -930,7 +1072,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                       "${response.spot.touchedRodData.y.toInt()}",
                       response.spot.touchedRodData.color,
                       "cases",
-                      50+response.spot.touchedBarGroup.x*20,
+                      (50+response.spot.touchedBarGroup.x*20*scaleFactor).toInt(),
                       50,
                       true,
                     );
@@ -965,38 +1107,59 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
               showTitles: false,
             ),
             leftTitles: SideTitles(
-                reservedSize: 20,
+                reservedSize: 15*scaleFactor,
                 showTitles: true,
                 interval: sideInterval,
                 rotateAngle: rotated?math.pi*86:0,
                 getTitles: (double value){
                   String str = "";
-                  if(value >= 100000){
-                    str = "${value.toString().substring(0,1)}L";
-                  }else if(value>=10000){
-                    str = "${value.toString().substring(0,2)}K";
-                  }else if(value>=1000){
-                    str = "${value.toString().substring(0,1)}K";
+                  if(numberData){
+                    if(value<1 && value>=0){
+                      if(value.toString().length>=4){
+                        str = value.toString().substring(0,4);
+                      }
+                    }else{
+                      if(value>=100){
+                        str = value.toString().substring(0,3);
+                      }else if(value>=10&& value<100){
+                        str = value.toString().substring(0,2);
+                      }else if(value<10){
+                        str = value.toString().substring(0,1);
+                      }else if(value == 0){
+                        str = "0";
+                      }else{
+                        str = value.toString().substring(0,3);
+                      }
+                    }
                   }else{
-                    str = value.toString();
+                    if(value >= 100000){
+                      str = "${value.toString().substring(0,1)}L";
+                    }else if(value>=10000){
+                      str = "${value.toString().substring(0,2)}K";
+                    }else if(value>=1000){
+                      str = "${value.toString().substring(0,1)}K";
+                    }else{
+                      str = value.toString();
+                    }
                   }
 
                   return str;
                 },
                 textStyle: TextStyle(
                   color: theme.brightness == Brightness.light?Colors.black:Colors.white,
-                  fontSize: 10*textScaleFactor,
+                  fontSize: 10*scaleFactor,
                 )
             ),
             bottomTitles: SideTitles(
                 rotateAngle: rotated?math.pi*86:math.pi*90,
                 showTitles: true,
+                reservedSize: 15*scaleFactor,
                 getTitles: (double value){
                   return list[value.toInt()].stateCode;
                 },
                 textStyle: TextStyle(
                   color: theme.brightness == Brightness.light?Colors.black:Colors.white,
-                  fontSize: 8*textScaleFactor,
+                  fontSize: 8*scaleFactor,
                 )
             ),
           ),
@@ -1018,7 +1181,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.symmetric(horizontal: 4,vertical: 8),
           child: Material(
             borderRadius: BorderRadius.all(
                 Radius.circular(10)
@@ -1034,14 +1197,14 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                     title,
                     style: TextStyle(
                       fontFamily: kQuickSand,
-                      fontSize: 25*textScaleFactor,
+                      fontSize: 25*scaleFactor,
                     ),
                   ),
                   Text(
                     subText,
                     style: TextStyle(
                       fontFamily: kQuickSand,
-                      fontSize: 20*textScaleFactor,
+                      fontSize: 20*scaleFactor,
                     ),
                   ),
                   Text(
@@ -1049,10 +1212,10 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                     style: TextStyle(
                       color: kGreyColor,
                       fontFamily: kQuickSand,
-                      fontSize: 16*textScaleFactor,
+                      fontSize: 16*scaleFactor,
                     ),
                   ),
-                  SizedBox(height: 5,),
+                  SizedBox(height: 5*scaleFactor,),
                   _getLineChart(spots, highest, maxX),
                 ],
               ),
@@ -1071,32 +1234,14 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
 
 
     if(dataRange == DataRange.BEGINNING){
-      bottomTitleInterval = 10;
+      bottomTitleInterval = (maxX/10).roundToDouble();
     }else if(dataRange == DataRange.MONTH){
-      bottomTitleInterval = 3;
+      bottomTitleInterval = (maxX/10).roundToDouble();
     }else if(dataRange == DataRange.TWO_WEEK){
-      bottomTitleInterval = 1;
+      bottomTitleInterval = (maxX/7).roundToDouble();
     }
 
-    if(total>1000){
-      sideInterval = 200;
-    }else if(total>500){
-      sideInterval = 100;
-    }else if(total>100){
-      sideInterval = 50;
-    }else if(total>50){
-      sideInterval = 10;
-    }else if(total>10){
-      sideInterval = 5;
-    }else if(total>5){
-      sideInterval = 1;
-    }else if(total>2.5){
-      sideInterval = 1;
-    }else if(total>1){
-      sideInterval = 0.25;
-    }else{
-      sideInterval = 0.05;
-    }
+    sideInterval = double.parse((total/10).toStringAsFixed(2));
 
     return Padding(
       padding: const EdgeInsets.all(6),
@@ -1135,20 +1280,33 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                 rightTitles: SideTitles(
                   showTitles: true,
                   interval: sideInterval,
-                  reservedSize: 20,
+                  reservedSize: 15*scaleFactor,
                   textStyle: TextStyle(
-                    fontSize: 10*textScaleFactor,
+                    fontSize: 10*scaleFactor,
                     color: theme.brightness == Brightness.light?Colors.black:Colors.white,
                     fontFamily: kNotoSansSc,
                   ),
                   getTitles: (double value){
                     String val = value.toString();
 
-                    if(val.length<4){
-                      val = val.substring(0,3);
-                    }else if(val.length>=4){
-                      val = val.substring(0,4);
+                    if(value>1000){
+                      return '${value.toString().substring(0,1)}k';
+                    }else if(value>100){
+                      return value.round().toString();
+                    }else if(value>10){
+                      return value.round().toString();
+                    }else if(value>0){
+                      return value.toStringAsFixed(2);
+                    }else if(value==0){
+                      return "0";
+                    }else if(value>-1000){
+                      return value.round().toString();
+                    }else if(value>-10000){
+                      return '${value.toString().substring(0,2)}.${value.toString().substring(2,3)}k';
                     }
+
+                    return val;
+
                     return val;
 
                   },
@@ -1157,9 +1315,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                   showTitles: true,
                   rotateAngle: math.pi*90,
                   interval: bottomTitleInterval,
-                  margin: 30,
+                  margin: 15*scaleFactor,
                   textStyle: TextStyle(
-                    fontSize: 8*textScaleFactor,
+                    fontSize: 8*scaleFactor,
                     color: theme.brightness == Brightness.light?Colors.black:Colors.white,
                     fontFamily: kNotoSansSc,
                   ),

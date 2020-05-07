@@ -21,7 +21,7 @@ class ResourcesScreen extends StatefulWidget{
 class _ResourcesScreenState extends State<ResourcesScreen>{
 
   NetworkHandler _networkHandler;
-  double textScaleFactor = 1;
+  double scaleFactor = 1;
 
   @override
   void initState() {
@@ -33,7 +33,7 @@ class _ResourcesScreenState extends State<ResourcesScreen>{
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     if(size.width <= 360){
-      textScaleFactor = 0.75;
+      scaleFactor = 0.75;
     }
 
     ThemeData theme = Theme.of(context);
@@ -52,7 +52,7 @@ class _ResourcesScreenState extends State<ResourcesScreen>{
                 Center(
                   child: CircularProgressIndicator(),
                 ),
-                SizedBox(height: 10,),
+                SizedBox(height: 10*scaleFactor,),
                 Text(
                   AppLocalizations.of(context).translate(kLoadingMessageLang),
                   style: TextStyle(
@@ -164,34 +164,35 @@ class _ResourcesScreenState extends State<ResourcesScreen>{
                           Text(
                             cityName==null?"${resources[index].city}":cityName,
                             style: TextStyle(
-                              fontSize: 16*textScaleFactor,
+                              fontSize: 16*scaleFactor,
                               fontFamily: kNotoSansSc,
                               color: Theme.of(context).accentColor,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(height: 5,),
+                          SizedBox(height: 5*scaleFactor,),
                           Text(
                             category==null?"${resources[index].category}":category,
                             style: TextStyle(
-                              fontSize: 18*textScaleFactor,
+                              fontSize: 18*scaleFactor,
                               fontFamily: kNotoSansSc,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(height: 10,),
+                          SizedBox(height: 10*scaleFactor,),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Icon(
                                 Icons.person_outline,
+                                size: 24*scaleFactor,
                               ),
-                              SizedBox(width: 10,),
+                              SizedBox(width: 10*scaleFactor,),
                               Expanded(
                                 child: Text(
                                   resources[index].name,
                                   style: TextStyle(
-                                    fontSize: 16*textScaleFactor,
+                                    fontSize: 16*scaleFactor,
                                     fontFamily: kNotoSansSc,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -199,27 +200,28 @@ class _ResourcesScreenState extends State<ResourcesScreen>{
                               ),
                             ],
                           ),
-                          SizedBox(height: 10,),
+                          SizedBox(height: 10*scaleFactor,),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Icon(
                                 MaterialCommunityIcons.information_outline,
+                                size: 24*scaleFactor,
                               ),
-                              SizedBox(width: 10,),
+                              SizedBox(width: 10*scaleFactor,),
                               Expanded(
                                 child: Text(
                                   resources[index].description,
                                   style: TextStyle(
-                                    fontSize: 14*textScaleFactor,
+                                    fontSize: 14*scaleFactor,
                                     fontFamily: kNotoSansSc,
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 20,),
+                              SizedBox(width: 20*scaleFactor,),
                             ],
                           ),
-                          SizedBox(height: 10,),
+                          SizedBox(height: 10*scaleFactor,),
                           InkWell(
                             onTap: (){
                               _networkHandler.launchInBrowser(resources[index].contactWeb);
@@ -229,39 +231,41 @@ class _ResourcesScreenState extends State<ResourcesScreen>{
                               children: <Widget>[
                                 Icon(
                                   MaterialCommunityIcons.web,
+                                  size: 24*scaleFactor,
                                 ),
-                                SizedBox(width: 10,),
+                                SizedBox(width: 10*scaleFactor,),
                                 Expanded(
                                   child: Text(
                                     resources[index].contactWeb,
                                     maxLines: 2,
                                     style: TextStyle(
-                                      fontSize: 14*textScaleFactor,
+                                      fontSize: 14*scaleFactor,
                                       fontFamily: kNotoSansSc,
                                       color: kBlueColor,
                                       fontStyle: FontStyle.italic,
                                     ),
                                   ),
                                 ),
-                                SizedBox(width: 20,),
+                                SizedBox(width: 20*scaleFactor,),
                               ],
                             ),
                           ),
-                          SizedBox(height: 10,),
+                          SizedBox(height: 10*scaleFactor,),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Icon(
                                 MaterialCommunityIcons.phone_outline,
+                                size: 24*scaleFactor,
                               ),
-                              SizedBox(width: 10,),
+                              SizedBox(width: 10*scaleFactor,),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: _getPhoneNum(resources[index].phoneNo),
                                 ),
                               ),
-                              SizedBox(width: 20,),
+                              SizedBox(width: 20*scaleFactor,),
                             ],
                           ),
                         ],
@@ -295,13 +299,13 @@ class _ResourcesScreenState extends State<ResourcesScreen>{
                 item.toString(),
                 maxLines: 2,
                 style: TextStyle(
-                  fontSize: 14*textScaleFactor,
+                  fontSize: 14*scaleFactor,
                   fontFamily: kNotoSansSc,
                   color: kBlueColor,
                   fontStyle: FontStyle.italic
                 ),
               ),
-              SizedBox(height: 5,),
+              SizedBox(height: 5*scaleFactor,),
             ],
           ),
         ),

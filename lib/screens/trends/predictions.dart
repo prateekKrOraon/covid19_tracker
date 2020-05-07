@@ -19,12 +19,19 @@ class Predictions extends StatefulWidget{
 }
 
 class _PredictionState extends State<Predictions>{
+
+  double scaleFactor = 1;
+
   @override
   Widget build(BuildContext context) {
 
     Size size = MediaQuery.of(context).size;
     AppLocalizations lang = AppLocalizations.of(context);
     ThemeData theme = Theme.of(context);
+
+    if(size.width<=400){
+      scaleFactor = 0.75;
+    }
 
     return FutureBuilder(
       future: StateWiseData.getInstance(),
@@ -90,14 +97,14 @@ class _PredictionState extends State<Predictions>{
                   lang.translate(kTodayActualCasesLang),
                   style: TextStyle(
                     fontFamily: kQuickSand,
-                    fontSize: 24,
+                    fontSize: 24*scaleFactor,
                   ),
                 ),
                 Text(
                   "${lang.translate(kLastUpdatedAtLang)}: ${DateFormat("d MMM, ").add_jm().format(lastUpdate)}",
                   style: TextStyle(
                     fontFamily: kQuickSand,
-                    fontSize: 14,
+                    fontSize: 14*scaleFactor,
                     color: kGreenColor,
                   ),
                 ),
@@ -113,7 +120,7 @@ class _PredictionState extends State<Predictions>{
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontFamily: kQuickSand,
-                                fontSize: 16,
+                                fontSize: 16*scaleFactor,
                                 color: kRedColor,
                               ),
                             ),
@@ -124,7 +131,7 @@ class _PredictionState extends State<Predictions>{
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontFamily: kQuickSand,
-                                fontSize: 16,
+                                fontSize: 16*scaleFactor,
                                 color: kBlueColor,
                               ),
                             ),
@@ -135,7 +142,7 @@ class _PredictionState extends State<Predictions>{
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontFamily: kQuickSand,
-                                fontSize: 16,
+                                fontSize: 16*scaleFactor,
                                 color: kGreenColor,
                               ),
                             ),
@@ -146,14 +153,14 @@ class _PredictionState extends State<Predictions>{
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontFamily: kQuickSand,
-                                fontSize: 16,
+                                fontSize: 16*scaleFactor,
                                 color: Colors.grey,
                               ),
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(height: 20,),
+                      SizedBox(height: 20*scaleFactor,),
                       Row(
                         children: [
                           Expanded(
@@ -165,7 +172,7 @@ class _PredictionState extends State<Predictions>{
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontFamily: kQuickSand,
-                                    fontSize: 24,
+                                    fontSize: 24*scaleFactor,
                                     color: kRedColor,
                                   ),
                                 ),
@@ -174,7 +181,7 @@ class _PredictionState extends State<Predictions>{
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontFamily: kQuickSand,
-                                    fontSize: 16,
+                                    fontSize: 16*scaleFactor,
                                     color: kRedColor,
                                   ),
                                 ),
@@ -190,7 +197,7 @@ class _PredictionState extends State<Predictions>{
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontFamily: kQuickSand,
-                                    fontSize: 24,
+                                    fontSize: 24*scaleFactor,
                                     color: kBlueColor,
                                   ),
                                 ),
@@ -199,7 +206,7 @@ class _PredictionState extends State<Predictions>{
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontFamily: kQuickSand,
-                                    fontSize: 16,
+                                    fontSize: 16*scaleFactor,
                                     color: kBlueColor,
                                   ),
                                 ),
@@ -215,7 +222,7 @@ class _PredictionState extends State<Predictions>{
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontFamily: kQuickSand,
-                                    fontSize: 24,
+                                    fontSize: 24*scaleFactor,
                                     color: kGreenColor,
                                   ),
                                 ),
@@ -224,7 +231,7 @@ class _PredictionState extends State<Predictions>{
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontFamily: kQuickSand,
-                                    fontSize: 16,
+                                    fontSize: 16*scaleFactor,
                                     color: kGreenColor,
                                   ),
                                 ),
@@ -240,7 +247,7 @@ class _PredictionState extends State<Predictions>{
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontFamily: kQuickSand,
-                                    fontSize: 24,
+                                    fontSize: 24*scaleFactor,
                                     color: Colors.grey,
                                   ),
                                 ),
@@ -249,7 +256,7 @@ class _PredictionState extends State<Predictions>{
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontFamily: kQuickSand,
-                                    fontSize: 16,
+                                    fontSize: 16*scaleFactor,
                                     color: Colors.grey,
                                   ),
                                 ),
@@ -261,24 +268,24 @@ class _PredictionState extends State<Predictions>{
                     ],
                   ),
                 ),
-                SizedBox(height: 24,),
+                SizedBox(height: 24*scaleFactor,),
                 Text(
-                  lang.translate(k5DaysPrediction),
+                  lang.translate(k5DaysPredictionLang),
                   style: TextStyle(
                     fontFamily: kQuickSand,
-                    fontSize: 24,
+                    fontSize: 24*scaleFactor,
                   ),
                 ),
-                SizedBox(height: 8,),
+                SizedBox(height: 8*scaleFactor,),
                 Text(
-                  lang.translate(kSIRDDisclaimer),
+                  lang.translate(kSIRDDisclaimerLang),
                   style: TextStyle(
                     fontFamily: kQuickSand,
-                    fontSize: 16,
+                    fontSize: 16*scaleFactor,
                     color: kGreyColor,
                   ),
                 ),
-                SizedBox(height: 8,),
+                SizedBox(height: 8*scaleFactor,),
                 Padding(
                   padding: const EdgeInsets.only(right: 10),
                   child: InkWell(
@@ -292,22 +299,22 @@ class _PredictionState extends State<Predictions>{
                         children: [
                           Icon(
                             SimpleLineIcons.info,
-                            size: 14,
+                            size: 14*scaleFactor,
                             color: kGreyColor,
                           ),
-                          SizedBox(width: 5,),
+                          SizedBox(width: 5*scaleFactor,),
                           Text(
-                            lang.translate(kKnowHowItWorks),
+                            lang.translate(kKnowHowItWorksLang),
                             style: TextStyle(
                               fontFamily: kQuickSand,
-                              fontSize: 16,
+                              fontSize: 16*scaleFactor,
                               color: kGreyColor,
                             ),
                           ),
-                          SizedBox(width: 5,),
+                          SizedBox(width: 5*scaleFactor,),
                           Icon(
                             Icons.launch,
-                            size: 14,
+                            size: 14*scaleFactor,
                             color: kGreyColor,
                           ),
                         ],
@@ -315,7 +322,7 @@ class _PredictionState extends State<Predictions>{
                     ),
                   ),
                 ),
-                SizedBox(height: 8,),
+                SizedBox(height: 8*scaleFactor,),
                 ListView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
@@ -349,11 +356,11 @@ class _PredictionState extends State<Predictions>{
                                   date,
                                   style: TextStyle(
                                     fontFamily: kQuickSand,
-                                    fontSize: 20,
+                                    fontSize: 20*scaleFactor,
                                     color: theme.accentColor,
                                   ),
                                 ),
-                                SizedBox(height: 10,),
+                                SizedBox(height: 10*scaleFactor,),
                                 Row(
                                   children: [
                                     Expanded(
@@ -362,7 +369,7 @@ class _PredictionState extends State<Predictions>{
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           fontFamily: kQuickSand,
-                                          fontSize: 16,
+                                          fontSize: 16*scaleFactor,
                                           color: kRedColor,
                                         ),
                                       ),
@@ -373,7 +380,7 @@ class _PredictionState extends State<Predictions>{
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           fontFamily: kQuickSand,
-                                          fontSize: 16,
+                                          fontSize: 16*scaleFactor,
                                           color: kBlueColor,
                                         ),
                                       ),
@@ -384,7 +391,7 @@ class _PredictionState extends State<Predictions>{
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           fontFamily: kQuickSand,
-                                          fontSize: 16,
+                                          fontSize: 16*scaleFactor,
                                           color: kGreenColor,
                                         ),
                                       ),
@@ -395,7 +402,7 @@ class _PredictionState extends State<Predictions>{
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           fontFamily: kQuickSand,
-                                          fontSize: 16,
+                                          fontSize: 16*scaleFactor,
                                           color: Colors.grey,
                                         ),
                                       ),
@@ -405,7 +412,7 @@ class _PredictionState extends State<Predictions>{
                                 Divider(
                                   color: kGreyColor,
                                 ),
-                                SizedBox(height: 10,),
+                                SizedBox(height: 10*scaleFactor,),
                                 Row(
                                   children: [
                                     Expanded(
@@ -417,7 +424,7 @@ class _PredictionState extends State<Predictions>{
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontFamily: kQuickSand,
-                                              fontSize: 24,
+                                              fontSize: 24*scaleFactor,
                                               color: kRedColor,
                                             ),
                                           ),
@@ -426,7 +433,7 @@ class _PredictionState extends State<Predictions>{
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontFamily: kQuickSand,
-                                              fontSize: 16,
+                                              fontSize: 16*scaleFactor,
                                               color: kRedColor,
                                             ),
                                           ),
@@ -442,7 +449,7 @@ class _PredictionState extends State<Predictions>{
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontFamily: kQuickSand,
-                                              fontSize: 24,
+                                              fontSize: 24*scaleFactor,
                                               color: kBlueColor,
                                             ),
                                           ),
@@ -451,7 +458,7 @@ class _PredictionState extends State<Predictions>{
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontFamily: kQuickSand,
-                                              fontSize: 16,
+                                              fontSize: 16*scaleFactor,
                                               color: kBlueColor,
                                             ),
                                           ),
@@ -467,7 +474,7 @@ class _PredictionState extends State<Predictions>{
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontFamily: kQuickSand,
-                                              fontSize: 24,
+                                              fontSize: 24*scaleFactor,
                                               color: kGreenColor,
                                             ),
                                           ),
@@ -476,7 +483,7 @@ class _PredictionState extends State<Predictions>{
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontFamily: kQuickSand,
-                                              fontSize: 16,
+                                              fontSize: 16*scaleFactor,
                                               color: kGreenColor,
                                             ),
                                           ),
@@ -492,7 +499,7 @@ class _PredictionState extends State<Predictions>{
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontFamily: kQuickSand,
-                                              fontSize: 24,
+                                              fontSize: 24*scaleFactor,
                                               color: Colors.grey,
                                             ),
                                           ),
@@ -501,7 +508,7 @@ class _PredictionState extends State<Predictions>{
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontFamily: kQuickSand,
-                                              fontSize: 16,
+                                              fontSize: 16*scaleFactor,
                                               color: Colors.grey,
                                             ),
                                           ),

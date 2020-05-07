@@ -2,6 +2,7 @@ import 'package:covid19_tracker/constants/app_constants.dart';
 import 'package:covid19_tracker/constants/language_constants.dart';
 import 'package:covid19_tracker/localization/app_localization.dart';
 import 'package:covid19_tracker/screens/home.dart';
+import 'package:covid19_tracker/utilities/custom_widgets/custom_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:intro_views_flutter/Constants/constants.dart';
 import 'package:intro_views_flutter/Models/page_view_model.dart';
@@ -51,9 +52,16 @@ class _OnboardingState extends State<Onboarding>{
   @override
   Widget build(BuildContext context) {
 
+    double scaleFactor = 1;
 
     ThemeData theme = Theme.of(context);
     AppLocalizations lang = AppLocalizations.of(context);
+
+    Size size = MediaQuery.of(context).size;
+
+    if(size.width<=400){
+      textScaleFactor = 0.75;
+    }
 
     final TextStyle _textStyle = TextStyle(
       fontFamily: kQuickSand,
@@ -71,7 +79,7 @@ class _OnboardingState extends State<Onboarding>{
             Text(
               lang.translate(kPrevention1DesLang),
               style: _textStyle.copyWith(
-                fontSize: 16,
+                fontSize: 16*scaleFactor,
                 color: theme.brightness == Brightness.light?Colors.black:Colors.white,
               ),
             ),
@@ -79,8 +87,8 @@ class _OnboardingState extends State<Onboarding>{
         ),
         mainImage: Center(
           child: Container(
-            height: 200,
-            width: 200,
+            height: 200*scaleFactor,
+            width: 200*scaleFactor,
             decoration:  BoxDecoration(
               shape: BoxShape.circle,
               image: DecorationImage(
@@ -105,7 +113,7 @@ class _OnboardingState extends State<Onboarding>{
             Text(
               lang.translate(kPrevention2DesLang),
               style: _textStyle.copyWith(
-                fontSize: 16,
+                fontSize: 16*scaleFactor,
                 color: theme.brightness == Brightness.light?Colors.black:Colors.white,
               ),
             ),
@@ -113,8 +121,8 @@ class _OnboardingState extends State<Onboarding>{
         ),
         mainImage: Center(
           child: Container(
-            height: 200,
-            width: 200,
+            height: 200*scaleFactor,
+            width: 200*scaleFactor,
             decoration:  BoxDecoration(
               shape: BoxShape.circle,
               image: DecorationImage(
@@ -139,7 +147,7 @@ class _OnboardingState extends State<Onboarding>{
             Text(
               lang.translate(kPrevention3DesLang),
               style: _textStyle.copyWith(
-                fontSize: 16,
+                fontSize: 16*scaleFactor,
                 color: theme.brightness == Brightness.light?Colors.black:Colors.white,
               ),
             ),
@@ -147,8 +155,8 @@ class _OnboardingState extends State<Onboarding>{
         ),
         mainImage: Center(
           child: Container(
-            height: 200,
-            width: 200,
+            height: 200*scaleFactor,
+            width: 200*scaleFactor,
             decoration:  BoxDecoration(
               shape: BoxShape.circle,
               image: DecorationImage(
@@ -173,7 +181,7 @@ class _OnboardingState extends State<Onboarding>{
             Text(
               lang.translate(kPrevention4DesLang),
               style: _textStyle.copyWith(
-                fontSize: 16,
+                fontSize: 16*scaleFactor,
                 color: theme.brightness == Brightness.light?Colors.black:Colors.white,
               ),
             ),
@@ -181,8 +189,8 @@ class _OnboardingState extends State<Onboarding>{
         ),
         mainImage: Center(
           child: Container(
-            height: 200,
-            width: 200,
+            height: 200*scaleFactor,
+            width: 200*scaleFactor,
             decoration:  BoxDecoration(
               shape: BoxShape.circle,
               image: DecorationImage(
@@ -214,7 +222,7 @@ class _OnboardingState extends State<Onboarding>{
                 lang.translate(kGetStartedLang),
                 style: TextStyle(
                   fontFamily: kQuickSand,
-                  fontSize: 18,
+                  fontSize: 18*scaleFactor,
                   color: theme.accentColor
                 ),
               ),

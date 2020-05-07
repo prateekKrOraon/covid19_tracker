@@ -37,7 +37,7 @@ class CountryDataScreen extends StatefulWidget{
 class _CountryDataScreen extends State<CountryDataScreen>{
 
   final Country country;
-  double textScaleFactor = 1;
+  double scaleFactor = 1;
   ThemeData theme;
   bool logarithmic = false;
   String dataRange = DataRange.MONTH;
@@ -52,7 +52,7 @@ class _CountryDataScreen extends State<CountryDataScreen>{
   }
   Future _countryData;
   _getCountryData(){
-    _countryData = NetworkHandler.getInstance().getCountryData(country.iso3);
+    _countryData = NetworkHandler.getInstance().getCountryTimeSeries(country.iso3);
   }
 
   @override
@@ -62,8 +62,8 @@ class _CountryDataScreen extends State<CountryDataScreen>{
 
     AppLocalizations lang = AppLocalizations.of(context);
 
-    if(size.width<=360){
-      textScaleFactor = 0.75;
+    if(size.width<=400){
+      scaleFactor = 0.75;
     }
 
     theme = Theme.of(context);
@@ -83,17 +83,17 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                     children: <Widget>[
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Text(
                             country.displayName,
                             style: TextStyle(
                               fontFamily: kQuickSand,
-                              fontSize: 30*textScaleFactor,
+                              fontSize: 30*scaleFactor,
                             ),
                           ),
                           Container(
-                            height: 30,
-                            width: 60,
+                            height: 30*scaleFactor,
                             child: Image(
                               fit: BoxFit.contain,
                               image: NetworkImage(
@@ -107,14 +107,14 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                         "${lang.translate(kLastUpdatedAtLang)}: ${DateFormat("d MMM, ").add_jm().format(country.updated)}",
                         style: TextStyle(
                           fontFamily: kQuickSand,
-                          fontSize: 14*textScaleFactor,
+                          fontSize: 14*scaleFactor,
                           color: Colors.green,
                         ),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 24,),
+                SizedBox(height: 24*scaleFactor,),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 6),
                   child: Column(
@@ -128,7 +128,7 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                             delta: country.todayCases.toString(),
                             color: kRedColor,
                           ),
-                          SizedBox(width: 10,),
+                          SizedBox(width: 10*scaleFactor,),
                           DashboardTile(
                             mainTitle: lang.translate(kTotalActvLang),
                             value: country.active.toString(),
@@ -137,7 +137,7 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                           ),
                         ],
                       ),
-                      SizedBox(height: 10,),
+                      SizedBox(height: 10*scaleFactor,),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -148,7 +148,7 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                             delta: "",
                             color: kGreenColor,
                           ),
-                          SizedBox(width: 10,),
+                          SizedBox(width: 10*scaleFactor,),
                           DashboardTile(
                             mainTitle: lang.translate(kTotalDetLang),
                             value: country.recovered.toString(),
@@ -157,7 +157,7 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                           ),
                         ],
                       ),
-                      SizedBox(height: 10,),
+                      SizedBox(height: 10*scaleFactor,),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -168,7 +168,7 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                             delta: "",
                             color: kGreyColor,
                           ),
-                          SizedBox(width: 10,),
+                          SizedBox(width: 10*scaleFactor,),
                           DashboardTile(
                             mainTitle: lang.translate(kMildCasesLang),
                             value: country.mild.toString(),
@@ -177,7 +177,7 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                           ),
                         ],
                       ),
-                      SizedBox(height: 10,),
+                      SizedBox(height: 10*scaleFactor,),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -188,7 +188,7 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                             delta: "",
                             color: kGreyColor,
                           ),
-                          SizedBox(width: 10,),
+                          SizedBox(width: 10*scaleFactor,),
                           DashboardTile(
                             mainTitle: lang.translate(kTestsPerMillionLang),
                             value: country.testPerOneMil.toString(),
@@ -197,7 +197,7 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                           ),
                         ],
                       ),
-                      SizedBox(height: 10,),
+                      SizedBox(height: 10*scaleFactor,),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -208,7 +208,7 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                             delta: "",
                             color: kGreyColor,
                           ),
-                          SizedBox(width: 10,),
+                          SizedBox(width: 10*scaleFactor,),
                           DashboardTile(
                             mainTitle: lang.translate(kDeathsPerMillionLang),
                             value: country.deathsPerOneMil.toString(),
@@ -220,17 +220,17 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                     ],
                   ),
                 ),
-                SizedBox(height: 24,),
+                SizedBox(height: 24*scaleFactor,),
                 FutureBuilder(
                   future: _countryData,
                   builder: (BuildContext context,snapshot){
 
                     if(snapshot.connectionState == ConnectionState.waiting){
-                      return Container(height:100,child: Center(child: CircularProgressIndicator(),));
+                      return Container(height:100*scaleFactor,child: Center(child: CircularProgressIndicator(),));
                     }
                     if(snapshot.hasError){
                       return Container(
-                        height: 100,
+                        height: 100*scaleFactor,
                         child: Center(
                           child: Text(
                             lang.locale.languageCode=="hi"?
@@ -238,6 +238,7 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                             "${lang.translate(kCountryDataErrorLang)} ${country.displayName}",
                             style: TextStyle(
                               fontFamily: kQuickSand,
+                              fontSize: 18*scaleFactor,
                               color: theme.accentColor,
                             ),
                           ),
@@ -314,7 +315,7 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                                   topLeft: Radius.circular(10),
                                 ),
                                 color: theme.accentColor,
-                                width: dataRange == DataRange.BEGINNING?1:5,
+                                width: dataRange == DataRange.BEGINNING?1:6*scaleFactor,
                               ),
                             ],
                           ),
@@ -342,7 +343,7 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                                   topLeft: Radius.circular(10),
                                 ),
                                 color: theme.accentColor,
-                                width: dataRange == DataRange.BEGINNING?1:5,
+                                width: dataRange == DataRange.BEGINNING?1:5*scaleFactor,
                               ),
                             ],
                           ),
@@ -370,7 +371,7 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                                   topLeft: Radius.circular(10),
                                 ),
                                 color: theme.accentColor,
-                                width: dataRange == DataRange.BEGINNING?1:5,
+                                width: dataRange == DataRange.BEGINNING?1:5*scaleFactor,
                               ),
                             ],
                           ),
@@ -522,7 +523,7 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                                     lang.translate(kSpreadTrendsLang),
                                     style: TextStyle(
                                       fontFamily: kQuickSand,
-                                      fontSize: 25*textScaleFactor,
+                                      fontSize: 25*scaleFactor,
                                     ),
                                   ),
                                   Text(
@@ -530,7 +531,7 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                                     style: TextStyle(
                                       color: Colors.grey[500],
                                       fontFamily: kQuickSand,
-                                      fontSize: 16*textScaleFactor,
+                                      fontSize: 16*scaleFactor,
                                     ),
                                   ),
                                 ],
@@ -538,11 +539,12 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 10,),
                                 child: Container(
-                                  height: 20,
-                                  width: 20,
+                                  height: 20*scaleFactor,
+                                  width: 20*scaleFactor,
                                   child: Center(
                                     child: Icon(
                                       SimpleLineIcons.arrow_right,
+                                      size: 20*scaleFactor,
                                     ),
                                   ),
                                 ),
@@ -550,7 +552,7 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                             ],
                           ),
                         ),
-                        SizedBox(height: 20,),
+                        SizedBox(height: 20*scaleFactor,),
                         Row(
                           children: <Widget>[
                             Expanded(
@@ -559,11 +561,11 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                                 style: TextStyle(
                                   color: kGreyColor,
                                   fontFamily: kNotoSansSc,
-                                  fontSize: 16*textScaleFactor,
+                                  fontSize: 16*scaleFactor,
                                 ),
                               ),
                             ),
-                            SizedBox(width: 10,),
+                            SizedBox(width: 10*scaleFactor,),
                             Material(
                               borderRadius: BorderRadius.all(
                                 Radius.circular(10),
@@ -581,7 +583,7 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                                         });
                                       },
                                       child: Container(
-                                        height: 35,
+                                        height: 35*scaleFactor,
                                         padding: EdgeInsets.symmetric(horizontal: 8),
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.only(
@@ -595,6 +597,7 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                                             lang.translate(kBeginningLang),
                                             style: TextStyle(
                                               fontFamily: kQuickSand,
+                                              fontSize: 14*scaleFactor,
                                               color: dataRange != DataRange.BEGINNING?
                                               theme.brightness == Brightness.light?Colors.black:Colors.white:
                                               theme.brightness == Brightness.light?Colors.white:Colors.black,
@@ -612,7 +615,7 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                                         });
                                       },
                                       child: Container(
-                                        height: 35,
+                                        height: 35*scaleFactor,
                                         padding: EdgeInsets.symmetric(horizontal: 8),
                                         decoration: BoxDecoration(
                                           color: dataRange != DataRange.MONTH?theme.backgroundColor:theme.accentColor,
@@ -622,6 +625,7 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                                             lang.translate(k1MonthLang),
                                             style: TextStyle(
                                               fontFamily: kQuickSand,
+                                              fontSize: 14*scaleFactor,
                                               color: dataRange != DataRange.MONTH?
                                               theme.brightness == Brightness.light?Colors.black:Colors.white:
                                               theme.brightness == Brightness.light?Colors.white:Colors.black,
@@ -639,7 +643,7 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                                         });
                                       },
                                       child: Container(
-                                        height: 35,
+                                        height: 35*scaleFactor,
                                         padding: EdgeInsets.symmetric(horizontal: 8),
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.only(
@@ -653,6 +657,7 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                                             lang.translate(k2WeekLang),
                                             style: TextStyle(
                                               fontFamily: kQuickSand,
+                                              fontSize: 14*scaleFactor,
                                               color: dataRange != DataRange.TWO_WEEK?
                                               theme.brightness == Brightness.light?Colors.black:Colors.white:
                                               theme.brightness == Brightness.light?Colors.white:Colors.black,
@@ -665,10 +670,10 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                                 ),
                               ),
                             ),
-                            SizedBox(width: 10,),
+                            SizedBox(width: 10*scaleFactor,),
                           ],
                         ),
-                        SizedBox(height: 20,),
+                        SizedBox(height: 20*scaleFactor,),
                         Container(
                           height: size.width*0.7,
                           width: size.width,
@@ -758,10 +763,10 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                       caseStr,
                       style: TextStyle(
                         fontFamily: kQuickSand,
-                        fontSize: 25*textScaleFactor,
+                        fontSize: 25*scaleFactor,
                       ),
                     ),
-                    SizedBox(height: 20,),
+                    SizedBox(height: 20*scaleFactor,),
                     _getBarChart(barGroups, highest,maxX)
                   ],
                 ),
@@ -798,10 +803,10 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                       caseStr,
                       style: TextStyle(
                         fontFamily: kQuickSand,
-                        fontSize: 25*textScaleFactor,
+                        fontSize: 25*scaleFactor,
                       ),
                     ),
-                    SizedBox(height: 20,),
+                    SizedBox(height: 20*scaleFactor,),
                     more?_getLineChartForMoreAnalysis(spots, total, maxX):_getLineChart(spots,total,maxX),
                   ],
                 ),
@@ -814,6 +819,9 @@ class _CountryDataScreen extends State<CountryDataScreen>{
 
 
   Widget _getBarChart(List<BarChartGroupData> barGroups,double highest,int maxX){
+
+    double sideInterval = (highest/10).toDouble();
+
     return Padding(
       padding: const EdgeInsets.all(8),
       child: AspectRatio(
@@ -843,9 +851,9 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                 showTitles: false,
               ),
               rightTitles: SideTitles(
-                  reservedSize: 20,
+                  reservedSize: 20*scaleFactor,
                   showTitles: true,
-                  interval: highest<10000?highest<1000?200:1000:highest>=50000?25000:5000,
+                  interval: sideInterval,
                   getTitles: (double value){
                     if(value<10000 && value>=1000){
                       return '${(value).toString().substring(0,1)}k';
@@ -859,11 +867,13 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                   },
                   textStyle: TextStyle(
                     color: theme.brightness == Brightness.light?Colors.black:Colors.white,
-                    fontSize: 10*textScaleFactor,
+                    fontSize: 10*scaleFactor,
+                    fontFamily: kQuickSand,
                   )
               ),
               bottomTitles: SideTitles(
                   rotateAngle: math.pi*90,
+                  reservedSize: 20*scaleFactor,
                   interval: dataRange == DataRange.BEGINNING?10:1,
                   showTitles: dataRange != DataRange.BEGINNING,
                   getTitles: (double value){
@@ -877,7 +887,8 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                   },
                   textStyle: TextStyle(
                     color: theme.brightness == Brightness.light?Colors.black:Colors.white,
-                    fontSize: 8*textScaleFactor,
+                    fontSize: 8*scaleFactor,
+                    fontFamily: kQuickSand,
                   )
               ),
             ),
@@ -886,7 +897,7 @@ class _CountryDataScreen extends State<CountryDataScreen>{
             barGroups: barGroups,
             gridData: FlGridData(
                 drawHorizontalLine: true,
-                horizontalInterval: highest<10000?highest<1000?200:1000:highest>=50000?25000:5000,
+                horizontalInterval: sideInterval,
                 drawVerticalLine: true,
             ),
           ),
@@ -898,6 +909,8 @@ class _CountryDataScreen extends State<CountryDataScreen>{
   Widget _getLineChart(List<FlSpot> spots,double total,int maxX){
 
     //total<=10000?total<=5000?total<500?total<100?50:100:500:5000:total<=50000?10000:total<=100000?25000:total>500000?100000:50000;
+
+    double sideInterval = (total/10).toDouble();
 
     return Padding(
       padding: const EdgeInsets.all(8),
@@ -927,7 +940,7 @@ class _CountryDataScreen extends State<CountryDataScreen>{
             ),
             gridData: FlGridData(
               drawHorizontalLine: true,
-              horizontalInterval: total<=10000?total<=5000?total<500?total<100?50:100:500:5000:total<=50000?10000:total<=100000?25000:total>500000?100000:50000,
+              horizontalInterval: sideInterval,
             ),
             titlesData: FlTitlesData(
                 leftTitles: SideTitles(
@@ -935,20 +948,24 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                 ),
                 rightTitles: SideTitles(
                     showTitles: true,
-                    interval: logarithmic?math.log(2000)*math.log2e*1000:total<=10000?total<=5000?total<500?total<100?50:100:500:5000:total<=50000?10000:total<=100000?25000:total>500000?100000:50000,
-                    reservedSize: total<=10000?20:total<=50000?20:20,
+                    interval: sideInterval,
+                    reservedSize: 20*scaleFactor,
                     textStyle: TextStyle(
-                      fontSize: 10*textScaleFactor,
+                      fontSize: 10*scaleFactor,
                       color: theme.brightness == Brightness.light?Colors.black:Colors.white,
-                      fontFamily: kNotoSansSc,
+                      fontFamily: kQuickSand,
                     ),
                     getTitles: (double value){
-                      if(value<10000 && value>=1000){
-                        return '${(value).toString().substring(0,1)}k';
-                      }else if (value>=10000 && value<100000){
-                        return '${(value).toString().substring(0,2)}k';
+                      if(value >= 10000000){
+                        return '${(value).toInt().toString().substring(0,2)}m';
+                      }else if(value>=1000000){
+                        return '${(value).toInt().toString().substring(0,1)}.${(value).toInt().toString().substring(1,2)}m';
                       }else if(value>=100000){
-                        return '${(value).toString().substring(0,1)}m';
+                        return '${(value).toInt().toString().substring(0,3)}k';
+                      }else if(value>=10000){
+                        return '${(value).toInt().toString().substring(0,2)}k';
+                      }else if(value>=1000){
+                        return '${(value).toInt().toString().substring(0,1)}k';
                       }else{
                         return '${(value).toInt().toString()}';
                       }
@@ -957,11 +974,12 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                 bottomTitles: SideTitles(
                   showTitles: true,
                   rotateAngle: math.pi*90,
+                  reservedSize: 15*scaleFactor,
                   interval: dataRange == DataRange.BEGINNING?10:1,
                   textStyle: TextStyle(
-                    fontSize: 8*textScaleFactor,
+                    fontSize: 8*scaleFactor,
                     color: theme.brightness == Brightness.light?Colors.black:Colors.white,
-                    fontFamily: kNotoSansSc,
+                    fontFamily: kQuickSand,
                   ),
                   getTitles: (double value){
                     DateTime now = DateTime.now();
@@ -995,54 +1013,20 @@ class _CountryDataScreen extends State<CountryDataScreen>{
 
 
   Widget _getLineChartForMoreAnalysis(List<FlSpot> spots,double total,int maxX){
-    double bottomTitleInterval = 0;
-    double sideInterval = 2;
-    double multiplier = 0;
+
+    double bottomTitleInterval = 1;
+
     double maxY = 0;
 
-
+    double sideInterval = (total/8).toDouble();
+    maxY = total;
 
     if(dataRange == DataRange.BEGINNING){
-      bottomTitleInterval = 6;
+      bottomTitleInterval = (maxX/10).roundToDouble();
     }else if(dataRange == DataRange.MONTH){
-      bottomTitleInterval = 3;
+      bottomTitleInterval = (maxX/10).roundToDouble();
     }else if(dataRange == DataRange.TWO_WEEK){
-      bottomTitleInterval = 1;
-    }
-
-    if(total>3000){
-      sideInterval = 700;
-      maxY = total+500;
-    }else if(total>2000){
-      sideInterval = 500;
-      maxY = total+500;
-    }else if(total > 500){
-      sideInterval = 300;
-      maxY = total+250;
-    }else if(total >100){
-      sideInterval = 100;
-      maxY = total+50;
-    }else if(total > 50){
-      sideInterval = 20;
-      maxY = total+25;
-    }else if(total > 10){
-      sideInterval = 10;
-      maxY = total+5;
-    }else if(total > 6){
-      sideInterval = 1;
-      maxY = total+500+3;
-    }else if(total > 3){
-      sideInterval = 1;
-      maxY = total+1.5;
-    }else if (total > 1){
-      sideInterval = 0.4;
-      maxY = total+0.5;
-    }else if(sideInterval>0.5){
-      sideInterval = 0.1;
-      maxY = total+0.25;
-    }else{
-      sideInterval = 0.01;
-      maxY = total;
+      bottomTitleInterval = (maxX/7).roundToDouble();
     }
 
 
@@ -1083,31 +1067,29 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                 rightTitles: SideTitles(
                   showTitles: true,
                   interval: sideInterval,
-                  reservedSize: total>1000?30:20,
+                  reservedSize: 20*scaleFactor,
                   textStyle: TextStyle(
-                    fontSize: 10*textScaleFactor,
+                    fontSize: 10*scaleFactor,
                     color: theme.brightness == Brightness.light?Colors.black:Colors.white,
-                    fontFamily: kNotoSansSc,
+                    fontFamily: kQuickSand,
                   ),
                   getTitles: (double value){
                     String val = value.toString();
 
-                    if(value>0){
-                      if(val.length<4){
-                        val = val.substring(0,3);
-                      }else if(val.length>=6){
-                        val = val.substring(0,6);
-                      }if(val.length>=4){
-                        val = val.substring(0,4);
-                      }
-                    }else if(value<0){
-                      if(val.length<5){
-                        val = val.substring(0,4);
-                      }else if(val.length>=7){
-                        val = val.substring(0,7);
-                      }if(val.length>=5){
-                        val = val.substring(0,5);
-                      }
+                    if(value>1000){
+                      return '${value.toString().substring(0,1)}k';
+                    }else if(value>100){
+                      return value.round().toString();
+                    }else if(value>10){
+                      return value.round().toString();
+                    }else if(value>0){
+                      return value.toStringAsFixed(2);
+                    }else if(value==0){
+                      return "0";
+                    }else if(value>-1000){
+                      return value.round().toString();
+                    }else if(value>-10000){
+                      return '${value.toString().substring(0,2)}.${value.toString().substring(2,3)}k';
                     }
 
                     return val;
@@ -1117,12 +1099,13 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                 bottomTitles: SideTitles(
                   showTitles: true,
                   rotateAngle: math.pi*90,
-                  interval: dataRange == DataRange.BEGINNING?10:1,
-                  margin: 30,
+                  interval: bottomTitleInterval,
+                  margin: 15*scaleFactor,
+                  reservedSize: 15*scaleFactor,
                   textStyle: TextStyle(
-                    fontSize: 8*textScaleFactor,
+                    fontSize: 8*scaleFactor,
                     color: theme.brightness == Brightness.light?Colors.black:Colors.white,
-                    fontFamily: kNotoSansSc,
+                    fontFamily: kQuickSand,
                   ),
                   getTitles: (double value){
                     DateTime now = DateTime.now();

@@ -2,6 +2,7 @@ import 'package:covid19_tracker/constants/app_constants.dart';
 import 'package:covid19_tracker/constants/colors.dart';
 import 'package:covid19_tracker/constants/language_constants.dart';
 import 'package:covid19_tracker/localization/app_localization.dart';
+import 'package:covid19_tracker/utilities/custom_widgets/custom_widgets.dart';
 import 'package:covid19_tracker/utilities/helpers/network_handler.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ class OpenSourceLicenses extends StatefulWidget{
 class _OpenSourceLicensesState extends State<OpenSourceLicenses>{
 
   ThemeData theme;
-  double textScaleFactor = 1;
+  double scaleFactor = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,7 @@ class _OpenSourceLicensesState extends State<OpenSourceLicenses>{
     Size size = MediaQuery.of(context).size;
 
     if(size.width <= 360){
-      textScaleFactor = 0.75;
+      scaleFactor = 0.75;
     }
 
     List<License> licenses = List();
@@ -127,6 +128,7 @@ class _OpenSourceLicensesState extends State<OpenSourceLicenses>{
           textAlign: TextAlign.start,
           style: TextStyle(
             fontFamily: kQuickSand,
+            fontSize: 22*textScaleFactor,
             color: Theme.of(context).brightness == Brightness.light?Colors.black:Colors.white,
           ),
         ),
@@ -158,7 +160,7 @@ class _OpenSourceLicensesState extends State<OpenSourceLicenses>{
                           licenses[index].name,
                           style: TextStyle(
                             fontFamily: kNotoSansSc,
-                            fontSize: 24*textScaleFactor,
+                            fontSize: 24*scaleFactor,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -185,7 +187,7 @@ class _OpenSourceLicensesState extends State<OpenSourceLicenses>{
                                   "Link",
                                   style: TextStyle(
                                     fontFamily: kNotoSansSc,
-                                    fontSize: 16*textScaleFactor,
+                                    fontSize: 16*scaleFactor,
                                     color: kBlueColor,
                                   ),
                                 ),
@@ -198,7 +200,7 @@ class _OpenSourceLicensesState extends State<OpenSourceLicenses>{
                           licenses[index].license,
                           style: TextStyle(
                             fontFamily: kNotoSansSc,
-                            fontSize: 14*textScaleFactor,
+                            fontSize: 14*scaleFactor,
                           ),
                         ),
                       ],
@@ -231,7 +233,7 @@ class _OpenSourceLicensesState extends State<OpenSourceLicenses>{
                         licenses[index].name,
                         style: TextStyle(
                           fontFamily: kNotoSansSc,
-                          fontSize: 24*textScaleFactor,
+                          fontSize: 24*scaleFactor,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -255,7 +257,7 @@ class _OpenSourceLicensesState extends State<OpenSourceLicenses>{
                                 "Repository Link",
                                 style: TextStyle(
                                   fontFamily: kNotoSansSc,
-                                  fontSize: 16*textScaleFactor,
+                                  fontSize: 16*scaleFactor,
                                   color: kBlueColor,
                                 ),
                               ),
@@ -268,7 +270,7 @@ class _OpenSourceLicensesState extends State<OpenSourceLicenses>{
                         licenses[index].license,
                         style: TextStyle(
                           fontFamily: kNotoSansSc,
-                          fontSize: 14*textScaleFactor,
+                          fontSize: 14*scaleFactor,
                         ),
                       ),
                     ],

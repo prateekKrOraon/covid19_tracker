@@ -101,8 +101,13 @@ class NetworkHandler{
     return jsonDecode(res.body);
   }
 
-  Future getCountryData(String iso3)async{
+  Future getCountryTimeSeries(String iso3)async{
     var res = await http.get("$countryDataUrl$iso3");
+    return jsonDecode(res.body);
+  }
+
+  Future getCountryData(String iso3)async{
+    var res = await http.get("$countryDataUrl2$iso3");
     return jsonDecode(res.body);
   }
 

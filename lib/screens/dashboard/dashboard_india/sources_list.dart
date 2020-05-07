@@ -29,7 +29,7 @@ class SourcesListScreen extends StatefulWidget{
 
 class _SourcesListScreen extends State<SourcesListScreen>{
 
-  double textScaleFactor = 1;
+  double scaleFactor = 1;
   ThemeData theme;
 
   @override
@@ -41,7 +41,7 @@ class _SourcesListScreen extends State<SourcesListScreen>{
     AppLocalizations lang = AppLocalizations.of(context);
 
     if(size.width<=360){
-      textScaleFactor = 0.75;
+      scaleFactor = 0.75;
     }
 
     return Scaffold(
@@ -92,7 +92,7 @@ class _SourcesListScreen extends State<SourcesListScreen>{
                     lang.translate(kSnapshotErrorLang),
                     style: TextStyle(
                       fontFamily: kNotoSansSc,
-                      fontSize: 20*textScaleFactor,
+                      fontSize: 20*scaleFactor,
                     ),
                   ),
                 );
@@ -148,7 +148,7 @@ class _SourcesListScreen extends State<SourcesListScreen>{
                                   stateSources[index].name,
                                   style: TextStyle(
                                     fontFamily: kNotoSansSc,
-                                    fontSize: 20*textScaleFactor,
+                                    fontSize: 20*scaleFactor,
                                   ),
                                 ),
                                 Padding(
@@ -194,7 +194,7 @@ class _SourcesListScreen extends State<SourcesListScreen>{
                   style: TextStyle(
                     fontFamily: kNotoSansSc,
                     color: kGreyColor,
-                    fontSize: 14*textScaleFactor,
+                    fontSize: 14*scaleFactor,
                   ),
                 ),
                 SizedBox(width: 8,),
@@ -205,7 +205,7 @@ class _SourcesListScreen extends State<SourcesListScreen>{
                       fontFamily: kNotoSansSc,
                       fontStyle: FontStyle.italic,
                       color: kBlueColor,
-                      fontSize: 14*textScaleFactor,
+                      fontSize: 14*scaleFactor,
                     ),
                   ),
                 ),

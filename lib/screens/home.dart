@@ -31,6 +31,7 @@ class _HomeState extends State<Home> {
   PackageInfo packageInfo;
   Map<String,dynamic> update = HashMap();
   bool isUpdateAvailable = false;
+  double scaleFactor = 1;
 
   @override
   initState(){
@@ -58,6 +59,12 @@ class _HomeState extends State<Home> {
 
     AppLocalizations lang = AppLocalizations.of(context);
 
+    Size size = MediaQuery.of(context).size;
+
+    if(size.width <= 400){
+      scaleFactor = 0.75;
+    }
+
     List<BottomNavigationBarItem> _bottomNavItems = <BottomNavigationBarItem>[
       BottomNavigationBarItem(
         icon: Icon(
@@ -67,6 +74,7 @@ class _HomeState extends State<Home> {
           lang.translate(kDashboardLang),
           style: TextStyle(
             fontFamily: kQuickSand,
+            fontSize: 14*scaleFactor,
           ),
         ),
       ),
@@ -78,6 +86,7 @@ class _HomeState extends State<Home> {
           lang.translate(kUpdatesLang),
           style: TextStyle(
             fontFamily: kQuickSand,
+            fontSize: 14*scaleFactor
           ),
         ),
       ),
@@ -89,6 +98,7 @@ class _HomeState extends State<Home> {
           lang.translate(kAnalysisLang),
           style: TextStyle(
             fontFamily: kQuickSand,
+            fontSize: 14*scaleFactor
           ),
         ),
       ),
@@ -100,12 +110,13 @@ class _HomeState extends State<Home> {
           lang.translate(kResourcesLang),
           style: TextStyle(
             fontFamily: kQuickSand,
+            fontSize: 14*scaleFactor
           ),
         ),
       ),
       BottomNavigationBarItem(
         icon: Container(
-          width: 30,
+          width: 30*scaleFactor,
           child: Stack(
             children: <Widget>[
               Icon(
@@ -114,8 +125,8 @@ class _HomeState extends State<Home> {
               Positioned(
                 right: 0,
                 child:isUpdateAvailable?Container(
-                  width: 15,
-                  height: 15,
+                  width: 15*scaleFactor,
+                  height: 15*scaleFactor,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(
                       Radius.circular(10),
@@ -127,7 +138,7 @@ class _HomeState extends State<Home> {
                       'N',
                       style: TextStyle(
                           fontFamily: kQuickSand,
-                          fontSize: 8
+                          fontSize: 8*scaleFactor,
                       ),
                     ),
                   ),
@@ -140,6 +151,7 @@ class _HomeState extends State<Home> {
           lang.translate(kAboutLang),
           style: TextStyle(
             fontFamily: kQuickSand,
+            fontSize: 14*scaleFactor
           ),
         ),
       ),
@@ -158,6 +170,12 @@ class _HomeState extends State<Home> {
         child: _body[_currentTabIndex],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        selectedIconTheme: IconThemeData().copyWith(
+          size: 24*scaleFactor,
+        ),
+        unselectedIconTheme: IconThemeData().copyWith(
+          size: 20*scaleFactor
+        ),
         selectedItemColor: Theme.of(context).accentColor,
         backgroundColor: Theme.of(context).primaryColorLight,
         unselectedItemColor: Theme.of(context).unselectedWidgetColor,

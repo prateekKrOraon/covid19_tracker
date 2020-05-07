@@ -23,7 +23,7 @@ class DailyCaseTimeChart extends StatefulWidget{
 class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
 
   String dataRange = DataRange.MONTH;
-  double textScaleFactor = 1;
+  double scaleFactor = 1;
 
   ThemeData theme;
 
@@ -37,8 +37,8 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
     Size size = MediaQuery.of(context).size;
     theme = Theme.of(context);
     AppLocalizations lang = AppLocalizations.of(context);
-    if(size.width <= 360){
-      textScaleFactor = 0.75;
+    if(size.width <= 400){
+      scaleFactor = 0.75;
     }
 
     return FutureBuilder(
@@ -136,7 +136,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
                         topLeft: Radius.circular(10),
                       ),
                     color: theme.accentColor,
-                    width: dataRange == DataRange.BEGINNING?2:8,
+                    width: dataRange == DataRange.BEGINNING?2*scaleFactor:6*scaleFactor,
                   ),
                 ],
             ),
@@ -154,7 +154,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
                     topLeft: Radius.circular(10),
                   ),
                   color: theme.accentColor,
-                  width: dataRange == DataRange.BEGINNING?2:8,
+                  width: dataRange == DataRange.BEGINNING?2*scaleFactor:6*scaleFactor,
                 ),
               ],
             ),
@@ -172,7 +172,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
                         topLeft: Radius.circular(10),
                       ),
                     color: theme.accentColor,
-                    width: dataRange == DataRange.BEGINNING?2:8,
+                    width: dataRange == DataRange.BEGINNING?2*scaleFactor:6*scaleFactor,
                   ),
                 ],
             ),
@@ -190,7 +190,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
                         topLeft: Radius.circular(10),
                       ),
                     color: theme.accentColor,
-                    width: dataRange == DataRange.BEGINNING?2:8,
+                    width: dataRange == DataRange.BEGINNING?2*scaleFactor:6*scaleFactor,
                   ),
                 ],
             ),
@@ -218,15 +218,15 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                SizedBox(height: 8,),
+                SizedBox(height: 8*scaleFactor,),
                 Text(
                   lang.translate(kScalingModesLang),
                   style: TextStyle(
                     fontFamily: kQuickSand,
-                    fontSize: 25*textScaleFactor,
+                    fontSize: 25*scaleFactor,
                   ),
                 ),
-                SizedBox(height: 10,),
+                SizedBox(height: 10*scaleFactor,),
                 Row(
                   children: <Widget>[
                     Expanded(
@@ -235,11 +235,11 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
                         style: TextStyle(
                           color: kGreyColor,
                           fontFamily: kNotoSansSc,
-                          fontSize: 16*textScaleFactor,
+                          fontSize: 16*scaleFactor,
                         ),
                       ),
                     ),
-                    SizedBox(width: 10,),
+                    SizedBox(width: 10*scaleFactor,),
                     Material(
                       borderRadius: BorderRadius.all(
                         Radius.circular(10),
@@ -256,7 +256,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
                               });
                             },
                             child: Container(
-                              height: 35,
+                              height: 35*scaleFactor,
                               padding: EdgeInsets.symmetric(horizontal: 8),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.only(
@@ -270,6 +270,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
                                   lang.translate(kBeginningLang),
                                   style: TextStyle(
                                     fontFamily: kQuickSand,
+                                    fontSize: 14*scaleFactor,
                                     color:dataRange != DataRange.BEGINNING?
                                     theme.brightness == Brightness.light?Colors.black:Colors.white:
                                     theme.brightness == Brightness.light?Colors.white:Colors.black,
@@ -287,7 +288,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
                               });
                             },
                             child: Container(
-                              height: 35,
+                              height: 35*scaleFactor,
                               padding: EdgeInsets.symmetric(horizontal: 8),
                               decoration: BoxDecoration(
                                 color: dataRange != DataRange.MONTH?theme.backgroundColor:theme.accentColor,
@@ -297,6 +298,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
                                   lang.translate(k1MonthLang),
                                   style: TextStyle(
                                     fontFamily: kQuickSand,
+                                    fontSize: 14*scaleFactor,
                                     color: dataRange != DataRange.MONTH?
                                     theme.brightness == Brightness.light?Colors.black:Colors.white:
                                     theme.brightness == Brightness.light?Colors.white:Colors.black,
@@ -314,7 +316,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
                               });
                             },
                             child: Container(
-                              height: 35,
+                              height: 35*scaleFactor,
                               padding: EdgeInsets.symmetric(horizontal: 8),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.only(
@@ -328,6 +330,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
                                   lang.translate(k2WeekLang),
                                   style: TextStyle(
                                     fontFamily: kQuickSand,
+                                    fontSize: 14*scaleFactor,
                                     color: dataRange != DataRange.TWO_WEEK?
                                     theme.brightness == Brightness.light?Colors.black:Colors.white:
                                     theme.brightness == Brightness.light?Colors.white:Colors.black,
@@ -339,19 +342,19 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
                         ],
                       ),
                     ),
-                    SizedBox(width: 10,),
+                    SizedBox(width: 10*scaleFactor,),
                   ],
                 ),
-                SizedBox(height: 20,),
+                SizedBox(height: 20*scaleFactor,),
                 Text(
                   "${lang.translate(kLastUpdatedAtLang)}: $lastUpdate\2020",
                   style: TextStyle(
                     color: kGreenColor,
-                    fontSize: 16*textScaleFactor,
+                    fontSize: 16*scaleFactor,
                     fontFamily: kQuickSand,
                   ),
                 ),
-                SizedBox(height: 10,),
+                SizedBox(height: 10*scaleFactor,),
                 Material(
                   borderRadius: BorderRadius.all(
                     Radius.circular(10),
@@ -373,7 +376,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
                             lang.translate(kConfirmedLang),
                             style: TextStyle(
                               fontFamily: kQuickSand,
-                              fontSize: 25*textScaleFactor,
+                              fontSize: 25*scaleFactor,
                             ),
                           ),
                           Text(
@@ -381,17 +384,17 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
                             style: TextStyle(
                               color: kGreyColor,
                               fontFamily: kQuickSand,
-                              fontSize: 16*textScaleFactor,
+                              fontSize: 16*scaleFactor,
                             ),
                           ),
-                          SizedBox(height: 10,),
+                          SizedBox(height: 10*scaleFactor,),
                           _getBarChart(dailyConfirmedChartGroup, dailyHighestCnf+200),
                         ],
                       ),
                     ),
                   ),
                 ),
-                SizedBox(height: 10,),
+                SizedBox(height: 10*scaleFactor,),
                 Material(
                   borderRadius: BorderRadius.all(
                     Radius.circular(10),
@@ -413,7 +416,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
                             lang.translate(kActiveLang),
                             style: TextStyle(
                               fontFamily: kQuickSand,
-                              fontSize: 25*textScaleFactor,
+                              fontSize: 25*scaleFactor,
                             ),
                           ),
                           Text(
@@ -421,17 +424,17 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
                             style: TextStyle(
                               color: kGreyColor,
                               fontFamily: kQuickSand,
-                              fontSize: 16*textScaleFactor,
+                              fontSize: 16*scaleFactor,
                             ),
                           ),
-                          SizedBox(height: 10,),
+                          SizedBox(height: 10*scaleFactor,),
                           _getBarChart(dailyActChartGroup, dailyHighestAct+200),
                         ],
                       ),
                     ),
                   ),
                 ),
-                SizedBox(height: 20,),
+                SizedBox(height: 20*scaleFactor,),
                 Material(
                   borderRadius: BorderRadius.all(
                     Radius.circular(10),
@@ -453,7 +456,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
                             lang.translate(kRecoveredLang),
                             style: TextStyle(
                               fontFamily: kQuickSand,
-                              fontSize: 25*textScaleFactor,
+                              fontSize: 25*scaleFactor,
                             ),
                           ),
                           Text(
@@ -461,17 +464,17 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
                             style: TextStyle(
                               color: kGreyColor,
                               fontFamily: kQuickSand,
-                              fontSize: 16*textScaleFactor,
+                              fontSize: 16*scaleFactor,
                             ),
                           ),
-                          SizedBox(height: 10,),
+                          SizedBox(height: 10*scaleFactor,),
                           _getBarChart(dailyRecChartGroup, dailyHighestRec+200),
                         ],
                       ),
                     ),
                   ),
                 ),
-                SizedBox(height: 20,),
+                SizedBox(height: 20*scaleFactor),
                 Material(
                   borderRadius: BorderRadius.all(
                     Radius.circular(10),
@@ -493,7 +496,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
                             lang.translate(kDeathsLang),
                             style: TextStyle(
                               fontFamily: kQuickSand,
-                              fontSize: 25*textScaleFactor,
+                              fontSize: 25*scaleFactor,
                             ),
                           ),
                           Text(
@@ -501,10 +504,10 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
                             style: TextStyle(
                               color: kGreyColor,
                               fontFamily: kQuickSand,
-                              fontSize: 16*textScaleFactor,
+                              fontSize: 16*scaleFactor,
                             ),
                           ),
-                          SizedBox(height: 10,),
+                          SizedBox(height: 10*scaleFactor,),
                           _getBarChart(dailyDetChartGroup, dailyHighestDet+10),
                         ],
                       ),
@@ -520,6 +523,9 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
   }
 
   Widget _getBarChart(List<BarChartGroupData> barGroups,double highest){
+
+    double sideInterval = (highest/10).roundToDouble();
+
     return Padding(
       padding: const EdgeInsets.all(6),
       child: AspectRatio(
@@ -561,13 +567,25 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
               rightTitles: SideTitles(
                   reservedSize: 20,
                   showTitles: true,
-                  interval: highest<200?10:200,
+                  interval: sideInterval,
                   getTitles: (double value){
-                    return value.toInt().toString();
+                    if(value >= 10000000){
+                      return '${(value).toInt().toString().substring(0,2)}m';
+                    }else if(value>=1000000){
+                      return '${(value).toInt().toString().substring(0,1)}.${(value).toInt().toString().substring(1,2)}m';
+                    }else if(value>=100000){
+                      return '${(value).toInt().toString().substring(0,3)}k';
+                    }else if(value>=10000){
+                      return '${(value).toInt().toString().substring(0,2)}k';
+                    }else if(value>=1000){
+                      return '${(value).toInt().toString().substring(0,1)}.${(value).toInt().toString().substring(1,2)}k';
+                    }else{
+                      return '${(value).toInt().toString()}';
+                    }
                   },
                   textStyle: TextStyle(
                     color: theme.brightness == Brightness.light?Colors.black:Colors.white,
-                    fontSize: 10*textScaleFactor,
+                    fontSize: 10*scaleFactor,
                   )
               ),
               bottomTitles: SideTitles(
@@ -584,7 +602,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
                   },
                   textStyle: TextStyle(
                     color: theme.brightness == Brightness.light?Colors.black:Colors.white,
-                    fontSize: 8*textScaleFactor,
+                    fontSize: 8*scaleFactor,
                   )
               ),
             ),

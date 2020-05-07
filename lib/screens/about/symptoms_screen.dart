@@ -13,10 +13,17 @@ class SymptomsScreen extends StatefulWidget{
 
 class _SymptomsScreenState extends State<SymptomsScreen>{
 
+  double scaleFactor = 1;
+
   @override
   Widget build(BuildContext context) {
 
     AppLocalizations lang = AppLocalizations.of(context);
+    Size size = MediaQuery.of(context).size;
+
+    if(size.width <= 400){
+      scaleFactor = 0.75;
+    }
 
     final List<PreventionAndSymptomsModel> _symptoms = [
       PreventionAndSymptomsModel(
@@ -52,6 +59,7 @@ class _SymptomsScreenState extends State<SymptomsScreen>{
           lang.translate(kSymptomsLang),
           style: TextStyle(
             fontFamily: kQuickSand,
+            fontSize: 22*scaleFactor,
             color: theme.brightness == Brightness.light?Colors.black:Colors.white,
           ),
         ),
@@ -67,31 +75,31 @@ class _SymptomsScreenState extends State<SymptomsScreen>{
                   lang.translate(kSymptomsOfCoronaVirusLang),
                   style: TextStyle(
                     fontFamily: kQuickSand,
-                    fontSize: 24,
+                    fontSize: 24*scaleFactor,
                     color: theme.accentColor
                   ),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 10*scaleFactor,
                 ),
                 Text(
                   lang.translate(kSymptomsOfCoronaAnsLang),
                   style: TextStyle(
                     fontFamily: kQuickSand,
-                    fontSize: 16,
+                    fontSize: 16*scaleFactor,
                   ),
                 ),
-                SizedBox(height: 20,),
+                SizedBox(height: 20*scaleFactor,),
                 Text(
                   lang.translate(kMajorAndCommonSymptomsLang),
                   style: TextStyle(
                     fontFamily: kQuickSand,
-                    fontSize: 24,
+                    fontSize: 24*scaleFactor,
                     color: theme.accentColor,
                   ),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 10*scaleFactor,
                 ),
                 ListView.builder(
                   shrinkWrap: true,
@@ -111,8 +119,8 @@ class _SymptomsScreenState extends State<SymptomsScreen>{
                                 _symptoms[index].imageLoc != ""?
                                 ClipOval(
                                   child: Image(
-                                    height: 75,
-                                    width: 75,
+                                    height: 75*scaleFactor,
+                                    width: 75*scaleFactor,
                                     image:  AssetImage(
                                       _symptoms[index].imageLoc,
                                     ),
@@ -120,32 +128,34 @@ class _SymptomsScreenState extends State<SymptomsScreen>{
                                 ):
                                 SizedBox(),
                                 _symptoms[index].imageLoc != ""?
-                                SizedBox(width: 10,):
+                                SizedBox(width: 10*scaleFactor,):
                                 SizedBox(),
-                                Text(
-                                  _symptoms[index].title,
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                    fontFamily: kQuickSand,
-                                    color: theme.accentColor,
+                                Expanded(
+                                  child: Text(
+                                    _symptoms[index].title,
+                                    style: TextStyle(
+                                      fontSize: 24*scaleFactor,
+                                      fontFamily: kQuickSand,
+                                      color: theme.accentColor,
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
-                            SizedBox(height: 10,),
+                            SizedBox(height: 10*scaleFactor,),
                             Text(
                               _symptoms[index].des,
                               style:TextStyle(
                                 fontFamily: kQuickSand,
-                                fontSize: index == 3?16:20,
+                                fontSize: index == 3?16*scaleFactor:20*scaleFactor,
                               ),
                             ),
-                            SizedBox(height: 10,),
+                            SizedBox(height: 10*scaleFactor,),
                             Text(
                               _symptoms[index].que,
                               style:TextStyle(
                                 fontFamily: kQuickSand,
-                                fontSize: 16,
+                                fontSize: 16*scaleFactor,
                               ),
                             ),
                           ],

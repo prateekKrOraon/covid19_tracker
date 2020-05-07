@@ -31,7 +31,7 @@ class _FullGlobalList extends State<FullGlobalList>{
 
   final List<Country> countries;
 
-  double textScaleFactor = 1;
+  double scaleFactor = 1;
   _FullGlobalList(this.countries);
 
   SortingOrder sortingOrder;
@@ -50,8 +50,8 @@ class _FullGlobalList extends State<FullGlobalList>{
 
     AppLocalizations lang = AppLocalizations.of(context);
 
-    if(size.width<=360){
-      textScaleFactor = 0.75;
+    if(size.width<=400){
+      scaleFactor = 0.75;
     }
 
     if(sortingOrder.checkOrder(SortingOrder.CNF_DEC)){
@@ -95,7 +95,7 @@ class _FullGlobalList extends State<FullGlobalList>{
             child: Column(
               children: <Widget>[
                 Container(
-                  height: size.height*0.075,
+                  height: size.height*0.085,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
@@ -105,7 +105,7 @@ class _FullGlobalList extends State<FullGlobalList>{
                         style: TextStyle(
                           fontFamily: kNotoSansSc,
                           color: kGreyColor,
-                          fontSize: 18*textScaleFactor,
+                          fontSize: 18*scaleFactor,
                         ),
                       ),
                       TableHeader(
@@ -171,7 +171,7 @@ class _FullGlobalList extends State<FullGlobalList>{
                   ),
                 ),
                 Container(
-                  height: size.height*0.87,
+                  height: size.height*0.855,
                   child: ListView.builder(
                     shrinkWrap: true,
                     itemCount: countries.length,

@@ -12,8 +12,6 @@ class Dashboard extends StatefulWidget{
 
 class _DashboardState extends State<Dashboard>{
 
-  double textScaleFactor = 1;
-
   ThemeData theme;
   bool refresh = false;
 

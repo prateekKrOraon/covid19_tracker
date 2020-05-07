@@ -64,15 +64,15 @@ class MathFunctions{
 
   }
 
-  List<double> mortalityRate(){
+  List<double> mortalityRate(List<double> deaths,List<double> confirmed){
     List<double> mortalityRates = List();
 
-    for(int i = 0;i<confirmedTimeSeries.length;i++){
+    for(int i = 0;i<confirmed.length;i++){
       double numerator;
       double denominator;
 
-      numerator = deathsTimeSeries[i];
-      denominator = confirmedTimeSeries[i];
+      numerator = deaths[i];
+      denominator = confirmed[i];
 
       if(denominator == 0){
         denominator = 1;
@@ -88,17 +88,17 @@ class MathFunctions{
 
   }
 
-  List<double> recoveryRate(){
+  List<double> recoveryRate(List<double> recoveries,List<double> confirmed){
     List<double> recoveryRates = List();
 
-    for(int i = 0;i<confirmedTimeSeries.length;i++){
+    for(int i = 0;i<confirmed.length;i++){
       double numerator;
       double denominator;
 
-      numerator = recoveredTimeSeries[i];
-      denominator = confirmedTimeSeries[i];
+      numerator = recoveries[i];
+      denominator = confirmed[i];
 
-      if(denominator == 0){
+      if(denominator == 0 || denominator.isNaN || denominator.isInfinite){
         denominator = 1;
       }
 
@@ -112,16 +112,21 @@ class MathFunctions{
 
   }
 
-  Map<String,int> getCases(){
+  Map<String,int> getCases(List<double> confirmed){
     Map<String,int> map = HashMap();
 
-    for(int i = 0;i<confirmedTimeSeries.length;i++){
-      String key = getKey(confirmedTimeSeries[i]);
+    int j = -1;
+
+    for(int i = 0;i<confirmed.length;i++){
+      if(confirmed[i]>0){
+        j++;
+      }
+      String key = getKey(confirmed[i]);
       if(key == "NONE"){
         continue;
       }
 
-      map.putIfAbsent(key, () => i);
+      map.putIfAbsent(key, () => j);
     }
 
     print(map);
@@ -129,10 +134,12 @@ class MathFunctions{
   }
 
   String getKey(double n){
-    if(n>=900000){
+    if(n>=1000000){
+      return "1000000";
+    }else if(n>=900000){
       return "900000";
     }else if(n>=800000){
-      return "00000";
+      return "800000";
     }else if(n>=700000){
       return "700000";
     }else if(n>=600000){
@@ -192,6 +199,11 @@ class MathFunctions{
       if(denominator == 0){
         denominator = 1;
       }
+
+      if(denominator==0){
+        denominator=1;
+      }
+
       double gr = numerator/denominator;
       growthRatios.add(gr);
     }

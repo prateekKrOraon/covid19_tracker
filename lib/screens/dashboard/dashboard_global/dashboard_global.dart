@@ -36,7 +36,7 @@ class DashboardGlobal extends StatefulWidget{
 
 class _DashboardGlobalState extends State<DashboardGlobal>{
 
-  double textScaleFactor = 1;
+  double scaleFactor = 1;
 
 
   ThemeData theme;
@@ -67,8 +67,8 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
     AppLocalizations lang = AppLocalizations.of(context);
     theme = Theme.of(context);
     Size size = MediaQuery.of(context).size;
-    if(size.width<=360.0){
-      textScaleFactor = 0.75;
+    if(size.width<=400){
+      scaleFactor = 0.75;
     }
 
     return FutureBuilder(
@@ -230,7 +230,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                             "${lang.translate(kLastUpdatedAtLang)}: ${DateFormat("d MMM, ").add_jm().format(worldDataLastUpdated)} IST",
                             style: TextStyle(
                               color: kGreenColor,
-                              fontSize: 16*textScaleFactor,
+                              fontSize: 16*scaleFactor,
                               fontFamily: kQuickSand,
                             ),
                           ),
@@ -246,6 +246,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                             child: Center(
                               child: Icon(
                                 SimpleLineIcons.refresh,
+                                size: 25*scaleFactor,
                               ),
                             ),
                           ),
@@ -253,7 +254,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                       ],
                     ),
                   ),
-                  SizedBox(height: 16,),
+                  SizedBox(height: 16*scaleFactor,),
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 6),
                     child: Column(
@@ -267,7 +268,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                               delta: worldData[kCountryTodayCases].toString(),
                               color: kRedColor,
                             ),
-                            SizedBox(width: 10,),
+                            SizedBox(width: 10*scaleFactor,),
                             DashboardTile(
                               mainTitle: lang.translate(kTotalActvLang),
                               value: worldData[kCountryActive].toString(),
@@ -276,7 +277,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                             ),
                           ],
                         ),
-                        SizedBox(height: 10,),
+                        SizedBox(height: 10*scaleFactor,),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -287,7 +288,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                               delta: "",
                               color: kGreenColor,
                             ),
-                            SizedBox(width: 10,),
+                            SizedBox(width: 10*scaleFactor,),
                             DashboardTile(
                               mainTitle: lang.translate(kTotalDetLang),
                               value: worldData[kCountryDeaths].toString(),
@@ -296,7 +297,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                             ),
                           ],
                         ),
-                        SizedBox(height: 10,),
+                        SizedBox(height: 10*scaleFactor,),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -307,7 +308,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                               delta: "",
                               color: kOrangeColor,
                             ),
-                            SizedBox(width: 10,),
+                            SizedBox(width: 10*scaleFactor,),
                             DashboardTile(
                               mainTitle: lang.translate(kAffectedCountriesLang),
                               value: worldData[kAffectedCountries].toString(),
@@ -319,7 +320,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                       ],
                     ),
                   ),
-                  SizedBox(height: 10,),
+                  SizedBox(height: 10*scaleFactor,),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 6),
                     child: Material(
@@ -346,7 +347,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                                       lang.translate(kTotalTestedLang),
                                       style: TextStyle(
                                         fontFamily: kQuickSand,
-                                        fontSize: 24*textScaleFactor,
+                                        fontSize: 24*scaleFactor,
                                         color: kDarkBlueColor,
                                       ),
                                     ),
@@ -357,7 +358,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                                       textAlign: TextAlign.end,
                                       style: TextStyle(
                                         color: kDarkBlueColor,
-                                        fontSize: 24*textScaleFactor,
+                                        fontSize: 24*scaleFactor,
                                         fontFamily: kQuickSand,
                                       ),
                                     ),
@@ -370,7 +371,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                       ),
                     ),
                   ),
-                  SizedBox(height: 16,),
+                  SizedBox(height: 16*scaleFactor,),
                   Material(
                     borderRadius: BorderRadius.all(
                       Radius.circular(10),
@@ -398,11 +399,11 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                                   style: TextStyle(
                                     color: kGreyColor,
                                     fontFamily: kNotoSansSc,
-                                    fontSize: 24*textScaleFactor,
+                                    fontSize: 24*scaleFactor,
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 5,),
+                              SizedBox(width: 5*scaleFactor,),
                               InkWell(
                                 onTap: (){
                                   Navigator.push(
@@ -420,10 +421,10 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                                         style: TextStyle(
                                           fontFamily: kQuickSand,
                                           color: kGreyColor,
-                                          fontSize: 16,
+                                          fontSize: 16*scaleFactor,
                                         ),
                                       ),
-                                      SizedBox(width: 5,),
+                                      SizedBox(width: 5*scaleFactor,),
                                       Icon(
                                         AntDesign.arrowright,
                                         color: kGreyColor,
@@ -435,7 +436,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                               ),
                             ],
                           ),
-                          SizedBox(height: 16,),
+                          SizedBox(height: 16*scaleFactor,),
                           TableHeaderStatic(lang.translate(kCountryLang)),
                           ListView.builder(
                             physics: NeverScrollableScrollPhysics(),
@@ -464,7 +465,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                       ),
                     ),
                   ),
-                  SizedBox(height: 24,),
+                  SizedBox(height: 24*scaleFactor,),
                   Material(
                     borderRadius: BorderRadius.all(
                       Radius.circular(10),
@@ -486,7 +487,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                             style: TextStyle(
                               fontFamily: kQuickSand,
                               color: kGreyColor,
-                              fontSize: 24,
+                              fontSize: 24*scaleFactor,
                             ),
                           ),
                           Padding(
@@ -497,7 +498,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                       ),
                     ),
                   ),
-                  SizedBox(height: 24,),
+                  SizedBox(height: 24*scaleFactor,),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 6),
                     child: Row(
@@ -510,7 +511,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                               lang.translate(kSpreadTrendsLang),
                               style: TextStyle(
                                 fontFamily: kQuickSand,
-                                fontSize: 25*textScaleFactor,
+                                fontSize: 25*scaleFactor,
                               ),
                             ),
                             Text(
@@ -518,7 +519,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                               style: TextStyle(
                                 color: Colors.grey[500],
                                 fontFamily: kQuickSand,
-                                fontSize: 16*textScaleFactor,
+                                fontSize: 16*scaleFactor,
                               ),
                             ),
                           ],
@@ -526,11 +527,12 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 10,),
                           child: Container(
-                            height: 20,
-                            width: 20,
+                            height: 20*scaleFactor,
+                            width: 20*scaleFactor,
                             child: Center(
                               child: Icon(
                                 SimpleLineIcons.arrow_right,
+                                size: 20*scaleFactor,
                               ),
                             ),
                           ),
@@ -538,7 +540,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                       ],
                     ),
                   ),
-                  SizedBox(height: 5,),
+                  SizedBox(height: 5*scaleFactor,),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 6),
                     child: Row(
@@ -549,11 +551,11 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                             style: TextStyle(
                               color: kGreyColor,
                               fontFamily: kNotoSansSc,
-                              fontSize: 16*textScaleFactor,
+                              fontSize: 16*scaleFactor,
                             ),
                           ),
                         ),
-                        SizedBox(width: 10,),
+                        SizedBox(width: 10*scaleFactor,),
                         Material(
                           borderRadius: BorderRadius.all(
                             Radius.circular(10),
@@ -571,7 +573,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                                     }
                                   },
                                   child: Container(
-                                    height: 35,
+                                    height: 35*scaleFactor,
                                     padding: EdgeInsets.symmetric(horizontal: 8),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.only(
@@ -585,6 +587,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                                         lang.translate(kBeginningLang),
                                         style: TextStyle(
                                           fontFamily: kQuickSand,
+                                          fontSize: 14*scaleFactor,
                                           color: dataRange != DataRange.BEGINNING?
                                           theme.brightness == Brightness.light?Colors.black:Colors.white:
                                           theme.brightness == Brightness.light?Colors.white:Colors.black,
@@ -603,7 +606,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
 
                                   },
                                   child: Container(
-                                    height: 35,
+                                    height: 35*scaleFactor,
                                     padding: EdgeInsets.symmetric(horizontal: 8),
                                     decoration: BoxDecoration(
                                       color: dataRange != DataRange.MONTH?theme.backgroundColor:theme.accentColor,
@@ -613,6 +616,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                                         lang.translate(k1MonthLang),
                                         style: TextStyle(
                                           fontFamily: kQuickSand,
+                                          fontSize: 14*scaleFactor,
                                           color: dataRange != DataRange.MONTH?
                                           theme.brightness == Brightness.light?Colors.black:Colors.white:
                                           theme.brightness == Brightness.light?Colors.white:Colors.black,
@@ -630,7 +634,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                                     }
                                   },
                                   child: Container(
-                                    height: 35,
+                                    height: 35*scaleFactor,
                                     padding: EdgeInsets.symmetric(horizontal: 8),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.only(
@@ -644,6 +648,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                                         lang.translate(k2WeekLang),
                                         style: TextStyle(
                                           fontFamily: kQuickSand,
+                                          fontSize: 14*scaleFactor,
                                           color: dataRange != DataRange.TWO_WEEK?
                                           theme.brightness == Brightness.light?Colors.black:Colors.white:
                                           theme.brightness == Brightness.light?Colors.white:Colors.black,
@@ -656,11 +661,11 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                             ),
                           ),
                         ),
-                        SizedBox(width: 10,),
+                        SizedBox(width: 10*scaleFactor,),
                       ],
                     ),
                   ),
-                  SizedBox(height: 24,),
+                  SizedBox(height: 24*scaleFactor,),
                   Container(
                     height: size.width*0.7,
                     width: size.width,
@@ -713,10 +718,10 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                       caseStr,
                       style: TextStyle(
                         fontFamily: kQuickSand,
-                        fontSize: 25*textScaleFactor,
+                        fontSize: 25*scaleFactor,
                       ),
                     ),
-                    SizedBox(height: 20,),
+                    SizedBox(height: 20*scaleFactor,),
                     _getLineChart(spots,total,maxX),
                   ],
                 ),
@@ -728,6 +733,19 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
   }
 
   Widget _getLineChart(List<FlSpot> spots,double total,int maxX){
+
+    double bottomInterval = 1;
+
+    if(dataRange == DataRange.BEGINNING){
+      bottomInterval = (maxX/10).roundToDouble();
+    }else if(dataRange == DataRange.MONTH){
+      bottomInterval = (maxX/10).roundToDouble();
+    }else if(dataRange == DataRange.TWO_WEEK){
+      bottomInterval = (maxX/7).roundToDouble();
+    }
+
+    double sideInterval = (total/10).roundToDouble();
+
     return Padding(
       padding: const EdgeInsets.all(8),
       child: AspectRatio(
@@ -756,7 +774,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
             ),
             gridData: FlGridData(
               drawHorizontalLine: true,
-              horizontalInterval: total<1500000?total<500000?100000:250000:500000,
+              horizontalInterval: sideInterval,
             ),
             titlesData: FlTitlesData(
                 leftTitles: SideTitles(
@@ -764,21 +782,25 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                 ),
                 rightTitles: SideTitles(
                     showTitles: true,
-                    interval: total<1500000?total<500000?100000:250000:500000,
-                    reservedSize: 25,
+                    interval: sideInterval,
+                    reservedSize: 20*scaleFactor,
                     textStyle: TextStyle(
-                      fontSize: 10*textScaleFactor,
+                      fontSize: 10*scaleFactor,
                       color: theme.brightness == Brightness.light?Colors.black:Colors.white,
-                      fontFamily: kNotoSansSc,
+                      fontFamily: kQuickSand,
                     ),
                     getTitles: (double value){
-                      if(value<100000 && value>10000){
-                        return '${(value).toString().substring(0,2)}k';
-                      }else if (value>=100000 && value<1000000){
-                        return '${(value).toString().substring(0,3)}k';
-                      }else if(value >= 1000000){
-                        return  '${(value).toString().substring(0,1)}.${(value).toString().substring(1,2)}m';
-                      }{
+                      if(value >= 10000000){
+                        return '${(value).toInt().toString().substring(0,2)}.${(value).toInt().toString().substring(2,3)}m';
+                      }else if(value>=1000000){
+                        return '${(value).toInt().toString().substring(0,1)}.${(value).toInt().toString().substring(1,2)}m';
+                      }else if(value>=100000){
+                        return '${(value).toInt().toString().substring(0,3)}k';
+                      }else if(value>=10000){
+                        return '${(value).toInt().toString().substring(0,2)}k';
+                      }else if(value>=1000){
+                        return '${(value).toInt().toString().substring(0,1)}k';
+                      }else{
                         return '${(value).toInt().toString()}';
                       }
                     }
@@ -786,11 +808,12 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                 bottomTitles: SideTitles(
                   showTitles: true,
                   rotateAngle: math.pi*90,
-                  interval: 3,
+                  interval: bottomInterval,
+                  reservedSize: 15*scaleFactor,
                   textStyle: TextStyle(
-                    fontSize: 8*textScaleFactor,
+                    fontSize: 8*scaleFactor,
                     color: theme.brightness == Brightness.light?Colors.black:Colors.white,
-                    fontFamily: kNotoSansSc,
+                    fontFamily: kQuickSand,
                   ),
                   getTitles: (double value){
                     DateTime now = DateTime.now();
@@ -806,7 +829,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
             lineBarsData: [
               LineChartBarData(
                 dotData: FlDotData(
-                  dotSize: 2,
+                  dotSize: dataRange==DataRange.BEGINNING?0:2,
                   strokeWidth: 0,
                 ),
                 isCurved: false,
@@ -851,7 +874,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                 topLeft: Radius.circular(10),
               ),
               color: theme.accentColor,
-              width: MediaQuery.of(context).size.width/20,
+              width: (MediaQuery.of(context).size.width/20)*scaleFactor,
             ),
           ],
         ),
@@ -864,6 +887,9 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
   }
 
   Widget _getBarChart(List<Country> countries,List<BarChartGroupData> barGroups,double highest,int maxX){
+
+
+
     return Padding(
       padding: const EdgeInsets.all(8),
       child: AspectRatio(
@@ -885,7 +911,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                       "$tooltipVal%",
                       TextStyle(
                         fontFamily: kQuickSand,
-                        fontSize: 14*textScaleFactor,
+                        fontSize: 14*scaleFactor,
                         color: Theme.of(context).accentColor,
                       )
                     );
@@ -905,7 +931,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
             ),
             titlesData: FlTitlesData(
               leftTitles: SideTitles(
-                  reservedSize: 16,
+                  reservedSize: 15*scaleFactor,
                   showTitles: false,
                   interval: 10,
                   getTitles: (double value){
@@ -913,19 +939,21 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                   },
                   textStyle: TextStyle(
                     color: theme.brightness == Brightness.light?Colors.black:Colors.white,
-                    fontSize: 10*textScaleFactor,
+                    fontSize: 10*scaleFactor,
                   )
               ),
               bottomTitles: SideTitles(
                   interval: 5,
                   showTitles: true,
+                  margin: 15*scaleFactor,
+                  reservedSize: 15*scaleFactor,
                   getTitles: (double value){
 
                     return countries[value.toInt()].displayName;
                   },
                   textStyle: TextStyle(
                     color: theme.brightness == Brightness.light?Colors.black:Colors.white,
-                    fontSize: 12*textScaleFactor,
+                    fontSize: 12*scaleFactor,
                   )
               ),
             ),
