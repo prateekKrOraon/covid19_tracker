@@ -737,8 +737,31 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
           LineChartData(
             lineTouchData: LineTouchData(
               touchTooltipData: LineTouchTooltipData(
+                getTooltipItems: (List<LineBarSpot> list){
+                  List<LineTooltipItem> returnList = List();
+
+                  list.forEach((element) {
+                    DateTime date = DateTime(
+                        2020,
+                        1,
+                        30+element.x.toInt(),
+                    );
+                    returnList.add(
+                      LineTooltipItem(
+                        "${DateFormat("d MMM").format(date)}\n${element.y.toInt()}",
+                        TextStyle(
+                          fontFamily: kQuickSand,
+                          fontSize: 12*scaleFactor,
+                          color: theme.brightness == Brightness.light?Colors.white:Colors.black,
+                        ),
+                      ),
+                    );
+                  });
+
+                  return returnList;
+                },
                 tooltipBottomMargin: 50,
-                tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
+                tooltipBgColor: theme.accentColor,
               ),
               touchCallback: (LineTouchResponse touchResponse) {},
               handleBuiltInTouches: true,

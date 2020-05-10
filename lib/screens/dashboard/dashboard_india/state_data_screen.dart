@@ -43,8 +43,6 @@ class _StateDataState extends State<StateData>{
   StateInfo stateInfo;
   bool logarithmic = false;
 
-  static const String LINE_CHART = 'line_chart';
-  static const String BAR_CHART = 'bar_chart';
 
   NetworkHandler _networkHandler;
 
@@ -52,13 +50,19 @@ class _StateDataState extends State<StateData>{
 
   SortingOrder sortingOrder;
 
+  Future _data;
+
   @override
   void initState() {
     _networkHandler = NetworkHandler.getInstance();
-
     this.stateInfo = widget.stateInfo;
     sortingOrder = SortingOrder();
+    _getData();
     super.initState();
+  }
+
+  Future _getData()async{
+    _data = Future.wait([_networkHandler.getStateData(stateInfo.stateName),_networkHandler.getStatesDaily(),_networkHandler.getZonesData(stateInfo.stateCode)]);
   }
 
   @override
@@ -143,7 +147,7 @@ class _StateDataState extends State<StateData>{
                           DashboardTile(
                             mainTitle: lang.translate(kTotalDetLang),
                             value: stateInfo.deaths.toString(),
-                            delta: stateInfo.deltaRec.toString(),
+                            delta: stateInfo.deltaDet.toString(),
                             color: kGreyColor,
                           ),
                         ],
@@ -172,7 +176,7 @@ class _StateDataState extends State<StateData>{
                 ):SizedBox(),
                 SizedBox(height: 10*scaleFactor,),
                 FutureBuilder(
-                  future: Future.wait([_networkHandler.getStateData(stateInfo.stateName),_networkHandler.getStatesDaily(),_networkHandler.getZonesData(stateInfo.stateCode)]),
+                  future: _data,
                   builder: (BuildContext context, snapshot){
                     if(snapshot.connectionState == ConnectionState.waiting){
                       return Container(height:size.width,child: Center(child: CircularProgressIndicator(),));
@@ -282,6 +286,7 @@ class _StateDataState extends State<StateData>{
                         dailyConfirmedChartGroup.add(
                           BarChartGroupData(
                             x: i,
+                            showingTooltipIndicators: [],
                             barRods: [
                               BarChartRodData(
                                 y: currentCnf.toDouble(),
@@ -315,6 +320,7 @@ class _StateDataState extends State<StateData>{
                         dailyRecChartGroup.add(
                           BarChartGroupData(
                             x: i,
+                            showingTooltipIndicators: [],
                             barRods: [
                               BarChartRodData(
                                 y: currentRec.toDouble(),
@@ -349,6 +355,7 @@ class _StateDataState extends State<StateData>{
                         dailyDetChartGroup.add(
                           BarChartGroupData(
                             x: i,
+                            showingTooltipIndicators: [],
                             barRods: [
                               BarChartRodData(
                                 y: currentDet.toDouble(),
@@ -743,6 +750,10 @@ class _StateDataState extends State<StateData>{
 
     double sideInterval = (highest/10).roundToDouble();
 
+    if(sideInterval<0.001){
+      sideInterval = 1;
+    }
+
     return Padding(
       padding: const EdgeInsets.all(6),
       child: AspectRatio(
@@ -752,9 +763,27 @@ class _StateDataState extends State<StateData>{
             barTouchData: BarTouchData(
                 allowTouchBarBackDraw: true,
                 touchTooltipData: BarTouchTooltipData(
-                  tooltipBgColor: kAccentColor,
+                  getTooltipItem: (groupData,a,rodData,b){
+                    return BarTooltipItem(
+                        "${rodData.y.toInt()}",
+                        TextStyle(
+                          fontFamily: kQuickSand,
+                          fontSize: 12*scaleFactor,
+                          color: theme.brightness == Brightness.light?Colors.white:Colors.black,
+                        )
+                    );
+                  },
+                  tooltipBgColor: theme.accentColor,
                 ),
-                touchCallback: (BarTouchResponse response){}
+                touchCallback: (BarTouchResponse response){
+                  setState(() {
+                    if (response.spot != null &&
+                        response.touchInput is! FlPanEnd &&
+                        response.touchInput is! FlLongPressEnd) {
+                    } else {
+                    }
+                  });
+                }
             ),
             borderData: FlBorderData(
               show: true,
@@ -827,6 +856,10 @@ class _StateDataState extends State<StateData>{
 
     total = total + (total*0.1);
 
+    if(sideInterval<0.001){
+      sideInterval = 1;
+    }
+
     return Padding(
       padding: const EdgeInsets.all(6),
       child: AspectRatio(
@@ -835,10 +868,43 @@ class _StateDataState extends State<StateData>{
           LineChartData(
             lineTouchData: LineTouchData(
               touchTooltipData: LineTouchTooltipData(
+                getTooltipItems: (List<LineBarSpot> list){
+                  List<LineTooltipItem> returnList = List();
+
+                  list.forEach((element) {
+                    DateTime date = DateTime(
+                      2020,
+                      DateTime.now().month,
+                      DateTime.now().day-maxX+element.x.toInt(),
+                    );
+                    returnList.add(
+                      LineTooltipItem(
+                        "${DateFormat("d MMM").format(date)}\n${element.y.toInt()}",
+                        TextStyle(
+                          fontFamily: kQuickSand,
+                          fontSize: 12*scaleFactor,
+                          color: theme.brightness == Brightness.light?Colors.white:Colors.black,
+                        ),
+                      ),
+                    );
+                  });
+
+                  return returnList;
+                },
                 tooltipBottomMargin: 50,
-                tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
+                tooltipBgColor: theme.accentColor,
               ),
-              touchCallback: (LineTouchResponse touchResponse) {},
+              touchCallback: (LineTouchResponse response) {
+                setState(() {
+                  if (response.lineBarSpots != null &&
+                      response.touchInput is! FlPanEnd &&
+                      response.touchInput is! FlLongPressEnd) {
+                    //touchedIndex = barTouchResponse.spot.touchedBarGroupIndex;
+                  } else {
+                    //touchedIndex = -1;
+                  }
+                });
+              },
               handleBuiltInTouches: true,
             ),
             maxY: total,

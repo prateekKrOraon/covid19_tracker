@@ -394,7 +394,7 @@ class TableRows extends StatelessWidget{
                       SizedBox(width: 2*textScaleFactor,),
                       Expanded(
                         child: Text(
-                          countryData?country.displayName:stateInfo.displayName,
+                          countryData?country.displayName==null?country.countryName:country.displayName:stateInfo.displayName==null?stateInfo.stateName:stateInfo.displayName,
                           style: TextStyle(
                             fontFamily: kNotoSansSc,
                             fontSize: 12*textScaleFactor,

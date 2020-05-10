@@ -283,7 +283,7 @@ class _CountryDataScreen extends State<CountryDataScreen>{
 
                     if(dataRange == DataRange.BEGINNING){
                       range = result.length;
-                      dataRangeStr = lang.translate(kSinceBeginningLang);
+                      dataRangeStr = lang.translate(kFrom22JanLang);
                     }else if(dataRange == DataRange.MONTH){
                       range = 30;
                       dataRangeStr = lang.translate(kLast30DaysLang);
@@ -461,16 +461,16 @@ class _CountryDataScreen extends State<CountryDataScreen>{
 
                     List<Widget> moreCharts = List();
                     moreCharts.add(
-                      _getLineChartLayout("Growth Factor", spots, highest, range,more: true),
+                      _getLineChartLayout(lang.translate(kGrowthFactorLang), spots, highest, range,more: true),
                     );
                     moreCharts.add(
-                      _getLineChartLayout("Growth Ratio", grSpots, grHighest, range,more: true),
+                      _getLineChartLayout(lang.translate(kGrowthRatioLang), grSpots, grHighest, range,more: true),
                     );
                     moreCharts.add(
-                      _getLineChartLayout("Growth Rate", gRSpots, gRHighest, range,more: true),
+                      _getLineChartLayout(lang.translate(kGrowthRateLang), gRSpots, gRHighest, range,more: true),
                     );
                     moreCharts.add(
-                      _getLineChartLayout("Second Derivative", sdSpots, sdHighest, range,more: true),
+                      _getLineChartLayout(lang.translate(kSecondDerivativeLang), sdSpots, sdHighest, range,more: true),
                     );
 
                     List<Widget> lineChartLayouts = List();
@@ -492,17 +492,17 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                     List<Widget> barChartLayouts = List();
 
                     barChartLayouts.add(
-                      _getBarChartLayout(lang.translate(kDailyCnfLang), dailyConfirmedChartGroup, (dailyHighestCnf+1000).toDouble(),dailyConfirmedChartGroup.length),
+                      _getBarChartLayout(lang.translate(kDailyCnfLang), dailyConfirmedChartGroup, (dailyHighestCnf).toDouble(),dailyConfirmedChartGroup.length),
                     );
 
                     if(country.recovered != 0){
                       barChartLayouts.add(
-                        _getBarChartLayout(lang.translate(kDailyRecLang), dailyRecChartGroup, (dailyHighestRec+1000).toDouble(),dailyRecChartGroup.length),
+                        _getBarChartLayout(lang.translate(kDailyRecLang), dailyRecChartGroup, (dailyHighestRec).toDouble(),dailyRecChartGroup.length),
                       );
                     }
 
                     barChartLayouts.add(
-                      _getBarChartLayout(lang.translate(kDailyDetLang), dailyDetChartGroup, (dailyHighestDet+500).toDouble(),dailyDetChartGroup.length),
+                      _getBarChartLayout(lang.translate(kDailyDetLang), dailyDetChartGroup, (dailyHighestDet).toDouble(),dailyDetChartGroup.length),
                     );
 
 
@@ -833,7 +833,17 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                 touchTooltipData: BarTouchTooltipData(
                   tooltipBgColor: kAccentColor,
                 ),
-                touchCallback: (BarTouchResponse response){}
+                touchCallback: (BarTouchResponse response){
+                  setState(() {
+                    if (response.spot != null &&
+                        response.touchInput is! FlPanEnd &&
+                        response.touchInput is! FlLongPressEnd) {
+                      //touchedIndex = barTouchResponse.spot.touchedBarGroupIndex;
+                    } else {
+                      //touchedIndex = -1;
+                    }
+                  });
+                }
             ),
             borderData: FlBorderData(
               show: true,
@@ -881,7 +891,7 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                     DateTime returnDate = DateTime(
                         2020,
                         now.month,
-                        now.day-maxX+value.toInt(),
+                        now.day-maxX+value.toInt()-1,
                     );
                     return DateFormat("d MMM").format(returnDate);
                   },
@@ -920,13 +930,36 @@ class _CountryDataScreen extends State<CountryDataScreen>{
           LineChartData(
             lineTouchData: LineTouchData(
               touchTooltipData: LineTouchTooltipData(
-                tooltipBottomMargin: 50,
-                tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
+                getTooltipItems: (List<LineBarSpot> list){
+                  List<LineTooltipItem> items = List();
+
+                  list.forEach((element) {
+                    DateTime date = DateTime(
+                      2020,
+                      DateTime.now().month,
+                      DateTime.now().day-maxX+element.x.toInt()-1,
+                    );
+                    items.add(
+                      LineTooltipItem(
+                        "${DateFormat("d MMM").format(date)}\n${element.y.toStringAsFixed(2)}",
+                        TextStyle(
+                          fontFamily: kQuickSand,
+                          fontSize: 12*scaleFactor,
+                          color: theme.brightness == Brightness.light?Colors.white:Colors.black,
+                        ),
+                      ),
+                    );
+                  });
+
+                  return items;
+                },
+                tooltipBottomMargin: 20,
+                tooltipBgColor: theme.accentColor,
               ),
               touchCallback: (LineTouchResponse touchResponse) {},
               handleBuiltInTouches: true,
             ),
-            maxY: total<500?total+200:total+2000,
+            maxY: total+10,
             borderData: FlBorderData(
               show: true,
               border: Border(
@@ -986,7 +1019,7 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                     DateTime returnDate = DateTime(
                         2020,
                         now.month,
-                        now.day-maxX+value.toInt(),
+                        now.day-maxX+value.toInt()-1,
                     );
                     return DateFormat("d MMM").format(returnDate);
                   },
@@ -1038,8 +1071,31 @@ class _CountryDataScreen extends State<CountryDataScreen>{
           LineChartData(
             lineTouchData: LineTouchData(
               touchTooltipData: LineTouchTooltipData(
-                tooltipBottomMargin: 50,
-                tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
+                getTooltipItems: (List<LineBarSpot> list){
+                  List<LineTooltipItem> items = List();
+
+                  list.forEach((element) {
+                    DateTime date = DateTime(
+                      2020,
+                      DateTime.now().month,
+                      DateTime.now().day-maxX+element.x.toInt()-1,
+                    );
+                    items.add(
+                      LineTooltipItem(
+                        "${DateFormat("d MMM").format(date)}\n${element.y.toStringAsFixed(2)}",
+                        TextStyle(
+                          fontFamily: kQuickSand,
+                          fontSize: 12*scaleFactor,
+                          color: theme.brightness == Brightness.light?Colors.white:Colors.black,
+                        )
+                      )
+                    );
+                  });
+
+                  return items;
+                },
+                tooltipBottomMargin: 20,
+                tooltipBgColor: theme.accentColor,
               ),
               touchCallback: (LineTouchResponse touchResponse) {},
               handleBuiltInTouches: true,
@@ -1112,7 +1168,7 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                     DateTime returnDate = DateTime(
                         2020,
                         now.month,
-                        now.day-maxX+value.toInt(),
+                        now.day-maxX+value.toInt()-1,
                     );
                     return DateFormat("d MMM").format(returnDate);
                   },

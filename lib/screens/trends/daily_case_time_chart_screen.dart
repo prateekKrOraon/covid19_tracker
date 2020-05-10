@@ -127,7 +127,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
           dailyConfirmedChartGroup.add(
             BarChartGroupData(
                 x: i,
-              showingTooltipIndicators: [],
+                showingTooltipIndicators: [],
                 barRods: [
                   BarChartRodData(
                       y: currentCnf,
@@ -526,6 +526,10 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
 
     double sideInterval = (highest/10).roundToDouble();
 
+    if(sideInterval < 0.001){
+      sideInterval = 1;
+    }
+
     return Padding(
       padding: const EdgeInsets.all(6),
       child: AspectRatio(
@@ -535,7 +539,22 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
             barTouchData: BarTouchData(
               allowTouchBarBackDraw: true,
               touchTooltipData: BarTouchTooltipData(
-                tooltipBgColor: kAccentColor,
+                getTooltipItem: (groupData,a,rodData,b){
+                  DateTime date = DateTime(
+                    2020,
+                    1,
+                    30+groupData.x.toInt(),
+                  );
+                  return BarTooltipItem(
+                    "${DateFormat("d MMM").format(date)}\n${rodData.y.toInt()}",
+                    TextStyle(
+                      fontFamily: kQuickSand,
+                      fontSize: 12*scaleFactor,
+                      color: theme.brightness == Brightness.light?Colors.white:Colors.black,
+                    )
+                  );
+                },
+                tooltipBgColor: theme.accentColor,
               ),
               touchCallback: (BarTouchResponse response){
                 setState(() {

@@ -17,6 +17,7 @@ String resourcesListLink = 'https://api.covid19india.org/resources/resources.jso
 String updateLogLink = "https://course-finder-prateek.000webhostapp.com/covid19_tracker/services/getUpdateLog.php";
 String faqsLink = "http://course-finder-prateek.000webhostapp.com/covid19_tracker/services/getFAQs.php";
 String checkForUpdateLink = "https://course-finder-prateek.000webhostapp.com/covid19_tracker/services/checkForUpdates.php";
+String compareCountryLink = "https://course-finder-prateek.000webhostapp.com/covid19_tracker/services/getCompareResult.php";
 
 //world data url
 String countryWiseDataUrl = "https://corona.lmao.ninja/v2/countries?sort=cases";

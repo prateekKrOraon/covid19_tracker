@@ -7,8 +7,10 @@ import 'package:covid19_tracker/data/states_daily_changes.dart';
 import 'package:covid19_tracker/localization/app_localization.dart';
 import 'package:covid19_tracker/utilities/analytics/math_functions.dart';
 import 'package:covid19_tracker/utilities/helpers/data_range.dart';
+import 'package:covid19_tracker/utilities/helpers/network_handler.dart';
 import 'package:covid19_tracker/utilities/models/state_data.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:intl/intl.dart';
@@ -34,6 +36,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
   String tooltipText = "";
   bool tooltipActive = false;
   Color tooltipColor = Colors.transparent;
+  Size size;
+
+  int graphCategory = -1;
 
   Future _data;
 
@@ -51,7 +56,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
   Widget build(BuildContext context) {
 
     theme = Theme.of(context);
-    Size size = MediaQuery.of(context).size;
+    size = MediaQuery.of(context).size;
     AppLocalizations lang = AppLocalizations.of(context);
 
     if(size.width <= 360){
@@ -286,7 +291,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
           }
         });
 
-        caseModel.sort((a,b) => a.key.compareTo(b.key));
+        caseModel.sort((a,b) => double.parse(a.key).compareTo(double.parse(b.key)));
 
         List<FlSpot> spots = List();
         int i = 0;
@@ -391,21 +396,6 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
         }
 
 
-
-//        for(int i = growthRatios.length-range; i<growthRatios.length;i++){
-//
-//        }
-//
-//
-//        for(int i = growthRates.length-range; i<growthRates.length;i++){
-//
-//        }
-//
-//
-//        for(int i = secondDerivative.length-range; i<secondDerivative.length;i++){
-//
-//        }
-
         List<Widget> moreCharts = List();
         moreCharts.add(
           _getChartLayout(
@@ -474,8 +464,6 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 16*scaleFactor,),
-                _getSectionTitle(lang.translate(kGrowthMetricsLang)),
                 SizedBox(height: 16*scaleFactor,),
                 Row(
                   children: <Widget>[
@@ -598,6 +586,44 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                   ],
                 ),
                 SizedBox(height: 16*scaleFactor,),
+                _getSectionTitle(lang.translate(kGrowthMetricsLang)),
+                SizedBox(height: 16*scaleFactor,),
+                Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: InkWell(
+                    onTap: (){
+                      NetworkHandler.getInstance().launchInBrowser("https://prateekkroraon.github.io/covid-19-tracker/statistical-analysis.html");
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            SimpleLineIcons.info,
+                            size: 14*scaleFactor,
+                            color: kGreyColor,
+                          ),
+                          SizedBox(width: 5*scaleFactor,),
+                          Text(
+                            lang.translate(kKnowMoreLang),
+                            style: TextStyle(
+                              fontFamily: kQuickSand,
+                              fontSize: 16*scaleFactor,
+                              color: kGreyColor,
+                            ),
+                          ),
+                          SizedBox(width: 5*scaleFactor,),
+                          Icon(
+                            Icons.launch,
+                            size: 14*scaleFactor,
+                            color: kGreyColor,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
                 Container(
                   height: size.width*0.85,
                   child: PageView.builder(
@@ -762,9 +788,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                   ),
                 ),
                 SizedBox(height: 24*scaleFactor,),
-                _getSectionTitle("State Wise Avg. Growth Rates",scroll: false),
+                _getSectionTitle(lang.translate(kStateWiseAvgGrowthRatesLang),scroll: false),
                 Text(
-                  "Growth rates are averged out for past seven days",
+                  lang.translate(kGrowthRateDisclaimerLang),
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     fontFamily: kQuickSand,
@@ -782,11 +808,11 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                   child: Container(
                     width: size.width,
                     padding: EdgeInsets.all(10),
-                    child: _getBarChart(stateGrowthRates, stateGrowthHighest,stateInfo,numberData: true),
+                    child: _getBarChart(stateGrowthRates, stateGrowthHighest,stateInfo,numberData: true,category: GraphCategories.AVG_GROWTH_RATE),
                   ),
                 ),
                 SizedBox(height: 24*scaleFactor,),
-                _getSectionTitle("State Wise Recovery Rates",scroll: false),
+                _getSectionTitle(lang.translate(kStateWiseRecRateLang),scroll: false),
                 SizedBox(height: 16*scaleFactor,),
                 Material(
                   borderRadius: BorderRadius.all(
@@ -797,20 +823,11 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                   child: Container(
                     width: size.width,
                     padding: EdgeInsets.all(10),
-                    child: _getBarChart(stateRecoveryRates, stateRecRateHighest,stateInfo,numberData: true),
+                    child: _getBarChart(stateRecoveryRates, stateRecRateHighest,stateInfo,numberData: true,category: GraphCategories.REC_RATES),
                   ),
                 ),
                 SizedBox(height: 24*scaleFactor,),
-                _getSectionTitle("State Wise Mortality Rates",scroll: false),
-                Text(
-                  "Growth rates are averged out for past seven days",
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontFamily: kQuickSand,
-                    fontSize: 16*scaleFactor,
-                    color: kGreyColor,
-                  ),
-                ),
+                _getSectionTitle(lang.translate(kStateWiseMortalityRateLang),scroll: false),
                 SizedBox(height: 16*scaleFactor,),
                 Material(
                   borderRadius: BorderRadius.all(
@@ -821,7 +838,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                   child: Container(
                     width: size.width,
                     padding: EdgeInsets.all(10),
-                    child: _getBarChart(stateMortalityRates, stateDetRateHighest,stateInfo,numberData: true),
+                    child: _getBarChart(stateMortalityRates, stateDetRateHighest,stateInfo,numberData: true,category: GraphCategories.DET_RATE),
                   ),
                 ),
                 SizedBox(height: 24*scaleFactor,),
@@ -836,7 +853,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                   child: Container(
                     width: size.width,
                     padding: EdgeInsets.all(10),
-                    child: _getBarChart(stateCnfBarGroup, cnfHighest+1000,stateInfo),
+                    child: _getBarChart(stateCnfBarGroup, cnfHighest+1000,stateInfo,numberData:false,category: GraphCategories.CNF_CASES),
                   ),
                 ),
                 SizedBox(height: 24*scaleFactor,),
@@ -946,12 +963,12 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                               quarterTurns: 1,
                               child: Container(
                                 width: 800*scaleFactor,
-                                child: _getBarChart(stateRestBarGroup, restHighest+1000,stateInfo,rotated: true),
+                                child: _getRestBarChart(stateRestBarGroup, restHighest+1000,stateInfo,rotated: true,category: GraphCategories.STATE_CASES),
                               ),
                             ),
                           ],
                         ),
-                        !tooltipActive?SizedBox():Positioned(
+                        graphCategory != GraphCategories.STATE_CASES?SizedBox():Positioned(
                           right: tooltipXPos,
                           top: tooltipYPos,
                           child: Container(
@@ -1029,149 +1046,187 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
     );
   }
 
-  void showTooltip(String title,String subtitle,Color color,String chart,int xPos,int yPos,bool showTooltip){
+  void showTooltip(String title,String subtitle,Color color,String chart,int xPos,int yPos,bool showTooltip,int category){
+    graphCategory = category;
     tooltipText = "$title\n$subtitle";
     this.tooltipActive = showTooltip;
     this.tooltipColor = color;
     tooltipXPos = yPos.toDouble();
     tooltipYPos = xPos.toDouble();
+
   }
 
-  Widget _getBarChart(List<BarChartGroupData> barGroups,double highest,List<StateInfo> list,{bool rotated=false,bool numberData=false}){
+  Widget _getBarChart(List<BarChartGroupData> barGroups,double highest,List<StateInfo> list,{bool rotated=false,bool numberData=false,int category}){
 
 
     double sideInterval = (highest/10).roundToDouble();
 
     return Padding(
       padding: const EdgeInsets.all(6),
-      child: BarChart(
-        BarChartData(
-          barTouchData: BarTouchData(
-            handleBuiltInTouches: rotated?false:true,
-            touchTooltipData: BarTouchTooltipData(
-              tooltipBgColor: theme.accentColor,
-              getTooltipItem: (groupData,a,rodData,b){
-                return BarTooltipItem(
-                  "${list[groupData.x].displayName}\n${rodData.y.round()}",
-                  TextStyle(
-                    fontFamily: kQuickSand,
-                    fontSize: 16*scaleFactor,
-                    color: theme.brightness==Brightness.light?Colors.white:Colors.black,
+      child: Stack(
+        children: [
+          Container(
+            width: category == GraphCategories.STATE_CASES?800*scaleFactor:size.width,
+            child: BarChart(
+              BarChartData(
+                barTouchData: BarTouchData(
+                  handleBuiltInTouches: false,
+                  touchTooltipData: BarTouchTooltipData(
+                    tooltipBgColor: theme.accentColor,
+                    getTooltipItem: (groupData,a,rodData,b){
+                      return BarTooltipItem(
+                        "${list[groupData.x].displayName}\n${rodData.y.round()}",
+                        TextStyle(
+                          fontFamily: kQuickSand,
+                          fontSize: 16*scaleFactor,
+                          color: theme.brightness==Brightness.light?Colors.white:Colors.black,
+                        ),
+                      );
+                    }
                   ),
-                );
-              }
-            ),
-            touchCallback: (BarTouchResponse response){
-              if(rotated){
-                setState(() {
-                  if (response.spot != null &&
-                      response.touchInput is! FlPanEnd &&
-                      response.touchInput is! FlLongPressEnd) {
-                    showTooltip(
-                      list[response.spot.touchedBarGroup.x].displayName,
-                      "${response.spot.touchedRodData.y.toInt()}",
-                      response.spot.touchedRodData.color,
-                      "cases",
-                      (50+response.spot.touchedBarGroup.x*20*scaleFactor).toInt(),
-                      50,
-                      true,
-                    );
-                  } else {
-                    showTooltip(
-                      "",
-                      "",
-                      Colors.transparent,
-                      "cases",
-                      0,
-                      0,
-                      false,
-                    );
-                  }
-                });
-              }
-            },
-          ),
-          borderData: FlBorderData(
-            show: true,
-            border: Border(
-              bottom: BorderSide(
-                color: kGreyColor,
-              ),
-              left: BorderSide(
-                color: kGreyColor,
-              ),
-            ),
-          ),
-          titlesData: FlTitlesData(
-            rightTitles: SideTitles(
-              showTitles: false,
-            ),
-            leftTitles: SideTitles(
-                reservedSize: 15*scaleFactor,
-                showTitles: true,
-                interval: sideInterval,
-                rotateAngle: rotated?math.pi*86:0,
-                getTitles: (double value){
-                  String str = "";
-                  if(numberData){
-                    if(value<1 && value>=0){
-                      if(value.toString().length>=4){
-                        str = value.toString().substring(0,4);
+                  touchCallback: (BarTouchResponse response){
+                    setState(() {
+                      if (response.spot != null &&
+                          response.touchInput is! FlPanEnd &&
+                          response.touchInput is! FlLongPressEnd) {
+                        showTooltip(
+                            list[response.spot.touchedBarGroup.x].displayName,
+                            category == GraphCategories.CNF_CASES?"${response.spot.touchedRodData.y.toInt()}":"${response.spot.touchedRodData.y.toStringAsFixed(1)} %",
+                            response.spot.touchedRodData.color,
+                            "cases",
+                            (50+response.spot.touchedRodData.y*20*scaleFactor).toInt(),
+                            (response.spot.touchedBarGroup.x*8*scaleFactor).toInt(),
+                            true,
+                            category
+                        );
+                      } else {
+                        showTooltip(
+                            "",
+                            "",
+                            Colors.transparent,
+                            "cases",
+                            0,
+                            0,
+                            false,
+                            category
+                        );
+                        graphCategory = -1;
                       }
-                    }else{
-                      if(value>=100){
-                        str = value.toString().substring(0,3);
-                      }else if(value>=10&& value<100){
-                        str = value.toString().substring(0,2);
-                      }else if(value<10){
-                        str = value.toString().substring(0,1);
-                      }else if(value == 0){
-                        str = "0";
-                      }else{
-                        str = value.toString().substring(0,3);
-                      }
-                    }
-                  }else{
-                    if(value >= 100000){
-                      str = "${value.toString().substring(0,1)}L";
-                    }else if(value>=10000){
-                      str = "${value.toString().substring(0,2)}K";
-                    }else if(value>=1000){
-                      str = "${value.toString().substring(0,1)}K";
-                    }else{
-                      str = value.toString();
-                    }
-                  }
+                    });
+                  },
+                ),
+                borderData: FlBorderData(
+                  show: true,
+                  border: Border(
+                    bottom: BorderSide(
+                      color: kGreyColor,
+                    ),
+                    left: BorderSide(
+                      color: kGreyColor,
+                    ),
+                  ),
+                ),
+                titlesData: FlTitlesData(
+                  rightTitles: SideTitles(
+                    showTitles: false,
+                  ),
+                  leftTitles: SideTitles(
+                      reservedSize: 15*scaleFactor,
+                      showTitles: true,
+                      interval: sideInterval,
+                      rotateAngle: rotated?math.pi*86:0,
+                      getTitles: (double value){
+                        String str = "";
+                        if(numberData){
+                          if(value<1 && value>=0){
+                            if(value.toString().length>=4){
+                              str = value.toString().substring(0,4);
+                            }
+                          }else{
+                            if(value>=100){
+                              str = value.toString().substring(0,3);
+                            }else if(value>=10&& value<100){
+                              str = value.toString().substring(0,2);
+                            }else if(value<10){
+                              str = value.toString().substring(0,1);
+                            }else if(value == 0){
+                              str = "0";
+                            }else{
+                              str = value.toString().substring(0,3);
+                            }
+                          }
+                        }else{
+                          if(value >= 100000){
+                            str = "${value.toString().substring(0,1)}L";
+                          }else if(value>=10000){
+                            str = "${value.toString().substring(0,2)}K";
+                          }else if(value>=1000){
+                            str = "${value.toString().substring(0,1)}K";
+                          }else{
+                            str = value.toString();
+                          }
+                        }
 
-                  return str;
-                },
-                textStyle: TextStyle(
-                  color: theme.brightness == Brightness.light?Colors.black:Colors.white,
-                  fontSize: 10*scaleFactor,
-                )
-            ),
-            bottomTitles: SideTitles(
-                rotateAngle: rotated?math.pi*86:math.pi*90,
-                showTitles: true,
-                reservedSize: 15*scaleFactor,
-                getTitles: (double value){
-                  return list[value.toInt()].stateCode;
-                },
-                textStyle: TextStyle(
-                  color: theme.brightness == Brightness.light?Colors.black:Colors.white,
-                  fontSize: 8*scaleFactor,
-                )
+                        return str;
+                      },
+                      textStyle: TextStyle(
+                        color: theme.brightness == Brightness.light?Colors.black:Colors.white,
+                        fontSize: 10*scaleFactor,
+                      )
+                  ),
+                  bottomTitles: SideTitles(
+                      rotateAngle: rotated?math.pi*86:math.pi*90,
+                      showTitles: true,
+                      reservedSize: 15*scaleFactor,
+                      getTitles: (double value){
+                        return list[value.toInt()].stateCode;
+                      },
+                      textStyle: TextStyle(
+                        color: theme.brightness == Brightness.light?Colors.black:Colors.white,
+                        fontSize: 8*scaleFactor,
+                      )
+                  ),
+                ),
+                maxY: highest,
+                backgroundColor: Colors.transparent,
+                barGroups: barGroups,
+                gridData: FlGridData(
+                    drawHorizontalLine: true,
+                    horizontalInterval: sideInterval,
+                    drawVerticalLine: true
+                ),
+              ),
             ),
           ),
-          maxY: highest,
-          backgroundColor: Colors.transparent,
-          barGroups: barGroups,
-          gridData: FlGridData(
-              drawHorizontalLine: true,
-              horizontalInterval: sideInterval,
-              drawVerticalLine: true
-          ),
-        ),
+          graphCategory == category?Positioned(
+            left: tooltipXPos,
+            child: Material(
+              borderRadius: BorderRadius.all(
+                Radius.circular(5),
+              ),
+              color: theme.accentColor,
+              child: Container(
+                constraints: BoxConstraints(
+                  maxWidth: 150,
+                ),
+                padding:EdgeInsets.symmetric(horizontal: 10,vertical: 5,),
+                child:Column(
+                  children: [
+                    Text(
+                      tooltipText,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: kQuickSand,
+                        fontSize: 12*scaleFactor,
+                        color:theme.brightness == Brightness.light?Colors.white:Colors.black,
+                      ),
+                    ),
+                  ],
+                )
+              ),
+            ),
+          ):SizedBox(),
+        ],
       ),
     );
   }
@@ -1226,19 +1281,153 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
     );
   }
 
+  Widget _getRestBarChart(List<BarChartGroupData> barGroups,double highest,List<StateInfo> list,{bool rotated=false,bool numberData=false,int category}){
+
+    double sideInterval = (highest/10).roundToDouble();
+
+    return BarChart(
+      BarChartData(
+        barTouchData: BarTouchData(
+          handleBuiltInTouches: rotated?false:true,
+          touchTooltipData: BarTouchTooltipData(
+              tooltipBgColor: theme.accentColor,
+              getTooltipItem: (groupData,a,rodData,b){
+                return BarTooltipItem(
+                  "${list[groupData.x].displayName}\n${rodData.y.round()}",
+                  TextStyle(
+                    fontFamily: kQuickSand,
+                    fontSize: 16*scaleFactor,
+                    color: theme.brightness==Brightness.light?Colors.white:Colors.black,
+                  ),
+                );
+              }
+          ),
+          touchCallback: (BarTouchResponse response){
+              setState(() {
+                if (response.spot != null &&
+                    response.touchInput is! FlPanEnd &&
+                    response.touchInput is! FlLongPressEnd) {
+                  showTooltip(
+                    list[response.spot.touchedBarGroup.x].displayName,
+                    "${response.spot.touchedRodData.y.toInt()}",
+                    response.spot.touchedRodData.color,
+                    "cases",
+                    (50+response.spot.touchedBarGroup.x*20*scaleFactor).toInt(),
+                    50,
+                    true,
+                    GraphCategories.STATE_CASES,
+                  );
+                } else {
+                  showTooltip(
+                    "",
+                    "",
+                    Colors.transparent,
+                    "cases",
+                    0,
+                    0,
+                    false,
+                    GraphCategories.STATE_CASES,
+                  );
+                  graphCategory = -1;
+                }
+              });
+          },
+        ),
+        borderData: FlBorderData(
+          show: true,
+          border: Border(
+            bottom: BorderSide(
+              color: kGreyColor,
+            ),
+            left: BorderSide(
+              color: kGreyColor,
+            ),
+          ),
+        ),
+        titlesData: FlTitlesData(
+          rightTitles: SideTitles(
+            showTitles: false,
+          ),
+          leftTitles: SideTitles(
+              reservedSize: 15*scaleFactor,
+              showTitles: true,
+              interval: sideInterval,
+              rotateAngle: rotated?math.pi*86:0,
+              getTitles: (double value){
+                String str = "";
+                if(numberData){
+                  if(value<1 && value>=0){
+                    if(value.toString().length>=4){
+                      str = value.toString().substring(0,4);
+                    }
+                  }else{
+                    if(value>=100){
+                      str = value.toString().substring(0,3);
+                    }else if(value>=10&& value<100){
+                      str = value.toString().substring(0,2);
+                    }else if(value<10){
+                      str = value.toString().substring(0,1);
+                    }else if(value == 0){
+                      str = "0";
+                    }else{
+                      str = value.toString().substring(0,3);
+                    }
+                  }
+                }else{
+                  if(value >= 100000){
+                    str = "${value.toString().substring(0,1)}L";
+                  }else if(value>=10000){
+                    str = "${value.toString().substring(0,2)}K";
+                  }else if(value>=1000){
+                    str = "${value.toString().substring(0,1)}K";
+                  }else{
+                    str = value.toString();
+                  }
+                }
+
+                return str;
+              },
+              textStyle: TextStyle(
+                color: theme.brightness == Brightness.light?Colors.black:Colors.white,
+                fontSize: 10*scaleFactor,
+              )
+          ),
+          bottomTitles: SideTitles(
+              rotateAngle: rotated?math.pi*86:math.pi*90,
+              showTitles: true,
+              reservedSize: 15*scaleFactor,
+              getTitles: (double value){
+                return list[value.toInt()].stateCode;
+              },
+              textStyle: TextStyle(
+                color: theme.brightness == Brightness.light?Colors.black:Colors.white,
+                fontSize: 8*scaleFactor,
+              )
+          ),
+        ),
+        maxY: highest,
+        backgroundColor: Colors.transparent,
+        barGroups: barGroups,
+        gridData: FlGridData(
+            drawHorizontalLine: true,
+            horizontalInterval: sideInterval,
+            drawVerticalLine: true
+        ),
+      ),
+    );
+  }
+
   Widget _getLineChart(List<FlSpot> spots,double total,int maxX){
     double bottomTitleInterval = 0;
     double sideInterval = 2;
-    double multiplier = 0;
-
 
 
     if(dataRange == DataRange.BEGINNING){
       bottomTitleInterval = (maxX/10).roundToDouble();
     }else if(dataRange == DataRange.MONTH){
-      bottomTitleInterval = (maxX/10).roundToDouble();
+      bottomTitleInterval = 3;
     }else if(dataRange == DataRange.TWO_WEEK){
-      bottomTitleInterval = (maxX/7).roundToDouble();
+      bottomTitleInterval = 2;
     }
 
     sideInterval = double.parse((total/10).toStringAsFixed(2));
@@ -1251,10 +1440,35 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
           LineChartData(
             lineTouchData: LineTouchData(
               touchTooltipData: LineTouchTooltipData(
+                getTooltipItems: (List<LineBarSpot> spots){
+                  List<LineTooltipItem> list = List();
+
+                  spots.forEach((element) {
+                    DateTime date = DateTime(
+                      2020,
+                      DateTime.now().month,
+                      DateTime.now().day-maxX+element.x.toInt(),
+                    );
+                    list.add(
+                      LineTooltipItem(
+                        "${DateFormat("d MMM y").format(date)}\n${element.y.toStringAsFixed(2)}",
+                        TextStyle(
+                          fontFamily: kQuickSand,
+                          fontSize: 12*scaleFactor,
+                          color: theme.brightness == Brightness.light?Colors.white:Colors.black,
+                        )
+                      )
+                    );
+                  });
+
+                  return list;
+                },
                 tooltipBottomMargin: 50,
-                tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
+                tooltipBgColor: theme.accentColor,
               ),
-              touchCallback: (LineTouchResponse touchResponse) {},
+              touchCallback: (LineTouchResponse touchResponse) {
+                // implementation
+              },
               handleBuiltInTouches: true,
             ),
             maxY: total,
@@ -1307,7 +1521,6 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
 
                     return val;
 
-                    return val;
 
                   },
                 ),
@@ -1357,4 +1570,12 @@ class CaseModel{
   int value;
 
   CaseModel(this.key,this.value);
+}
+
+class GraphCategories{
+  static const int AVG_GROWTH_RATE = 0;
+  static const int REC_RATES = 1;
+  static const int DET_RATE = 2;
+  static const int CNF_CASES = 3;
+  static const int STATE_CASES = 4;
 }

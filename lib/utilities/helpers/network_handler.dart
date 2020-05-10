@@ -139,4 +139,10 @@ class NetworkHandler{
     return jsonDecode(res.body);
   }
 
+  Future getCompareResult(String countryOne, String countryTwo)async{
+    Map<String,String> header = {"Accept":"application/json"};
+    var res = await http.post(compareCountryLink,headers: header,body: {"country_one":countryOne,"country_two":countryTwo});
+    return jsonDecode(res.body);
+  }
+
 }

@@ -48,7 +48,7 @@ class _ChartScreenState extends State<ChartsScreen> with SingleTickerProviderSta
             Tab(text: lang.translate(kDailyLang)),
             Tab(text: lang.translate(kMoreAnalysis),),
             Tab(text: lang.translate(kPredictions),),
-            Tab(text: "Compare",),
+            Tab(text: lang.translate(kComparativeAnalysis),),
           ],
         ),
         body: TabBarView(

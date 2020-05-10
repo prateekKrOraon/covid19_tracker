@@ -5,6 +5,7 @@ import 'package:covid19_tracker/constants/language_constants.dart';
 import 'file:///G:/stuff/AndroidStudioProjects/Flutter/MY_PROJECTS/covid19_tracker/lib/utilities/analytics/sird_model.dart';
 import 'package:covid19_tracker/data/state_wise_data.dart';
 import 'package:covid19_tracker/localization/app_localization.dart';
+import 'package:covid19_tracker/utilities/helpers/network_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:intl/intl.dart';
@@ -290,7 +291,7 @@ class _PredictionState extends State<Predictions>{
                   padding: const EdgeInsets.only(right: 10),
                   child: InkWell(
                     onTap: (){
-
+                      NetworkHandler.getInstance().launchInBrowser("https://prateekkroraon.github.io/covid-19-tracker/sird-model.html");
                     },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 4),
