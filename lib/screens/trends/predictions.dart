@@ -87,6 +87,16 @@ class _PredictionState extends State<Predictions>{
           );
         });
 
+        print(sird.infectedTimeSeries.length);
+
+        DateTime date = DateTime(
+          2020,
+          1,
+          30+sird.infectedTimeSeries.length,
+        );
+
+        print(date.toString());
+
         return SingleChildScrollView(
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 8,vertical: 4),
@@ -332,9 +342,9 @@ class _PredictionState extends State<Predictions>{
 
                     String date = DateFormat("d MMM y").format(
                       DateTime(
-                        DateTime.now().year,
-                        DateTime.now().month,
-                        DateTime.now().day+index,
+                        2020,
+                        1,
+                        30+sird.infectedTimeSeries.length+index,
                       ),
                     );
 
