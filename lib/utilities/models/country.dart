@@ -24,6 +24,28 @@ class Country{
   int tests;
   int testPerOneMil;
   DateTime updated;
+  List<double> cnfCasesSeries;
+  List<double> recCasesSeries;
+  List<double> detCasesSeries;
+
+  void generateList(Map map){
+    cnfCasesSeries = List();
+    recCasesSeries = List();
+    detCasesSeries = List();
+
+    map.forEach((key, value) {
+      cnfCasesSeries.add(
+        double.parse(value[kConfirmed].toString()),
+      );
+      recCasesSeries.add(
+        double.parse(value[kRecovered].toString()),
+      );
+      detCasesSeries.add(
+        double.parse(value[kDeaths].toString()),
+      );
+    });
+
+  }
 
   Country.fromMap(BuildContext context, Map<String,dynamic> map){
     this.countryName = map[kCountry];

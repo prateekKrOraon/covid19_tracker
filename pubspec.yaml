@@ -1,6 +1,6 @@
 name: covid19_tracker
 description: An app to provide real-time tally of  COVID-19 patients in India.
-version: 1.4.3+1
+version: 1.5.6+1
 
 
 environment:

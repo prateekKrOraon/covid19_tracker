@@ -29,6 +29,7 @@ class _SplashScreenState extends State<SplashScreen>{
   SharedPreferences _prefs;
   bool onBoarding = false;
   String langCode;
+  double scaleFactor = 1;
 
   @override
   void initState() {
@@ -65,6 +66,7 @@ class _SplashScreenState extends State<SplashScreen>{
                 "Choose Language/भाषा चुनें",
                 style: TextStyle(
                   fontFamily: kQuickSand,
+                  fontSize: 18*scaleFactor
                 ),
               ),
               children: <Widget>[
@@ -73,11 +75,12 @@ class _SplashScreenState extends State<SplashScreen>{
                     "English - US",
                     style: TextStyle(
                       fontFamily: kQuickSand,
+                      fontSize: 16,
                     ),
                   ),
                   trailing: Container(
-                    height: 20,
-                    width: 20,
+                    height: 20*scaleFactor,
+                    width: 20*scaleFactor,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(
                         Radius.circular(10),
@@ -102,11 +105,12 @@ class _SplashScreenState extends State<SplashScreen>{
                     "हिन्दी - भारत",
                     style: TextStyle(
                       fontFamily: kQuickSand,
+                      fontSize: 16,
                     ),
                   ),
                   trailing: Container(
-                    height: 20,
-                    width: 20,
+                    height: 20*scaleFactor,
+                    width: 20*scaleFactor,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(
                         Radius.circular(10),
@@ -150,6 +154,9 @@ class _SplashScreenState extends State<SplashScreen>{
     Size size = MediaQuery.of(context).size;
     AppLocalizations lang = AppLocalizations.of(context);
 
+    if(size.width <= 400){
+      scaleFactor = 0.75;
+    }
 
     return Scaffold(
       body: Container(
@@ -160,18 +167,18 @@ class _SplashScreenState extends State<SplashScreen>{
           children: <Widget>[
             SizedBox(),
             Image(
-              height: 125,
-              width: 125,
+              height: 125*scaleFactor,
+              width: 125*scaleFactor,
               image: AssetImage(
                 "assets/app_icon_large.png"
               ),
             ),
-            SizedBox(height: 10,),
+            SizedBox(height: 10*scaleFactor,),
             Text(
               lang.translate(kAppNameLang),
               style: TextStyle(
                   fontFamily: kQuickSand,
-                  fontSize: 30,
+                  fontSize: 30*scaleFactor,
               ),
             ),
             SizedBox(),

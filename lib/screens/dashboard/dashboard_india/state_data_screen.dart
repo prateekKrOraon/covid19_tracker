@@ -8,6 +8,7 @@ import 'package:covid19_tracker/constants/api_constants.dart';
 import 'package:covid19_tracker/constants/colors.dart';
 import 'package:covid19_tracker/constants/app_constants.dart';
 import 'package:covid19_tracker/constants/language_constants.dart';
+import 'package:covid19_tracker/data/zones_data.dart';
 import 'package:covid19_tracker/localization/app_localization.dart';
 import 'package:covid19_tracker/utilities/custom_widgets/custom_widgets.dart';
 import 'package:covid19_tracker/utilities/models/district.dart';
@@ -42,22 +43,26 @@ class _StateDataState extends State<StateData>{
   StateInfo stateInfo;
   bool logarithmic = false;
 
-  static const String LINE_CHART = 'line_chart';
-  static const String BAR_CHART = 'bar_chart';
 
   NetworkHandler _networkHandler;
 
-  double textScaleFactor = 1;
+  double scaleFactor = 1;
 
   SortingOrder sortingOrder;
+
+  Future _data;
 
   @override
   void initState() {
     _networkHandler = NetworkHandler.getInstance();
-
     this.stateInfo = widget.stateInfo;
     sortingOrder = SortingOrder();
+    _getData();
     super.initState();
+  }
+
+  Future _getData()async{
+    _data = Future.wait([_networkHandler.getStateData(stateInfo.stateName),_networkHandler.getStatesDaily(),_networkHandler.getZonesData(stateInfo.stateCode)]);
   }
 
   @override
@@ -67,8 +72,8 @@ class _StateDataState extends State<StateData>{
     AppLocalizations lang = AppLocalizations.of(context);
     theme = Theme.of(context);
 
-    if(size.width<=360){
-      textScaleFactor = 0.75;
+    if(size.width<=400){
+      scaleFactor = 0.75;
     }
 
     return Scaffold(
@@ -90,21 +95,21 @@ class _StateDataState extends State<StateData>{
                         stateInfo.displayName,
                         style: TextStyle(
                           fontFamily: kQuickSand,
-                          fontSize: 30*textScaleFactor,
+                          fontSize: 30*scaleFactor,
                         ),
                       ),
                       Text(
                         "${lang.translate(kLastUpdatedAtLang)}: ${DateFormat("d MMM, ").add_jm().format(stateInfo.lastUpdated)}",
                         style: TextStyle(
                           fontFamily: kQuickSand,
-                          fontSize: 14*textScaleFactor,
+                          fontSize: 14*scaleFactor,
                           color: Colors.green,
                         ),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 16,),
+                SizedBox(height: 16*scaleFactor,),
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 6),
                   child: Column(
@@ -118,7 +123,7 @@ class _StateDataState extends State<StateData>{
                             delta: stateInfo.deltaCnf.toString(),
                             color: kRedColor,
                           ),
-                          SizedBox(width: 10,),
+                          SizedBox(width: 10*scaleFactor,),
                           DashboardTile(
                             mainTitle: lang.translate(kTotalActvLang),
                             value: stateInfo.active.toString(),
@@ -127,7 +132,7 @@ class _StateDataState extends State<StateData>{
                           ),
                         ],
                       ),
-                      SizedBox(height: 10,),
+                      SizedBox(height: 10*scaleFactor,),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -138,11 +143,11 @@ class _StateDataState extends State<StateData>{
                             delta: stateInfo.deltaRec.toString(),
                             color: kGreenColor,
                           ),
-                          SizedBox(width: 10,),
+                          SizedBox(width: 10*scaleFactor,),
                           DashboardTile(
                             mainTitle: lang.translate(kTotalDetLang),
                             value: stateInfo.deaths.toString(),
-                            delta: stateInfo.deltaRec.toString(),
+                            delta: stateInfo.deltaDet.toString(),
                             color: kGreyColor,
                           ),
                         ],
@@ -156,12 +161,12 @@ class _StateDataState extends State<StateData>{
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
-                        SizedBox(height: 10,),
+                        SizedBox(height: 10*scaleFactor,),
                         Text(
-                          "Note: ${stateInfo.stateNotes}",
+                          "Note:\n${stateInfo.stateNotes}\nThe colored dots represents zones",
                           style: TextStyle(
                             fontFamily: kNotoSansSc,
-                            fontSize: 14*textScaleFactor,
+                            fontSize: 13*scaleFactor,
                             color:kGreyColor,
                           ),
                         ),
@@ -169,9 +174,9 @@ class _StateDataState extends State<StateData>{
                     ),
                   ),
                 ):SizedBox(),
-                SizedBox(height: 10,),
+                SizedBox(height: 10*scaleFactor,),
                 FutureBuilder(
-                  future: Future.wait([_networkHandler.getStateData(stateInfo.stateName),_networkHandler.getStatesDaily()]),
+                  future: _data,
                   builder: (BuildContext context, snapshot){
                     if(snapshot.connectionState == ConnectionState.waiting){
                       return Container(height:size.width,child: Center(child: CircularProgressIndicator(),));
@@ -202,6 +207,7 @@ class _StateDataState extends State<StateData>{
 
                     //Table data processing
                     Map districtWiseReport = snapshot.data[0];
+                    Map zones = snapshot.data[2];
                     List districtData = districtWiseReport[kDistrictData];
                     List<District> districts = List();
 
@@ -213,6 +219,7 @@ class _StateDataState extends State<StateData>{
                           District.fromMap(
                             context,
                             map,
+                            zones,
                           ),
                         );
                       }
@@ -224,8 +231,7 @@ class _StateDataState extends State<StateData>{
                     //unknown cases is appended at the end of the sorted list is there is any
                     if(districtData[districtData.length-1][kDistrict] == 'Unknown'){
                       districts.add(
-
-                        District.fromMap(context, districtData[districtData.length-1]),
+                        District.fromMap(context, districtData[districtData.length-1],zones),
                       );
                     }
 
@@ -280,6 +286,7 @@ class _StateDataState extends State<StateData>{
                         dailyConfirmedChartGroup.add(
                           BarChartGroupData(
                             x: i,
+                            showingTooltipIndicators: [],
                             barRods: [
                               BarChartRodData(
                                 y: currentCnf.toDouble(),
@@ -288,7 +295,7 @@ class _StateDataState extends State<StateData>{
                                   topLeft: Radius.circular(10),
                                 ),
                                 color: theme.accentColor,
-                                width: 5,
+                                width: 6*scaleFactor,
                               ),
                             ],
                           ),
@@ -313,6 +320,7 @@ class _StateDataState extends State<StateData>{
                         dailyRecChartGroup.add(
                           BarChartGroupData(
                             x: i,
+                            showingTooltipIndicators: [],
                             barRods: [
                               BarChartRodData(
                                 y: currentRec.toDouble(),
@@ -321,7 +329,7 @@ class _StateDataState extends State<StateData>{
                                   topLeft: Radius.circular(10),
                                 ),
                                 color: theme.accentColor,
-                                width: 5,
+                                width: 6*scaleFactor,
                               ),
                             ],
                           ),
@@ -347,6 +355,7 @@ class _StateDataState extends State<StateData>{
                         dailyDetChartGroup.add(
                           BarChartGroupData(
                             x: i,
+                            showingTooltipIndicators: [],
                             barRods: [
                               BarChartRodData(
                                 y: currentDet.toDouble(),
@@ -355,7 +364,7 @@ class _StateDataState extends State<StateData>{
                                   topLeft: Radius.circular(10),
                                 ),
                                 color: theme.accentColor,
-                                width: 5,
+                                width: 6*scaleFactor,
                               ),
                             ],
                           ),
@@ -380,15 +389,15 @@ class _StateDataState extends State<StateData>{
                     List<Widget> barChartLayouts = List();
 
                     barChartLayouts.add(
-                      _getBarChartLayout(lang.translate(kDailyCnfLang), dailyConfirmedChartGroup, (dailyHighestCnf+100).toDouble(),range~/3),
+                      _getBarChartLayout(lang.translate(kDailyCnfLang), dailyConfirmedChartGroup, (dailyHighestCnf).toDouble(),range~/3),
                     );
 
                     barChartLayouts.add(
-                      _getBarChartLayout(lang.translate(kDailyRecLang), dailyRecChartGroup, (dailyHighestRec+100).toDouble(),range~/3),
+                      _getBarChartLayout(lang.translate(kDailyRecLang), dailyRecChartGroup, (dailyHighestRec).toDouble(),range~/3),
                     );
 
                     barChartLayouts.add(
-                      _getBarChartLayout(lang.translate(kDailyDetLang), dailyDetChartGroup, (dailyHighestDet+100).toDouble(),range~/3),
+                      _getBarChartLayout(lang.translate(kDailyDetLang), dailyDetChartGroup, (dailyHighestDet).toDouble(),range~/3),
                     );
 
 
@@ -424,22 +433,38 @@ class _StateDataState extends State<StateData>{
                                           District district = districts[index];
                                           return Column(
                                             children: <Widget>[
-                                              SizedBox(height:5,),
+                                              SizedBox(height:5*scaleFactor,),
                                               Container(
                                                 padding: EdgeInsets.only(left: 6,right: 6),
                                                 constraints:BoxConstraints(
-                                                  minHeight: 30,
-                                                  maxHeight: 76,
+                                                  minHeight: 30*scaleFactor,
+                                                  maxHeight: 76*scaleFactor,
                                                 ),
                                                 child: Row(
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: <Widget>[
+                                                    Container(
+                                                      width: 20*scaleFactor,
+                                                      height: 20*scaleFactor,
+                                                      child: Center(
+                                                        child: Container(
+                                                          height: 10*scaleFactor,
+                                                          width: 10*scaleFactor,
+                                                          decoration: BoxDecoration(
+                                                            borderRadius: BorderRadius.all(
+                                                              Radius.circular(5,),
+                                                            ),
+                                                            color: district.zone,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
                                                     Expanded(
                                                       child: Text(
                                                         district.name,
                                                         style: TextStyle(
                                                           fontFamily: kQuickSand,
-                                                          fontSize: 14*textScaleFactor,
+                                                          fontSize: 14*scaleFactor,
                                                         ),
                                                       ),
                                                     ),
@@ -452,17 +477,17 @@ class _StateDataState extends State<StateData>{
                                                             textAlign: TextAlign.center,
                                                             style: TextStyle(
                                                               fontFamily: kQuickSand,
-                                                              fontSize: 14*textScaleFactor,
+                                                              fontSize: 14*scaleFactor,
                                                             ),
                                                           ),
-                                                          SizedBox(height: 3,),
+                                                          SizedBox(height: 3*scaleFactor,),
                                                           Text(
                                                             district.deltaCnf==0?"":"(+${district.deltaCnf})",
                                                             textAlign: TextAlign.center,
                                                             style: TextStyle(
                                                               fontFamily: kQuickSand,
                                                               color: kRedColor,
-                                                              fontSize: 12*textScaleFactor,
+                                                              fontSize: 12*scaleFactor,
                                                             ),
                                                           ),
                                                         ],
@@ -477,7 +502,7 @@ class _StateDataState extends State<StateData>{
                                                             textAlign: TextAlign.center,
                                                             style: TextStyle(
                                                               fontFamily: kQuickSand,
-                                                              fontSize: 14*textScaleFactor,
+                                                              fontSize: 14*scaleFactor,
                                                             ),
                                                           ),
                                                         ],
@@ -493,17 +518,17 @@ class _StateDataState extends State<StateData>{
                                                             textAlign: TextAlign.center,
                                                             style: TextStyle(
                                                               fontFamily: kQuickSand,
-                                                              fontSize: 14*textScaleFactor,
+                                                              fontSize: 14*scaleFactor,
                                                             ),
                                                           ),
-                                                          SizedBox(height: 3,),
+                                                          SizedBox(height: 3*scaleFactor,),
                                                           Text(
                                                             district.deltaRec==0?"":"(+${district.deltaRec})",
                                                             textAlign: TextAlign.center,
                                                             style: TextStyle(
                                                               fontFamily: kQuickSand,
                                                               color: kGreenColor,
-                                                              fontSize: 12*textScaleFactor,
+                                                              fontSize: 12*scaleFactor,
                                                             ),
                                                           ),
                                                         ],
@@ -518,17 +543,17 @@ class _StateDataState extends State<StateData>{
                                                             textAlign: TextAlign.center,
                                                             style: TextStyle(
                                                               fontFamily: kQuickSand,
-                                                              fontSize: 14*textScaleFactor,
+                                                              fontSize: 14*scaleFactor,
                                                             ),
                                                           ),
-                                                          SizedBox(height: 3,),
+                                                          SizedBox(height: 3*scaleFactor,),
                                                           Text(
                                                             district.deltaDet==0?"":"(+${district.deltaDet})",
                                                             textAlign: TextAlign.center,
                                                             style: TextStyle(
                                                               fontFamily: kQuickSand,
                                                               color: Colors.grey,
-                                                              fontSize: 12*textScaleFactor,
+                                                              fontSize: 12*scaleFactor,
                                                             ),
                                                           ),
                                                         ],
@@ -537,7 +562,7 @@ class _StateDataState extends State<StateData>{
                                                   ],
                                                 ),
                                               ),
-                                              SizedBox(height:5,),
+                                              SizedBox(height:5*scaleFactor,),
                                               Container(height: 1,color: theme.brightness == Brightness.light?kGreyColorLight:Colors.grey[800],),
                                             ],
                                           );
@@ -549,7 +574,7 @@ class _StateDataState extends State<StateData>{
                             ),
                           ),
                         ),
-                        SizedBox(height: 20,),
+                        SizedBox(height: 20*scaleFactor,),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 6),
                           child: Row(
@@ -562,7 +587,7 @@ class _StateDataState extends State<StateData>{
                                     lang.translate(kSpreadTrendsLang),
                                     style: TextStyle(
                                       fontFamily: kQuickSand,
-                                      fontSize: 25*textScaleFactor,
+                                      fontSize: 25*scaleFactor,
                                     ),
                                   ),
                                   Text(
@@ -570,7 +595,7 @@ class _StateDataState extends State<StateData>{
                                     style: TextStyle(
                                       color: Colors.grey[500],
                                       fontFamily: kQuickSand,
-                                      fontSize: 16*textScaleFactor,
+                                      fontSize: 16*scaleFactor,
                                     ),
                                   ),
                                 ],
@@ -583,6 +608,7 @@ class _StateDataState extends State<StateData>{
                                   child: Center(
                                     child: Icon(
                                       SimpleLineIcons.arrow_right,
+                                      size: 20*scaleFactor,
                                     ),
                                   ),
                                 ),
@@ -590,7 +616,7 @@ class _StateDataState extends State<StateData>{
                             ],
                           ),
                         ),
-                        SizedBox(height: 20,),
+                        SizedBox(height: 20*scaleFactor,),
                         Container(
                           height: size.width*0.7,
                           width: size.width,
@@ -665,10 +691,10 @@ class _StateDataState extends State<StateData>{
                       caseStr,
                       style: TextStyle(
                         fontFamily: kQuickSand,
-                        fontSize: 25*textScaleFactor,
+                        fontSize: 25*scaleFactor,
                       ),
                     ),
-                    SizedBox(height: 20,),
+                    SizedBox(height: 20*scaleFactor,),
                     _getBarChart(barGroups, highest,maxX)
                   ],
                 ),
@@ -705,10 +731,10 @@ class _StateDataState extends State<StateData>{
                       caseStr,
                       style: TextStyle(
                         fontFamily: kQuickSand,
-                        fontSize: 25*textScaleFactor,
+                        fontSize: 25*scaleFactor,
                       ),
                     ),
-                    SizedBox(height: 20,),
+                    SizedBox(height: 20*scaleFactor,),
                     _getLineChart(spots,total,maxX),
                   ],
                 ),
@@ -721,6 +747,13 @@ class _StateDataState extends State<StateData>{
 
 
   Widget _getBarChart(List<BarChartGroupData> barGroups,double highest,int maxX){
+
+    double sideInterval = (highest/10).roundToDouble();
+
+    if(sideInterval<0.001){
+      sideInterval = 1;
+    }
+
     return Padding(
       padding: const EdgeInsets.all(6),
       child: AspectRatio(
@@ -730,9 +763,27 @@ class _StateDataState extends State<StateData>{
             barTouchData: BarTouchData(
                 allowTouchBarBackDraw: true,
                 touchTooltipData: BarTouchTooltipData(
-                  tooltipBgColor: kAccentColor,
+                  getTooltipItem: (groupData,a,rodData,b){
+                    return BarTooltipItem(
+                        "${rodData.y.toInt()}",
+                        TextStyle(
+                          fontFamily: kQuickSand,
+                          fontSize: 12*scaleFactor,
+                          color: theme.brightness == Brightness.light?Colors.white:Colors.black,
+                        )
+                    );
+                  },
+                  tooltipBgColor: theme.accentColor,
                 ),
-                touchCallback: (BarTouchResponse response){}
+                touchCallback: (BarTouchResponse response){
+                  setState(() {
+                    if (response.spot != null &&
+                        response.touchInput is! FlPanEnd &&
+                        response.touchInput is! FlLongPressEnd) {
+                    } else {
+                    }
+                  });
+                }
             ),
             borderData: FlBorderData(
               show: true,
@@ -750,20 +801,23 @@ class _StateDataState extends State<StateData>{
                 showTitles: false,
               ),
               rightTitles: SideTitles(
-                  reservedSize: 20,
+                  reservedSize: 20*scaleFactor,
                   showTitles: true,
-                  interval: highest<200?50:200,
+                  interval: sideInterval,
                   getTitles: (double value){
                     return value.toInt().toString();
                   },
                   textStyle: TextStyle(
                     color: theme.brightness == Brightness.light?Colors.black:Colors.white,
-                    fontSize: 10*textScaleFactor,
+                    fontSize: 10*scaleFactor,
+                    fontFamily: kQuickSand
                   )
               ),
               bottomTitles: SideTitles(
                   rotateAngle: math.pi*90,
-                  interval: 5,
+                  interval: 3,
+                  margin: 20*scaleFactor,
+                  reservedSize: 15*scaleFactor,
                   showTitles: true,
                   getTitles: (double value){
                     DateTime now = DateTime.now();
@@ -776,7 +830,8 @@ class _StateDataState extends State<StateData>{
                   },
                   textStyle: TextStyle(
                     color: theme.brightness == Brightness.light?Colors.black:Colors.white,
-                    fontSize: 8*textScaleFactor,
+                    fontSize: 8*scaleFactor,
+                    fontFamily: kQuickSand
                   )
               ),
             ),
@@ -785,7 +840,7 @@ class _StateDataState extends State<StateData>{
             barGroups: barGroups,
             gridData: FlGridData(
                 drawHorizontalLine: true,
-                horizontalInterval: highest<200?50:200,
+                horizontalInterval: sideInterval,
                 drawVerticalLine: true
             ),
           ),
@@ -795,6 +850,16 @@ class _StateDataState extends State<StateData>{
   }
 
   Widget _getLineChart(List<FlSpot> spots,double total,int maxX){
+
+    double sideInterval = (total/10).roundToDouble();
+    double bottomInterval = (maxX/10).roundToDouble();
+
+    total = total + (total*0.1);
+
+    if(sideInterval<0.001){
+      sideInterval = 1;
+    }
+
     return Padding(
       padding: const EdgeInsets.all(6),
       child: AspectRatio(
@@ -803,13 +868,46 @@ class _StateDataState extends State<StateData>{
           LineChartData(
             lineTouchData: LineTouchData(
               touchTooltipData: LineTouchTooltipData(
+                getTooltipItems: (List<LineBarSpot> list){
+                  List<LineTooltipItem> returnList = List();
+
+                  list.forEach((element) {
+                    DateTime date = DateTime(
+                      2020,
+                      DateTime.now().month,
+                      DateTime.now().day-maxX+element.x.toInt(),
+                    );
+                    returnList.add(
+                      LineTooltipItem(
+                        "${DateFormat("d MMM").format(date)}\n${element.y.toInt()}",
+                        TextStyle(
+                          fontFamily: kQuickSand,
+                          fontSize: 12*scaleFactor,
+                          color: theme.brightness == Brightness.light?Colors.white:Colors.black,
+                        ),
+                      ),
+                    );
+                  });
+
+                  return returnList;
+                },
                 tooltipBottomMargin: 50,
-                tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
+                tooltipBgColor: theme.accentColor,
               ),
-              touchCallback: (LineTouchResponse touchResponse) {},
+              touchCallback: (LineTouchResponse response) {
+                setState(() {
+                  if (response.lineBarSpots != null &&
+                      response.touchInput is! FlPanEnd &&
+                      response.touchInput is! FlLongPressEnd) {
+                    //touchedIndex = barTouchResponse.spot.touchedBarGroupIndex;
+                  } else {
+                    //touchedIndex = -1;
+                  }
+                });
+              },
               handleBuiltInTouches: true,
             ),
-            maxY: total<500?total+200:total+2000,
+            maxY: total,
             borderData: FlBorderData(
               show: true,
               border: Border(
@@ -823,7 +921,7 @@ class _StateDataState extends State<StateData>{
             ),
             gridData: FlGridData(
               drawHorizontalLine: true,
-              horizontalInterval: total<500?100:2000,
+              horizontalInterval: sideInterval,
             ),
             titlesData: FlTitlesData(
                 leftTitles: SideTitles(
@@ -831,12 +929,12 @@ class _StateDataState extends State<StateData>{
                 ),
                 rightTitles: SideTitles(
                     showTitles: true,
-                    interval: logarithmic?math.log(2000)*math.log2e*1000:total<500?100:2000,
-                    reservedSize: total<500?20:10,
+                    interval: sideInterval,
+                    reservedSize: total<500?20*scaleFactor:20*scaleFactor,
                     textStyle: TextStyle(
-                      fontSize: 10*textScaleFactor,
+                      fontSize: 10*scaleFactor,
                       color: theme.brightness == Brightness.light?Colors.black:Colors.white,
-                      fontFamily: kNotoSansSc,
+                      fontFamily: kQuickSand,
                     ),
                     getTitles: (double value){
                       if(value<10000 && value>500){
@@ -851,11 +949,13 @@ class _StateDataState extends State<StateData>{
                 bottomTitles: SideTitles(
                   showTitles: true,
                   rotateAngle: math.pi*90,
-                  interval: 3,
+                  reservedSize: 15*scaleFactor,
+                  margin: 10*scaleFactor,
+                  interval: bottomInterval,
                   textStyle: TextStyle(
-                    fontSize: 8*textScaleFactor,
+                    fontSize: 8*scaleFactor,
                     color: theme.brightness == Brightness.light?Colors.black:Colors.white,
-                    fontFamily: kNotoSansSc,
+                    fontFamily: kQuickSand,
                   ),
                   getTitles: (double value){
                     DateTime now = DateTime.now();

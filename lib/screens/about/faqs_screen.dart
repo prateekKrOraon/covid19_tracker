@@ -17,7 +17,7 @@ class FAQsScreen extends StatefulWidget{
 
 class _FAQsScreenState extends State<FAQsScreen>{
 
-  double textScaleFactor = 1.0;
+  double scaleFactor = 1.0;
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +26,8 @@ class _FAQsScreenState extends State<FAQsScreen>{
     AppLocalizations lang = AppLocalizations.of(context);
     Size size = MediaQuery.of(context).size;
 
-    if(size.width <= 360){
-      textScaleFactor = 0.75;
+    if(size.width <= 400){
+      scaleFactor = 0.75;
     }
 
     return Scaffold(
@@ -38,6 +38,7 @@ class _FAQsScreenState extends State<FAQsScreen>{
           "Frequently Asked Questions",
           style: TextStyle(
             fontFamily: kQuickSand,
+            fontSize: 22*scaleFactor,
           ),
         ),
       ),
@@ -101,7 +102,7 @@ class _FAQsScreenState extends State<FAQsScreen>{
         map[kCategory],
         style: TextStyle(
             fontFamily: kQuickSand,
-            fontSize: 18*textScaleFactor
+            fontSize: 18*scaleFactor
         ),
       ),
       children: _getTileChildren(map[kFAQs]),
@@ -122,7 +123,7 @@ class _FAQsScreenState extends State<FAQsScreen>{
             map[kQuestion],
             style: TextStyle(
                 fontFamily: kQuickSand,
-                fontSize: 18*textScaleFactor
+                fontSize: 18*scaleFactor
             ),
           ),
           children: <Widget>[
@@ -132,7 +133,7 @@ class _FAQsScreenState extends State<FAQsScreen>{
                 map[kAnswer],
                 style: TextStyle(
                   fontFamily: kQuickSand,
-                  fontSize: 16*textScaleFactor,
+                  fontSize: 16*scaleFactor,
                 ),
               ),
             )

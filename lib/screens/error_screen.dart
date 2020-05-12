@@ -24,6 +24,9 @@ class ErrorScreen extends StatefulWidget{
 }
 
 class _ErrorScreenState extends State<ErrorScreen>{
+
+  double scaleFactor = 1;
+
   @override
   Widget build(BuildContext context) {
 
@@ -32,25 +35,29 @@ class _ErrorScreenState extends State<ErrorScreen>{
     Size size = MediaQuery.of(context).size;
     ThemeData theme = Theme.of(context);
 
+    if(size.width <=400){
+      scaleFactor = 0.75;
+    }
+
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Image(
-            width: size.width*0.4,
+            width: size.width*0.4*scaleFactor,
             image: AssetImage(
               'assets/network_error_2_512.png'
             ),
           ),
-          SizedBox(height: 10,),
+          SizedBox(height: 10*scaleFactor,),
           Text(
             lang.translate(kSnapshotErrorLang),
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 18*scaleFactor,
               fontFamily: kQuickSand,
             ),
           ),
-          SizedBox(height: 40,),
+          SizedBox(height: 40*scaleFactor,),
           RaisedButton(
             elevation: 2,
             color: theme.accentColor,
@@ -61,7 +68,7 @@ class _ErrorScreenState extends State<ErrorScreen>{
             child: Text(
               lang.translate(kRetryLang),
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 16*scaleFactor,
                 fontFamily: kQuickSand,
                 color: theme.brightness == Brightness.light?Colors.white:Colors.black,
               ),

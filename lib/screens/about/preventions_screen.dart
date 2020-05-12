@@ -13,10 +13,17 @@ class PreventionsScreen extends StatefulWidget{
 
 class _PreventionScreenState extends State<PreventionsScreen>{
 
+  double scaleFactor = 1;
+
   @override
   Widget build(BuildContext context) {
 
+    Size size = MediaQuery.of(context).size;
     AppLocalizations lang = AppLocalizations.of(context);
+
+    if(size.width<=400){
+      scaleFactor = 0.75;
+    }
 
     final List<PreventionAndSymptomsModel> _preventions = [
       PreventionAndSymptomsModel(
@@ -52,6 +59,7 @@ class _PreventionScreenState extends State<PreventionsScreen>{
           lang.translate(kPreventionLang),
           style: TextStyle(
             fontFamily: kQuickSand,
+            fontSize: 22*scaleFactor,
             color: theme.brightness == Brightness.light?Colors.black:Colors.white,
           ),
         ),
@@ -67,21 +75,21 @@ class _PreventionScreenState extends State<PreventionsScreen>{
                   lang.translate(kHowToProtectLang),
                   style: TextStyle(
                     fontFamily: kQuickSand,
-                    fontSize: 24,
+                    fontSize: 24*scaleFactor,
                     color: theme.accentColor,
                   ),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 10*scaleFactor,
                 ),
                 Text(
                   lang.translate(kHowToProtectAnsLang),
                   style: TextStyle(
                     fontFamily: kQuickSand,
-                    fontSize: 16,
+                    fontSize: 16*scaleFactor,
                   ),
                 ),
-                SizedBox(height: 20,),
+                SizedBox(height: 20*scaleFactor,),
                 ListView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
@@ -97,38 +105,40 @@ class _PreventionScreenState extends State<PreventionsScreen>{
                             children: <Widget>[
                               ClipOval(
                                 child: Image(
-                                  height: 75,
-                                  width: 75,
+                                  height: 75*scaleFactor,
+                                  width: 75*scaleFactor,
                                   image:  AssetImage(
                                     _preventions[index].imageLoc,
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 10,),
-                              Text(
-                                _preventions[index].title,
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  fontFamily: kQuickSand,
-                                  color: theme.accentColor
+                              SizedBox(width: 10*scaleFactor,),
+                              Expanded(
+                                child: Text(
+                                  _preventions[index].title,
+                                  style: TextStyle(
+                                    fontSize: 24*scaleFactor,
+                                    fontFamily: kQuickSand,
+                                    color: theme.accentColor
+                                  ),
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(height: 10,),
+                          SizedBox(height: 10*scaleFactor,),
                           Text(
                             _preventions[index].des,
                             style:TextStyle(
                               fontFamily: kQuickSand,
-                              fontSize: 16,
+                              fontSize: 16*scaleFactor,
                             ),
                           ),
-                          SizedBox(height: 10,),
+                          SizedBox(height: 10*scaleFactor,),
                           Text(
                             _preventions[index].que,
                             style:TextStyle(
                               fontFamily: kQuickSand,
-                              fontSize: 16,
+                              fontSize: 16*scaleFactor,
                             ),
                           ),
                         ],

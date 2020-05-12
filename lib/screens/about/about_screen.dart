@@ -32,7 +32,7 @@ class AboutScreen extends StatefulWidget{
 class _AboutScreenState extends State<AboutScreen>{
 
   NetworkHandler _networkHandler;
-  double textScaleFactor = 1;
+  double scaleFactor = 1;
   ThemeData theme;
   bool darkTheme;
   Map<String,dynamic> update;
@@ -59,7 +59,7 @@ class _AboutScreenState extends State<AboutScreen>{
     AppLocalizations lang = AppLocalizations.of(context);
 
     if(MediaQuery.of(context).size.width<=360){
-      textScaleFactor=0.75;
+      scaleFactor=0.75;
     }
 
     return SingleChildScrollView(
@@ -70,19 +70,19 @@ class _AboutScreenState extends State<AboutScreen>{
             children: <Widget>[
               SizedBox(height: 20,),
               Image(
-                height: 100,
-                width: 100,
+                height: 100*scaleFactor,
+                width: 100*scaleFactor,
                 image: AssetImage('assets/app_icon_large.png'),
               ),
-              SizedBox(height: 16,),
+              SizedBox(height: 16*scaleFactor,),
               Text(
                 lang.translate(kAppNameLang),
                 style: TextStyle(
-                  fontSize: 30*textScaleFactor,
+                  fontSize: 30*scaleFactor,
                   fontFamily: kQuickSand,
                 ),
               ),
-              SizedBox(height: 16,),
+              SizedBox(height: 16*scaleFactor,),
               Center(
                 child: Material(
                   borderRadius: BorderRadius.all(
@@ -108,12 +108,13 @@ class _AboutScreenState extends State<AboutScreen>{
                           Icon(
                             AntDesign.github,
                             color: theme.accentColor,
+                            size: 24*scaleFactor,
                           ),
-                          SizedBox(width: 10,),
+                          SizedBox(width: 10*scaleFactor,),
                           Text(
                             lang.translate(kGitHubLang),
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 16*scaleFactor,
                               fontFamily: kQuickSand,
                             ),
                           )
@@ -123,7 +124,7 @@ class _AboutScreenState extends State<AboutScreen>{
                   ),
                 ),
               ),
-              SizedBox(height: 16,),
+              SizedBox(height: 16*scaleFactor,),
               Material(
                 borderRadius: BorderRadius.all(
                   Radius.circular(10),
@@ -138,7 +139,7 @@ class _AboutScreenState extends State<AboutScreen>{
                       Text(
                         lang.translate(kCOVID19Lang),
                         style: TextStyle(
-                          fontSize: 25*textScaleFactor,
+                          fontSize: 25*scaleFactor,
                           fontFamily: kQuickSand,
                         ),
                       ),
@@ -152,20 +153,21 @@ class _AboutScreenState extends State<AboutScreen>{
                           );
                         },
                         child: Container(
-                          height: 56,
+                          height: 56*scaleFactor,
                           child: Row(
                             children: <Widget>[
-                              SizedBox(width: 20,),
+                              SizedBox(width: 20*scaleFactor,),
                               Icon(
                                 AntDesign.questioncircleo,
+                                size: 24*scaleFactor,
                                 color: theme.accentColor,
                               ),
-                              SizedBox(width: 30,),
+                              SizedBox(width: 30*scaleFactor,),
                               Expanded(
                                 child: Text(
                                   lang.translate(kFAQsLang),
                                   style: TextStyle(
-                                    fontSize: 16*textScaleFactor,
+                                    fontSize: 16*scaleFactor,
                                   ),
                                 ),
                               ),
@@ -183,20 +185,21 @@ class _AboutScreenState extends State<AboutScreen>{
                           );
                         },
                         child: Container(
-                          height: 56,
+                          height: 56*scaleFactor,
                           child: Row(
                             children: <Widget>[
-                              SizedBox(width: 20,),
+                              SizedBox(width: 20*scaleFactor,),
                               Icon(
                                 AntDesign.medicinebox,
+                                size: 24*scaleFactor,
                                 color: theme.accentColor,
                               ),
-                              SizedBox(width: 30,),
+                              SizedBox(width: 30*scaleFactor,),
                               Expanded(
                                 child: Text(
                                   lang.translate(kSymptomsLang),
                                   style: TextStyle(
-                                    fontSize: 16*textScaleFactor,
+                                    fontSize: 16*scaleFactor,
                                   ),
                                 ),
                               ),
@@ -214,20 +217,21 @@ class _AboutScreenState extends State<AboutScreen>{
                          );
                         },
                         child: Container(
-                          height: 56,
+                          height: 56*scaleFactor,
                           child: Row(
                             children: <Widget>[
-                              SizedBox(width: 20,),
+                              SizedBox(width: 20*scaleFactor,),
                               Icon(
                                 MaterialCommunityIcons.block_helper,
+                                size: 24*scaleFactor,
                                 color: theme.accentColor,
                               ),
-                              SizedBox(width: 30,),
+                              SizedBox(width: 30*scaleFactor,),
                               Expanded(
                                 child: Text(
                                   lang.translate(kPreventionLang),
                                   style: TextStyle(
-                                    fontSize: 16*textScaleFactor,
+                                    fontSize: 16*scaleFactor,
                                   ),
                                 ),
                               ),
@@ -239,7 +243,7 @@ class _AboutScreenState extends State<AboutScreen>{
                   ),
                 ),
               ),
-              SizedBox(height: 16,),
+              SizedBox(height: 16*scaleFactor,),
               Material(
                 borderRadius: BorderRadius.all(
                   Radius.circular(10),
@@ -259,7 +263,7 @@ class _AboutScreenState extends State<AboutScreen>{
                       Text(
                         lang.translate(kSourceLang),
                         style: TextStyle(
-                          fontSize: 25*textScaleFactor,
+                          fontSize: 25*scaleFactor,
                           fontFamily: kQuickSand,
                         ),
                       ),
@@ -268,25 +272,27 @@ class _AboutScreenState extends State<AboutScreen>{
                           _networkHandler.launchInBrowser(crowdSourcedDatabaseLink);
                         },
                         child: Container(
-                          height: 56,
+                          height: 56*scaleFactor,
                           child: Row(
                             children: <Widget>[
-                              SizedBox(width: 20,),
+                              SizedBox(width: 20*scaleFactor,),
                               Icon(
                                 Icons.storage,
+                                size: 24*scaleFactor,
                                 color: theme.accentColor,
                               ),
-                              SizedBox(width: 30,),
+                              SizedBox(width: 30*scaleFactor,),
                               Expanded(
                                 child: Text(
                                   lang.translate(kCrowdSrcDBLang),
                                   style: TextStyle(
-                                    fontSize: 16*textScaleFactor,
+                                    fontSize: 16*scaleFactor,
                                   ),
                                 ),
                               ),
                               Icon(
                                 Icons.launch,
+                                size: 24*scaleFactor,
                                 color: theme.accentColor,
                               ),
                             ],
@@ -298,25 +304,27 @@ class _AboutScreenState extends State<AboutScreen>{
                           _networkHandler.launchInBrowser(covid19IndiaAPILink);
                         },
                         child: Container(
-                          height: 56,
+                          height: 56*scaleFactor,
                           child: Row(
                             children: <Widget>[
-                              SizedBox(width: 20,),
+                              SizedBox(width: 20*scaleFactor,),
                               Icon(
                                 Icons.web_asset,
+                                size: 24*scaleFactor,
                                 color: theme.accentColor,
                               ),
-                              SizedBox(width: 30,),
+                              SizedBox(width: 30*scaleFactor,),
                               Expanded(
                                 child: Text(
                                   'api.covid19india.org',
                                   style: TextStyle(
-                                      fontSize: 16*textScaleFactor,
+                                      fontSize: 16*scaleFactor,
                                   ),
                                 ),
                               ),
                               Icon(
                                 Icons.launch,
+                                size: 24*scaleFactor,
                                 color: theme.accentColor,
                               ),
                             ],
@@ -328,25 +336,27 @@ class _AboutScreenState extends State<AboutScreen>{
                           _networkHandler.launchInBrowser(coronaLMAONinjaAPILink);
                         },
                         child: Container(
-                          height: 56,
+                          height: 56*scaleFactor,
                           child: Row(
                             children: <Widget>[
-                              SizedBox(width: 20,),
+                              SizedBox(width: 20*scaleFactor,),
                               Icon(
                                 Icons.web_asset,
+                                size: 24*scaleFactor,
                                 color: theme.accentColor,
                               ),
-                              SizedBox(width: 30,),
+                              SizedBox(width: 30*scaleFactor,),
                               Expanded(
                                 child: Text(
                                   'corona.lmao.ninja',
                                   style: TextStyle(
-                                    fontSize: 16*textScaleFactor,
+                                    fontSize: 16*scaleFactor,
                                   ),
                                 ),
                               ),
                               Icon(
                                 Icons.launch,
+                                size: 24*scaleFactor,
                                 color: theme.accentColor,
                               ),
                             ],
@@ -358,25 +368,27 @@ class _AboutScreenState extends State<AboutScreen>{
                           _networkHandler.launchInBrowser(covidAPILink);
                         },
                         child: Container(
-                          height: 56,
+                          height: 56*scaleFactor,
                           child: Row(
                             children: <Widget>[
-                              SizedBox(width: 20,),
+                              SizedBox(width: 20*scaleFactor,),
                               Icon(
                                 Icons.web_asset,
+                                size: 24*scaleFactor,
                                 color: theme.accentColor,
                               ),
-                              SizedBox(width: 30,),
+                              SizedBox(width: 30*scaleFactor,),
                               Expanded(
                                 child: Text(
                                   'covidapi.info',
                                   style: TextStyle(
-                                    fontSize: 16*textScaleFactor,
+                                    fontSize: 16*scaleFactor,
                                   ),
                                 ),
                               ),
                               Icon(
                                 Icons.launch,
+                                size: 24*scaleFactor,
                                 color: theme.accentColor,
                               ),
                             ],
@@ -387,7 +399,7 @@ class _AboutScreenState extends State<AboutScreen>{
                   ),
                 ),
               ),
-              SizedBox(height: 10,),
+              SizedBox(height: 10*scaleFactor,),
               Material(
                 borderRadius: BorderRadius.all(
                   Radius.circular(10),
@@ -407,7 +419,7 @@ class _AboutScreenState extends State<AboutScreen>{
                       Text(
                         lang.translate(kDeveloperLang),
                         style: TextStyle(
-                          fontSize: 25*textScaleFactor,
+                          fontSize: 25*scaleFactor,
                           fontFamily: kQuickSand,
                         ),
                       ),
@@ -416,26 +428,28 @@ class _AboutScreenState extends State<AboutScreen>{
                           _networkHandler.launchInBrowser(developerPrateekGitHubLink);
                         },
                         child: Container(
-                          height: 56,
+                          height: 56*scaleFactor,
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              SizedBox(width: 20,),
+                              SizedBox(width: 20*scaleFactor,),
                               Icon(
                                 AntDesign.github,
+                                size: 24*scaleFactor,
                                 color: theme.accentColor,
                               ),
-                              SizedBox(width: 30,),
+                              SizedBox(width: 30*scaleFactor,),
                               Expanded(
                                 child: Text(
                                   lang.translate(kDeveloperNameLang),
                                   style: TextStyle(
-                                      fontSize: 16*textScaleFactor,
+                                      fontSize: 16*scaleFactor,
                                   ),
                                 ),
                               ),
                               Icon(
                                 Icons.launch,
+                                size: 24*scaleFactor,
                                 color: theme.accentColor,
                               ),
                             ],
@@ -446,7 +460,7 @@ class _AboutScreenState extends State<AboutScreen>{
                   ),
                 ),
               ),
-              SizedBox(height: 10,),
+              SizedBox(height: 10*scaleFactor,),
               Material(
                 borderRadius: BorderRadius.all(
                   Radius.circular(10),
@@ -466,7 +480,7 @@ class _AboutScreenState extends State<AboutScreen>{
                       Text(
                         lang.translate(kApplicationLang),
                         style: TextStyle(
-                          fontSize: 25*textScaleFactor,
+                          fontSize: 25*scaleFactor,
                           fontFamily: kQuickSand,
                         ),
                       ),
@@ -478,16 +492,17 @@ class _AboutScreenState extends State<AboutScreen>{
                           }
                         },
                         child: Container(
-                          height: 56,
+                          height: 56*scaleFactor,
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              SizedBox(width: 20,),
+                              SizedBox(width: 20*scaleFactor,),
                               Icon(
                                 AntDesign.infocirlceo,
+                                size: 24*scaleFactor,
                                 color: theme.accentColor,
                               ),
-                              SizedBox(width: 30,),
+                              SizedBox(width: 30*scaleFactor,),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -496,13 +511,13 @@ class _AboutScreenState extends State<AboutScreen>{
                                     Text(
                                       lang.translate(kVersionLang),
                                       style: TextStyle(
-                                        fontSize: 16*textScaleFactor,
+                                        fontSize: 16*scaleFactor,
                                       ),
                                     ),
                                     isUpdateAvailable?Text(
                                       "${lang.translate(kUpdateAvailableLang)} (v${update['version']}). ${lang.translate(kClickToDownloadLang)}",
                                       style: TextStyle(
-                                        fontSize: 10*textScaleFactor,
+                                        fontSize: 10*scaleFactor,
                                         color: theme.accentColor,
                                       ),
                                     ):SizedBox(),
@@ -510,8 +525,8 @@ class _AboutScreenState extends State<AboutScreen>{
                                 ),
                               ),
                               isUpdateAvailable?Container(
-                                width: 20,
-                                height: 20,
+                                width: 20*scaleFactor,
+                                height: 20*scaleFactor,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.all(
                                     Radius.circular(10),
@@ -523,16 +538,16 @@ class _AboutScreenState extends State<AboutScreen>{
                                     'N',
                                     style: TextStyle(
                                       fontFamily: kQuickSand,
-                                      fontSize: 10
+                                      fontSize: 10*scaleFactor
                                     ),
                                   ),
                                 ),
                               ):SizedBox(),
-                              SizedBox(width: 5,),
+                              SizedBox(width: 5*scaleFactor,),
                               Text(
-                                '1.4.3',
+                                '1.5.6',
                                 style: TextStyle(
-                                  fontSize: 16*textScaleFactor,
+                                  fontSize: 16*scaleFactor,
                                 ),
                               ),
                             ],
@@ -540,21 +555,22 @@ class _AboutScreenState extends State<AboutScreen>{
                         ),
                       ),
                       Container(
-                        height: 56,
+                        height: 56*scaleFactor,
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
-                            SizedBox(width: 20,),
+                            SizedBox(width: 20*scaleFactor,),
                             Icon(
                               darkTheme?Icons.brightness_2:Icons.brightness_5,
+                              size: 24*scaleFactor,
                               color: theme.accentColor,
                             ),
-                            SizedBox(width: 30,),
+                            SizedBox(width: 30*scaleFactor,),
                             Expanded(
                               child: Text(
                                 darkTheme?lang.translate(kLightThemeLang):lang.translate(kDarkThemeLang),
                                 style: TextStyle(
-                                  fontSize: 16*textScaleFactor,
+                                  fontSize: 16*scaleFactor,
                                 ),
                               ),
                             ),
@@ -581,6 +597,7 @@ class _AboutScreenState extends State<AboutScreen>{
                                   lang.translate(kChooseLanguageLang),
                                   style: TextStyle(
                                     fontFamily: kQuickSand,
+                                    fontSize: 16*scaleFactor,
                                   ),
                                 ),
                                 children: <Widget>[
@@ -589,11 +606,12 @@ class _AboutScreenState extends State<AboutScreen>{
                                       "English - US",
                                       style: TextStyle(
                                         fontFamily: kQuickSand,
+                                        fontSize: 16*scaleFactor
                                       ),
                                     ),
                                     trailing: Container(
-                                      height: 20,
-                                      width: 20,
+                                      height: 20*scaleFactor,
+                                      width: 20*scaleFactor,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.all(
                                           Radius.circular(10),
@@ -618,11 +636,12 @@ class _AboutScreenState extends State<AboutScreen>{
                                       "हिन्दी - भारत",
                                       style: TextStyle(
                                         fontFamily: kQuickSand,
+                                        fontSize: 16*scaleFactor
                                       ),
                                     ),
                                     trailing: Container(
-                                      height: 20,
-                                      width: 20,
+                                      height: 20*scaleFactor,
+                                      width: 20*scaleFactor,
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.all(
                                           Radius.circular(10),
@@ -655,21 +674,22 @@ class _AboutScreenState extends State<AboutScreen>{
                           });
                         },
                         child: Container(
-                          height: 56,
+                          height: 56*scaleFactor,
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              SizedBox(width: 20,),
+                              SizedBox(width: 20*scaleFactor,),
                               Icon(
                                 MaterialCommunityIcons.translate,
+                                size: 24*scaleFactor,
                                 color: theme.accentColor,
                               ),
-                              SizedBox(width: 30,),
+                              SizedBox(width: 30*scaleFactor,),
                               Expanded(
                                 child: Text(
                                   lang.translate(kChangeLanguageLang),
                                   style: TextStyle(
-                                    fontSize: 16*textScaleFactor,
+                                    fontSize: 16*scaleFactor,
                                   ),
                                 ),
                               ),
@@ -681,7 +701,7 @@ class _AboutScreenState extends State<AboutScreen>{
                   ),
                 ),
               ),
-              SizedBox(height: 10,),
+              SizedBox(height: 10*scaleFactor,),
               Material(
                 borderRadius: BorderRadius.all(
                   Radius.circular(10),
@@ -701,7 +721,7 @@ class _AboutScreenState extends State<AboutScreen>{
                       Text(
                         lang.translate(kLicenseLang),
                         style: TextStyle(
-                          fontSize: 25*textScaleFactor,
+                          fontSize: 25*scaleFactor,
                           fontFamily: kQuickSand,
                         ),
                       ),
@@ -715,21 +735,22 @@ class _AboutScreenState extends State<AboutScreen>{
                           );
                         },
                         child: Container(
-                          height: 56,
+                          height: 56*scaleFactor,
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              SizedBox(width: 20,),
+                              SizedBox(width: 20*scaleFactor,),
                               Icon(
                                 MaterialCommunityIcons.license,
+                                size: 24*scaleFactor,
                                 color: theme.accentColor,
                               ),
-                              SizedBox(width: 30,),
+                              SizedBox(width: 30*scaleFactor,),
                               Expanded(
                                 child: Text(
                                   lang.translate(kOpenSrcLang),
                                   style: TextStyle(
-                                    fontSize: 16*textScaleFactor,
+                                    fontSize: 16*scaleFactor,
                                   ),
                                 ),
                               ),

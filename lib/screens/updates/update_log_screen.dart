@@ -18,7 +18,7 @@ class UpdatesScreen extends StatefulWidget{
 
 class _UpdatesScreenState extends State<UpdatesScreen>{
 
-  double textScaleFactor = 1;
+  double scaleFactor = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +27,8 @@ class _UpdatesScreenState extends State<UpdatesScreen>{
     ThemeData theme = Theme.of(context);
     AppLocalizations lang = AppLocalizations.of(context);
 
-    if(size.width <= 360){
-      textScaleFactor = 0.75;
+    if(size.width <= 400){
+      scaleFactor = 0.75;
     }
 
     return Scaffold(
@@ -44,7 +44,7 @@ class _UpdatesScreenState extends State<UpdatesScreen>{
                 lang.translate(kRecentUpdatesLang),
                 style: TextStyle(
                   fontFamily: kQuickSand,
-                  fontSize: 18*textScaleFactor,
+                  fontSize: 18*scaleFactor,
                   color: theme.brightness == Brightness.light?Colors.black:Colors.white,
                 ),
               ),
@@ -52,7 +52,7 @@ class _UpdatesScreenState extends State<UpdatesScreen>{
                 lang.translate(kRecentUpdatesSubTitleLang),
                 style: TextStyle(
                   fontFamily: kQuickSand,
-                  fontSize: 12*textScaleFactor,
+                  fontSize: 12*scaleFactor,
                   color: theme.brightness == Brightness.light?Colors.black:Colors.white,
                 ),
               ),
@@ -115,7 +115,8 @@ class _UpdatesScreenState extends State<UpdatesScreen>{
               child: Text(
                 lang.translate(kNoUpdatesLang),
                 style: TextStyle(
-                  fontFamily: kNotoSansSc,
+                  fontFamily: kQuickSand,
+                  fontSize: 16*scaleFactor,
                   fontWeight: FontWeight.bold,
                   color: theme.accentColor,
                 ),
@@ -149,8 +150,8 @@ class _UpdatesScreenState extends State<UpdatesScreen>{
                                 Text(
                                   DateFormat("d MMM").add_jm().format(updates[index].timestamp),
                                   style: TextStyle(
-                                    fontFamily: kNotoSansSc,
-                                    fontSize: 16*textScaleFactor,
+                                    fontFamily: kQuickSand,
+                                    fontSize: 16*scaleFactor,
                                     fontWeight: FontWeight.bold,
                                     color: theme.accentColor,
                                   ),
@@ -159,7 +160,8 @@ class _UpdatesScreenState extends State<UpdatesScreen>{
                                 Text(
                                   updates[index].update,
                                   style: TextStyle(
-                                    fontFamily: kNotoSansSc,
+                                    fontFamily: kQuickSand,
+                                    fontSize: 16*scaleFactor,
                                   ),
                                 ),
                               ],
