@@ -630,7 +630,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
             barGroups: barGroups,
             gridData: FlGridData(
                 drawHorizontalLine: true,
-                horizontalInterval: highest<200?10:200,
+                horizontalInterval: sideInterval,
                 drawVerticalLine: true
             ),
           ),
