@@ -87,7 +87,6 @@ class _PredictionState extends State<Predictions>{
           );
         });
 
-        print(sird.infectedTimeSeries.length);
 
         DateTime date = DateTime(
           2020,
@@ -95,7 +94,6 @@ class _PredictionState extends State<Predictions>{
           30+sird.infectedTimeSeries.length,
         );
 
-        print(date.toString());
 
         return SingleChildScrollView(
           child: Container(

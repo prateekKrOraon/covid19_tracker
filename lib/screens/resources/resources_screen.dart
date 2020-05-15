@@ -321,13 +321,18 @@ class _ResourcesScreenState extends State<ResourcesScreen>{
     List<String> keys = map.keys.toList()..sort();
 
     for(int i = 0; i<keys.length;i++){
-      list.add(
-        Tab(
-          text: AppLocalizations
-              .of(context)
-              .translate(keys[i].toString().toLowerCase().replaceAll(" ", "_"),),
-        ),
-      );
+      print(keys[i]);
+      try{
+        list.add(
+          Tab(
+            text: AppLocalizations
+                .of(context)
+                .translate(keys[i].toString().toLowerCase().replaceAll(" ", "_"),),
+          ),
+        );
+      }catch(e){
+        e.toString();
+      }
     }
 
     return list;

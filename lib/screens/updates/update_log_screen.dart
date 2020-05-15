@@ -97,6 +97,11 @@ class _UpdatesScreenState extends State<UpdatesScreen>{
             DateTime.now().year,
             DateTime.now().month,
             DateTime.now().day,
+            0,
+            0,
+            0,
+            0,
+            0,
           ).millisecondsSinceEpoch;
 
           for(int i = (updatesData.length-1);i>=0;i--){

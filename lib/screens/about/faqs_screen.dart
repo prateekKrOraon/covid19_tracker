@@ -35,7 +35,7 @@ class _FAQsScreenState extends State<FAQsScreen>{
       appBar: AppBar(
         backgroundColor: theme.scaffoldBackgroundColor,
         title: Text(
-          "Frequently Asked Questions",
+          lang.translate(kFAQs),
           style: TextStyle(
             fontFamily: kQuickSand,
             fontSize: 22*scaleFactor,
