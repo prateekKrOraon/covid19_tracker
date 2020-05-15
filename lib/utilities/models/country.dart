@@ -19,10 +19,10 @@ class Country{
   int active;
   int critical;
   int mild;
-  int casesPerOneMil;
-  int deathsPerOneMil;
+  double casesPerOneMil;
+  double deathsPerOneMil;
   int tests;
-  int testPerOneMil;
+  double testPerOneMil;
   DateTime updated;
   List<double> cnfCasesSeries;
   List<double> recCasesSeries;
@@ -61,10 +61,10 @@ class Country{
     this.recovered = map[kCountryRecovered];
     this.active = map[kCountryActive];
     this.critical = map[kCountryCritical];
-    this.casesPerOneMil = map[kCountryCasesPerOneMil];
-    this.deathsPerOneMil = map[kCountryDeathsPerOneMil];
+    this.casesPerOneMil = double.parse(map[kCountryCasesPerOneMil].toString());
+    this.deathsPerOneMil = double.parse(map[kCountryDeathsPerOneMil].toString());
     this.tests = map[kCountryTests];
-    this.testPerOneMil = map[kCountryTestsPerOneMil];
+    this.testPerOneMil = double.parse(map[kCountryTestsPerOneMil].toString());
     this.mild = active-critical;
     this.displayName = AppLocalizations.of(context).translate(this.countryName.toLowerCase().replaceAll(" ","_"));
     this.updated = DateTime.fromMillisecondsSinceEpoch(map[kCountryUpdated]);

@@ -129,7 +129,6 @@ class MathFunctions{
       map.putIfAbsent(key, () => j);
     }
 
-    print(map);
     return map;
   }
 

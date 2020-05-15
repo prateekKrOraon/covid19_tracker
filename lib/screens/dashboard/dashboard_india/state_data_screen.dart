@@ -8,7 +8,6 @@ import 'package:covid19_tracker/constants/api_constants.dart';
 import 'package:covid19_tracker/constants/colors.dart';
 import 'package:covid19_tracker/constants/app_constants.dart';
 import 'package:covid19_tracker/constants/language_constants.dart';
-import 'package:covid19_tracker/data/zones_data.dart';
 import 'package:covid19_tracker/localization/app_localization.dart';
 import 'package:covid19_tracker/utilities/custom_widgets/custom_widgets.dart';
 import 'package:covid19_tracker/utilities/models/district.dart';
@@ -431,6 +430,11 @@ class _StateDataState extends State<StateData>{
                                         itemCount: districts.length,
                                         itemBuilder:(BuildContext context,int index){
                                           District district = districts[index];
+
+                                          if(district.confirmed == 0){
+                                            return SizedBox();
+                                          }
+
                                           return Column(
                                             children: <Widget>[
                                               SizedBox(height:5*scaleFactor,),
