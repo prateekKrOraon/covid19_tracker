@@ -263,7 +263,11 @@ class _StateDataState extends State<StateData>{
                       range = dailyReport.length;
                     }
 
-                    for(int i =dailyReport.length-90; i<dailyReport.length; i++){
+                    int j = 0;
+                    int k = 0;
+                    int l = 0;
+
+                    for(int i = 0; i<dailyReport.length; i++){
                       Map day = dailyReport[i];
                       if(i%3==0){
                         String str = day[stateInfo.stateCode.toLowerCase()];
@@ -276,29 +280,31 @@ class _StateDataState extends State<StateData>{
                           dailyHighestCnf = currentCnf;
                         }
                         totalCnf += currentCnf;
-                        cnfSpots.add(
-                          FlSpot(
-                            (i~/3).toDouble(),
-                            totalCnf.toDouble(),
-                          ),
-                        );
-                        dailyConfirmedChartGroup.add(
-                          BarChartGroupData(
-                            x: i,
-                            showingTooltipIndicators: [],
-                            barRods: [
-                              BarChartRodData(
-                                y: currentCnf.toDouble(),
-                                borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(10),
-                                  topLeft: Radius.circular(10),
+                        if(i>=dailyReport.length-90){
+                          cnfSpots.add(
+                            FlSpot(
+                              (i~/3).toDouble(),
+                              totalCnf.toDouble(),
+                            ),
+                          );
+                          dailyConfirmedChartGroup.add(
+                            BarChartGroupData(
+                              x: i,
+                              showingTooltipIndicators: [],
+                              barRods: [
+                                BarChartRodData(
+                                  y: currentCnf.toDouble(),
+                                  borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(10),
+                                    topLeft: Radius.circular(10),
+                                  ),
+                                  color: theme.accentColor,
+                                  width: 6*scaleFactor,
                                 ),
-                                color: theme.accentColor,
-                                width: 6*scaleFactor,
-                              ),
-                            ],
-                          ),
-                        );
+                              ],
+                            ),
+                          );
+                        }
                       }
                       if(i%3==1){
                         String str = day[stateInfo.stateCode.toLowerCase()];
@@ -310,29 +316,31 @@ class _StateDataState extends State<StateData>{
                           dailyHighestRec = currentRec;
                         }
                         totalRec += currentRec;
-                        recSpots.add(
-                          FlSpot(
-                            (i~/3).toDouble(),
-                            totalRec.toDouble(),
-                          ),
-                        );
-                        dailyRecChartGroup.add(
-                          BarChartGroupData(
-                            x: i,
-                            showingTooltipIndicators: [],
-                            barRods: [
-                              BarChartRodData(
-                                y: currentRec.toDouble(),
-                                borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(10),
-                                  topLeft: Radius.circular(10),
+                        if(i>=dailyReport.length-90){
+                          recSpots.add(
+                            FlSpot(
+                              (i~/3).toDouble(),
+                              totalRec.toDouble(),
+                            ),
+                          );
+                          dailyRecChartGroup.add(
+                            BarChartGroupData(
+                              x: i,
+                              showingTooltipIndicators: [],
+                              barRods: [
+                                BarChartRodData(
+                                  y: currentRec.toDouble(),
+                                  borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(10),
+                                    topLeft: Radius.circular(10),
+                                  ),
+                                  color: theme.accentColor,
+                                  width: 6*scaleFactor,
                                 ),
-                                color: theme.accentColor,
-                                width: 6*scaleFactor,
-                              ),
-                            ],
-                          ),
-                        );
+                              ],
+                            ),
+                          );
+                        }
                       }
                       if(i%3==2){
                         String str = day[stateInfo.stateCode.toLowerCase()];
@@ -345,44 +353,46 @@ class _StateDataState extends State<StateData>{
                           dailyHighestDet = currentDet;
                         }
                         totalDet += currentDet;
-                        detSpots.add(
-                          FlSpot(
-                            (i~/3).toDouble(),
-                            totalDet.toDouble(),
-                          ),
-                        );
-                        dailyDetChartGroup.add(
-                          BarChartGroupData(
-                            x: i,
-                            showingTooltipIndicators: [],
-                            barRods: [
-                              BarChartRodData(
-                                y: currentDet.toDouble(),
-                                borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(10),
-                                  topLeft: Radius.circular(10),
+                        if(i>=dailyReport.length-90){
+                          detSpots.add(
+                            FlSpot(
+                              (i~/3).toDouble(),
+                              totalDet.toDouble(),
+                            ),
+                          );
+                          dailyDetChartGroup.add(
+                            BarChartGroupData(
+                              x: i,
+                              showingTooltipIndicators: [],
+                              barRods: [
+                                BarChartRodData(
+                                  y: currentDet.toDouble(),
+                                  borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(10),
+                                    topLeft: Radius.circular(10),
+                                  ),
+                                  color: theme.accentColor,
+                                  width: 6*scaleFactor,
                                 ),
-                                color: theme.accentColor,
-                                width: 6*scaleFactor,
-                              ),
-                            ],
-                          ),
-                        );
+                              ],
+                            ),
+                          );
+                        }
                       }
                     }
 
                     List<Widget> lineChartLayouts = List();
 
                     lineChartLayouts.add(
-                      _getLineChartLayout(lang.translate(kConfirmedLang),cnfSpots, totalCnf.toDouble(), (dailyReport.length~/3)),
+                      _getLineChartLayout(lang.translate(kConfirmedLang),cnfSpots, totalCnf.toDouble(), 30),
                     );
 
                     lineChartLayouts.add(
-                      _getLineChartLayout(lang.translate(kRecoveredLang),recSpots, totalRec.toDouble(), (dailyReport.length~/3)),
+                      _getLineChartLayout(lang.translate(kRecoveredLang),recSpots, totalRec.toDouble(), 30),
                     );
 
                     lineChartLayouts.add(
-                      _getLineChartLayout(lang.translate(kDeathsLang),detSpots, totalDet.toDouble(), (dailyReport.length~/3)),
+                      _getLineChartLayout(lang.translate(kDeathsLang),detSpots, totalDet.toDouble(), 30),
                     );
 
                     List<Widget> barChartLayouts = List();

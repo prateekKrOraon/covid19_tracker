@@ -92,20 +92,36 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
         if(dataRange == DataRange.BEGINNING){
           range = caseTime.length;
         }else if(dataRange == DataRange.MONTH){
-          range = 31;
+          range = 32;
         }else if(dataRange == DataRange.TWO_WEEK){
-          range = 14;
+          range = 15;
         }
 
         String lastUpdate = "";
 
-        for(int i = (caseTime.length-range);i<caseTime.length;i++){
+        int day = int.parse(caseTime[caseTime.length-1][kDate].toString().substring(0,3));
+
+        int max = 0;
+        if(day == DateTime.now().day){
+          max = caseTime.length-1;
+        }else if(day == DateTime.now().day-1){
+          max = caseTime.length;
+        }else{
+          max = caseTime.length-1;
+        }
+
+        for(int i = (caseTime.length-range);i<max;i++){
           Map map = caseTime[i];
           double currentCnf = double.parse(map[kTotalConfirmed]);
           double currentRec = double.parse(map[kTotalRecovered]);
           double currentDet = double.parse(map[kTotalDeaths]);
           double currentAct = currentCnf-currentDet-currentRec;
-          if(i==caseTime.length-1){
+          if(i==caseTime.length-2 && max==caseTime.length-1){
+            totalCnf = currentCnf;
+            totalRec = currentRec;
+            totalDet = currentDet;
+            totalAct = currentAct;
+          }else if(i==caseTime.length-1 && max==caseTime.length){
             totalCnf = currentCnf;
             totalRec = currentRec;
             totalDet = currentDet;
@@ -507,7 +523,7 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                             ),
                           ),
                           SizedBox(height: 5*scaleFactor,),
-                          _getLineChart(totalCnfSpots, totalCnf, caseTime.length),
+                          _getLineChart(totalCnfSpots, totalCnf, max),
                         ],
                       ),
                     ),
@@ -547,7 +563,7 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                             ),
                           ),
                           SizedBox(height: 5*scaleFactor,),
-                          _getLineChart(totalActiveSpots, uniformScale?totalCnf:totalAct, caseTime.length),
+                          _getLineChart(totalActiveSpots, uniformScale?totalCnf:totalAct, max),
                         ],
                       ),
                     ),
@@ -587,7 +603,7 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                             ),
                           ),
                           SizedBox(height: 5*scaleFactor,),
-                          _getLineChart(totalRecSpots, uniformScale?totalCnf:totalRec, caseTime.length),
+                          _getLineChart(totalRecSpots, uniformScale?totalCnf:totalRec, max),
                         ],
                       ),
                     ),
@@ -627,7 +643,7 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                             ),
                           ),
                           SizedBox(height: 5*scaleFactor,),
-                          _getLineChart(totalDetSpots, uniformScale?totalCnf:totalDet, caseTime.length),
+                          _getLineChart(totalDetSpots, uniformScale?totalCnf:totalDet, max),
                         ],
                       ),
                     ),
@@ -827,7 +843,7 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                     DateTime returnDate = DateTime(
                         2020,
                         now.month,
-                        now.day-maxX+value.toInt()
+                        now.day-maxX+value.toInt(),
                     );
                     return DateFormat("d MMM").format(returnDate);
                   },

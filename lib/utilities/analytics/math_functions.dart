@@ -20,7 +20,7 @@ class MathFunctions{
     deathsTimeSeries = List();
     dateTimeSeries = List();
 
-    for(int i = 0;i<timeSeries.length;i++){
+    for(int i = 0;i<timeSeries.length-1;i++){
       Map map = timeSeries[i];
 
       confirmedTimeSeries.add(double.parse(map[kTotalConfirmed]));

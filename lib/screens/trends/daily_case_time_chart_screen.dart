@@ -88,14 +88,26 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
         if(dataRange == DataRange.BEGINNING){
           range = caseTime.length;
         }else if(dataRange == DataRange.MONTH){
-          range = 31;
+          range = 32;
         }else if(dataRange == DataRange.TWO_WEEK){
-          range = 14;
+          range = 15;
         }
 
         String lastUpdate = "";
 
-        for(int i = caseTime.length-range;i<caseTime.length;i++){
+        int day = int.parse(caseTime[caseTime.length-1][kDate].toString().substring(0,3));
+        print(day);
+
+        int max = 0;
+        if(day == DateTime.now().day){
+          max = caseTime.length-1;
+        }else if(day == DateTime.now().day-1){
+          max = caseTime.length;
+        }else{
+          max = caseTime.length-1;
+        }
+
+        for(int i = caseTime.length-range;i<max;i++){
 
           Map map = caseTime[i];
 
@@ -196,7 +208,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
             ),
           );
 
-          if(i == caseTime.length-1){
+          if(i == max-1){
             lastUpdate = map[kDate];
           }
         }
@@ -210,7 +222,6 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
         }else if(dataRange == DataRange.TWO_WEEK){
           dataRangeStr = lang.translate(kLast14DaysLang);
         }
-
 
         return SingleChildScrollView(
           child: Padding(
@@ -529,6 +540,14 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
     if(sideInterval < 0.001){
       sideInterval = 1;
     }
+    int maxX = 31;
+    if(dataRange == DataRange.BEGINNING){
+      maxX = barGroups.length;
+    }else if(dataRange == DataRange.MONTH){
+      maxX = 31;
+    }else if(dataRange == DataRange.TWO_WEEK){
+      maxX = 14;
+    }
 
     return Padding(
       padding: const EdgeInsets.all(6),
@@ -615,7 +634,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
                     DateTime returnDate = DateTime(
                         2020,
                         now.month,
-                        now.day-31+value.toInt()
+                        now.day-maxX+value.toInt()
                     );
                     return DateFormat("d MMM").format(returnDate);
                   },

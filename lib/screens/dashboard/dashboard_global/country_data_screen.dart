@@ -144,14 +144,14 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                         children: <Widget>[
                           DashboardTile(
                             mainTitle: lang.translate(kTotalRecLang),
-                            value: country.deaths.toString(),
+                            value: country.recovered.toString(),
                             delta: "",
                             color: kGreenColor,
                           ),
                           SizedBox(width: 10*scaleFactor,),
                           DashboardTile(
                             mainTitle: lang.translate(kTotalDetLang),
-                            value: country.recovered.toString(),
+                            value: country.deaths.toString(),
                             delta: country.todayDeaths.toString(),
                             color: Colors.grey,
                           ),

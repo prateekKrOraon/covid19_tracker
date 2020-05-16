@@ -22,7 +22,18 @@ class SIRD{
     deathsTimeSeries = List();
     dateTimeSeries = List();
 
-    for(int i = 0;i<timeSeries.length;i++){
+    int day = int.parse(timeSeries[timeSeries.length-1][kDate].toString().substring(0,3));
+
+    int max = 0;
+    if(day == DateTime.now().day){
+      max = timeSeries.length-1;
+    }else if(day == DateTime.now().day-1){
+      max = timeSeries.length;
+    }else{
+      max = timeSeries.length;
+    }
+
+    for(int i = 0;i<max;i++){
       Map map = timeSeries[i];
 
       recoveredTimeSeries.add(double.parse(map[kTotalRecovered]));

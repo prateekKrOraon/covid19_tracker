@@ -116,6 +116,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
 
         List stateWise = map[kStateWise];
         List<StateInfo> stateInfo = List();
+
         for(int i = 1;i<stateWise.length;i++){
           Map state = stateWise[i];
           stateInfo.add(
@@ -132,6 +133,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
         double stateGrowthHighest = 0;
         double stateRecRateHighest = 0;
         double stateDetRateHighest = 0;
+
+
 
         for(int i=0;i<stateInfo.length;i++){
           StateInfo state = stateInfo[i];
@@ -328,7 +331,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
         double rrHighest = 0;
 
         for(int i = growthFactors.length-range; i<growthFactors.length;i++){
-          double element = growthFactors[i];
+          double element = 0;
+
+          element = growthFactors[i];
           if(element > highest){
             highest = element;
           }
@@ -421,7 +426,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
         growthMetricsList.add(
           _getChartLayout(
             lang.translate(kGrowthFactorLang),
-            "${lang.translate(kCurGrowthFactLang)} = ${growthFactors[growthFactors.length-1].toString().substring(0,4)}",
+            "${lang.translate(kCurGrowthFactLang)} = ${growthFactors[growthFactors.length-2].toString().substring(0,4)}",
             spots,
             highest+4,
             growthFactors.length,
@@ -431,7 +436,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
         growthMetricsList.add(
           _getChartLayout(
             lang.translate(kGrowthRatioLang),
-            "${lang.translate(kCurGrowthRatioLang)} = ${growthRatios[growthRatios.length-1].toString().substring(0,4)}",
+            "${lang.translate(kCurGrowthRatioLang)} = ${growthRatios[growthRatios.length-2].toString().substring(0,4)}",
             grSpots,
             grHighest+0.5,
             growthRatios.length,
@@ -441,7 +446,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
         growthMetricsList.add(
           _getChartLayout(
             lang.translate(kGrowthRateLang),
-            "${lang.translate(kCurGrowthRateLang)} = ${(growthRates[growthRates.length-1]*100).toString().substring(0,4)} %",
+            "${lang.translate(kCurGrowthRateLang)} = ${(growthRates[growthRates.length-2]*100).toString().substring(0,4)} %",
             gRSpots,
             gRHighest+0.2,
             growthRates.length,
@@ -1430,7 +1435,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
       bottomTitleInterval = 2;
     }
 
-    sideInterval = double.parse((total/10).toStringAsFixed(2));
+    sideInterval = double.parse((total/5).toStringAsFixed(2));
 
     return Padding(
       padding: const EdgeInsets.all(6),
@@ -1494,7 +1499,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                 rightTitles: SideTitles(
                   showTitles: true,
                   interval: sideInterval,
-                  reservedSize: 15*scaleFactor,
+                  reservedSize: 20*scaleFactor,
                   textStyle: TextStyle(
                     fontSize: 10*scaleFactor,
                     color: theme.brightness == Brightness.light?Colors.black:Colors.white,
