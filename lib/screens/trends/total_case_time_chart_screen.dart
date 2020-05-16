@@ -1,11 +1,9 @@
 import 'dart:math' as math;
-
 import 'package:covid19_tracker/constants/api_constants.dart';
 import 'package:covid19_tracker/constants/colors.dart';
 import 'package:covid19_tracker/constants/app_constants.dart';
 import 'package:covid19_tracker/constants/language_constants.dart';
 import 'package:covid19_tracker/localization/app_localization.dart';
-import 'package:covid19_tracker/utilities/custom_widgets/custom_widgets.dart';
 import 'package:covid19_tracker/utilities/helpers/data_range.dart';
 import 'package:covid19_tracker/data/state_wise_data.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -92,20 +90,44 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
         if(dataRange == DataRange.BEGINNING){
           range = caseTime.length;
         }else if(dataRange == DataRange.MONTH){
-          range = 31;
+          range = 32;
         }else if(dataRange == DataRange.TWO_WEEK){
-          range = 14;
+          range = 15;
         }
 
         String lastUpdate = "";
 
-        for(int i = (caseTime.length-range);i<caseTime.length;i++){
+        int lastDate = int.parse(caseTime[caseTime.length-1][kDate].toString().substring(0,3));
+
+        int max = 0;
+        if(lastDate<=30){
+          if((lastDate+1)%31 == DateTime.now().day){
+            max = caseTime.length;
+          }else{
+            max = caseTime.length-1;
+          }
+        }else if(lastDate==31){
+          if((lastDate+1)%32 == DateTime.now().day){
+            max = caseTime.length;
+          }else{
+            max = caseTime.length-1;
+          }
+        }else{
+          max = caseTime.length-1;
+        }
+
+        for(int i = (caseTime.length-range);i<max;i++){
           Map map = caseTime[i];
           double currentCnf = double.parse(map[kTotalConfirmed]);
           double currentRec = double.parse(map[kTotalRecovered]);
           double currentDet = double.parse(map[kTotalDeaths]);
           double currentAct = currentCnf-currentDet-currentRec;
-          if(i==caseTime.length-1){
+          if(i==caseTime.length-2 && max==caseTime.length-1){
+            totalCnf = currentCnf;
+            totalRec = currentRec;
+            totalDet = currentDet;
+            totalAct = currentAct;
+          }else if(i==caseTime.length-1 && max==caseTime.length){
             totalCnf = currentCnf;
             totalRec = currentRec;
             totalDet = currentDet;
@@ -282,6 +304,7 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                           ],
                         ),
                       ),
+                      SizedBox(height: 20*scaleFactor,),
                       Center(
                         child: _getPieChart(
                           double.parse(map[kStateWise][0][kConfirmed]),
@@ -507,7 +530,7 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                             ),
                           ),
                           SizedBox(height: 5*scaleFactor,),
-                          _getLineChart(totalCnfSpots, totalCnf, caseTime.length),
+                          _getLineChart(totalCnfSpots, totalCnf, max),
                         ],
                       ),
                     ),
@@ -547,7 +570,7 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                             ),
                           ),
                           SizedBox(height: 5*scaleFactor,),
-                          _getLineChart(totalActiveSpots, uniformScale?totalCnf:totalAct, caseTime.length),
+                          _getLineChart(totalActiveSpots, uniformScale?totalCnf:totalAct, max),
                         ],
                       ),
                     ),
@@ -587,7 +610,7 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                             ),
                           ),
                           SizedBox(height: 5*scaleFactor,),
-                          _getLineChart(totalRecSpots, uniformScale?totalCnf:totalRec, caseTime.length),
+                          _getLineChart(totalRecSpots, uniformScale?totalCnf:totalRec, max),
                         ],
                       ),
                     ),
@@ -627,7 +650,7 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                             ),
                           ),
                           SizedBox(height: 5*scaleFactor,),
-                          _getLineChart(totalDetSpots, uniformScale?totalCnf:totalDet, caseTime.length),
+                          _getLineChart(totalDetSpots, uniformScale?totalCnf:totalDet, max),
                         ],
                       ),
                     ),
@@ -685,7 +708,7 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
               value: recovered,
               color: kGreenColor,
               title: touchedIndex == 1?"${recovered.toInt()}":"${((recovered/confirmed)*100).toString().substring(0,4)}%",
-              titlePositionPercentageOffset: touchedIndex == 1?1.4:0.5,
+              titlePositionPercentageOffset: touchedIndex == 1?1.3:0.5,
               titleStyle: TextStyle(
                 fontFamily: kQuickSand,
                 fontSize: touchedIndex == 1?20*scaleFactor:12*scaleFactor,
@@ -698,7 +721,7 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
               value: deaths,
               color: Colors.grey,
               title: touchedIndex == 2?"${deaths.toInt()}":"${((deaths/confirmed)*100).toString().substring(0,4)}%",
-              titlePositionPercentageOffset: touchedIndex == 2?1.5:0.5,
+              titlePositionPercentageOffset: touchedIndex == 2?1.4:0.5,
               titleStyle: TextStyle(
                 fontFamily: kQuickSand,
                 fontSize: touchedIndex == 2?20*scaleFactor:12*scaleFactor,
@@ -766,7 +789,7 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
               touchCallback: (LineTouchResponse touchResponse) {},
               handleBuiltInTouches: true,
             ),
-            maxY: total<2000?total+200:total+2000,
+            maxY: total+500,
             borderData: FlBorderData(
               show: true,
               border: Border(
@@ -827,7 +850,7 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                     DateTime returnDate = DateTime(
                         2020,
                         now.month,
-                        now.day-maxX+value.toInt()
+                        now.day-maxX+value.toInt(),
                     );
                     return DateFormat("d MMM").format(returnDate);
                   },

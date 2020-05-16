@@ -28,6 +28,73 @@ class Country{
   List<double> recCasesSeries;
   List<double> detCasesSeries;
 
+  initialize(){
+    if(countryName == null){
+      countryName = "";
+    }
+    if(displayName == null){
+      if(countryName != null){
+        displayName = countryName;
+      }else{
+        displayName = "";
+      }
+    }
+    if(continent == null){
+      continent = "";
+    }
+    if(flagLink == null){
+      flagLink = "";
+    }
+    if(id == null){
+      id = 0;
+    }
+    if(iso2 == null){
+      iso2 = "";
+    }
+    if(iso3 == null){
+      iso3 = "";
+    }
+    if(totalCases == null){
+      totalCases = 0;
+    }
+    if(todayCases == null){
+      todayCases = 0;
+    }
+    if(recovered == null){
+      recovered = 0;
+    }
+    if(deaths == null){
+      deaths = 0;
+    }
+    if(todayDeaths == null){
+      todayDeaths = 0;
+    }
+    if(active == null){
+      active = 0;
+    }
+    if(critical == null){
+      critical = 0;
+    }
+    if(mild == null){
+      mild = 0;
+    }
+    if(casesPerOneMil == null){
+      casesPerOneMil = 0.0;
+    }
+    if(deathsPerOneMil == null){
+      deathsPerOneMil = 0.0;
+    }
+    if(tests == null){
+      tests = 0;
+    }
+    if(testPerOneMil == null){
+      testPerOneMil = 0;
+    }
+    if(updated == null){
+      updated = DateTime.now();
+    }
+  }
+
   void generateList(Map map){
     cnfCasesSeries = List();
     recCasesSeries = List();
@@ -48,26 +115,32 @@ class Country{
   }
 
   Country.fromMap(BuildContext context, Map<String,dynamic> map){
-    this.countryName = map[kCountry];
-    this.continent = map[kCountryContinent];
-    this.flagLink = map[kCountryInfo][kFlagLink];
-    this.id = map[kCountryInfo][kCountryID];
-    this.iso2 = map[kCountryInfo][kISO2];
-    this.iso3 = map[kCountryInfo][kISO3];
-    this.totalCases = map[kCountryTotalCases];
-    this.todayCases = map[kCountryTodayCases];
-    this.deaths = map[kCountryDeaths];
-    this.todayDeaths = map[kCountryTodayDeaths];
-    this.recovered = map[kCountryRecovered];
-    this.active = map[kCountryActive];
-    this.critical = map[kCountryCritical];
-    this.casesPerOneMil = double.parse(map[kCountryCasesPerOneMil].toString());
-    this.deathsPerOneMil = double.parse(map[kCountryDeathsPerOneMil].toString());
-    this.tests = map[kCountryTests];
-    this.testPerOneMil = double.parse(map[kCountryTestsPerOneMil].toString());
-    this.mild = active-critical;
-    this.displayName = AppLocalizations.of(context).translate(this.countryName.toLowerCase().replaceAll(" ","_"));
-    this.updated = DateTime.fromMillisecondsSinceEpoch(map[kCountryUpdated]);
+    try{
+      this.countryName = map[kCountry];
+      this.continent = map[kCountryContinent];
+      this.flagLink = map[kCountryInfo][kFlagLink];
+      this.displayName = AppLocalizations.of(context).translate(this.countryName.toLowerCase().replaceAll(" ","_"));
+      this.updated = DateTime.fromMillisecondsSinceEpoch(map[kCountryUpdated]);
+      this.id = map[kCountryInfo][kCountryID];
+      this.iso2 = map[kCountryInfo][kISO2];
+      this.iso3 = map[kCountryInfo][kISO3];
+      this.totalCases = int.parse(map[kCountryTotalCases].toString());
+      this.todayCases = int.parse(map[kCountryTodayCases].toString());
+      this.deaths = int.parse(map[kCountryDeaths].toString());
+      this.todayDeaths = int.parse(map[kCountryTodayDeaths].toString());
+      this.recovered = int.parse(map[kCountryRecovered].toString());
+      this.active = int.parse(map[kCountryActive].toString());
+      this.critical = int.parse(map[kCountryCritical].toString());
+      this.casesPerOneMil = double.parse(map[kCountryCasesPerOneMil].toString());
+      this.deathsPerOneMil = double.parse(map[kCountryDeathsPerOneMil].toString());
+      this.tests = int.parse(map[kCountryTests].toString());
+      this.testPerOneMil = double.parse(map[kCountryTestsPerOneMil].toString());
+      this.mild = active-critical;
+    }catch(e){
+      var ex = e;
+      print("$countryName = ${ex.toString()}");
+      initialize();
+    }
   }
 
 }

@@ -144,14 +144,14 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                         children: <Widget>[
                           DashboardTile(
                             mainTitle: lang.translate(kTotalRecLang),
-                            value: country.deaths.toString(),
+                            value: country.recovered.toString(),
                             delta: "",
                             color: kGreenColor,
                           ),
                           SizedBox(width: 10*scaleFactor,),
                           DashboardTile(
                             mainTitle: lang.translate(kTotalDetLang),
-                            value: country.recovered.toString(),
+                            value: country.deaths.toString(),
                             delta: country.todayDeaths.toString(),
                             color: Colors.grey,
                           ),
@@ -921,6 +921,14 @@ class _CountryDataScreen extends State<CountryDataScreen>{
     //total<=10000?total<=5000?total<500?total<100?50:100:500:5000:total<=50000?10000:total<=100000?25000:total>500000?100000:50000;
 
     double sideInterval = (total/10).toDouble();
+    double bottomInterval = 10;
+    if(dataRange == DataRange.BEGINNING){
+      bottomInterval = 10;
+    }else if(dataRange == DataRange.MONTH){
+      bottomInterval = 3;
+    }else if(dataRange == DataRange.TWO_WEEK){
+      bottomInterval = 2;
+    }
 
     return Padding(
       padding: const EdgeInsets.all(8),
@@ -1008,7 +1016,7 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                   showTitles: true,
                   rotateAngle: math.pi*90,
                   reservedSize: 15*scaleFactor,
-                  interval: dataRange == DataRange.BEGINNING?10:1,
+                  interval: bottomInterval,
                   textStyle: TextStyle(
                     fontSize: 8*scaleFactor,
                     color: theme.brightness == Brightness.light?Colors.black:Colors.white,
