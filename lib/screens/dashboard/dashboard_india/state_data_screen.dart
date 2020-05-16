@@ -580,7 +580,7 @@ class _StateDataState extends State<StateData>{
                                               Container(height: 1,color: theme.brightness == Brightness.light?kGreyColorLight:Colors.grey[800],),
                                             ],
                                           );
-                                        }
+                                        },
                                     ),
                                   ),
                                 ),//Tabular data

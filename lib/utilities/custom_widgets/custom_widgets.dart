@@ -430,7 +430,7 @@ class TableRows extends StatelessWidget{
                 ),
                 Expanded(
                   child: Text(
-                    countryData?country.active.toString():stateInfo.active.toString(),
+                    countryData?country.active==0?"N/A":country.active.toString():stateInfo.active.toString(),
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: kNotoSansSc,

@@ -22,15 +22,23 @@ class SIRD{
     deathsTimeSeries = List();
     dateTimeSeries = List();
 
-    int day = int.parse(timeSeries[timeSeries.length-1][kDate].toString().substring(0,3));
+    int lastDate = int.parse(timeSeries[timeSeries.length-1][kDate].toString().substring(0,3));
 
     int max = 0;
-    if(day == DateTime.now().day){
-      max = timeSeries.length-1;
-    }else if(day == DateTime.now().day-1){
-      max = timeSeries.length;
+    if(lastDate<=30){
+      if((lastDate+1)%31 == DateTime.now().day){
+        max = timeSeries.length;
+      }else{
+        max = timeSeries.length-1;
+      }
+    }else if(lastDate==31){
+      if((lastDate+1)%32 == DateTime.now().day){
+        max = timeSeries.length;
+      }else{
+        max = timeSeries.length-1;
+      }
     }else{
-      max = timeSeries.length;
+      max = timeSeries.length-1;
     }
 
     for(int i = 0;i<max;i++){

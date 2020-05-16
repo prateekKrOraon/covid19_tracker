@@ -218,6 +218,7 @@ class _CompareScreenState extends State<CompareScreen> with SingleTickerProvider
 
                 Map dataOne = snapshot.data[0];
                 Map dataTwo = snapshot.data[1];
+                print(dataOne);
                 if(dataOne.containsKey('result')){
                   if(dataOne['result'] == null){
                     return Container(

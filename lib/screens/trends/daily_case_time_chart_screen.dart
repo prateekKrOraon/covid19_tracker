@@ -95,14 +95,21 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
 
         String lastUpdate = "";
 
-        int day = int.parse(caseTime[caseTime.length-1][kDate].toString().substring(0,3));
-        print(day);
+        int lastDate = int.parse(caseTime[caseTime.length-1][kDate].toString().substring(0,3));
 
         int max = 0;
-        if(day == DateTime.now().day){
-          max = caseTime.length-1;
-        }else if(day == DateTime.now().day-1){
-          max = caseTime.length;
+        if(lastDate<=30){
+          if((lastDate+1)%31 == DateTime.now().day){
+            max = caseTime.length;
+          }else{
+            max = caseTime.length-1;
+          }
+        }else if(lastDate==31){
+          if((lastDate+1)%32 == DateTime.now().day){
+            max = caseTime.length;
+          }else{
+            max = caseTime.length-1;
+          }
         }else{
           max = caseTime.length-1;
         }

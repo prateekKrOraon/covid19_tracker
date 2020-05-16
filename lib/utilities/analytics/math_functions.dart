@@ -20,7 +20,26 @@ class MathFunctions{
     deathsTimeSeries = List();
     dateTimeSeries = List();
 
-    for(int i = 0;i<timeSeries.length-1;i++){
+    int lastDate = int.parse(timeSeries[timeSeries.length-1][kDate].toString().substring(0,3));
+
+    int max = timeSeries.length-1;
+
+    if(lastDate<=30){
+      if((lastDate+1)%31 == DateTime.now().day){
+        max = timeSeries.length;
+      }else{
+        max = timeSeries.length-1;
+      }
+    }else if(lastDate==31){
+      if((lastDate+1)%32 == DateTime.now().day){
+        max = timeSeries.length;
+      }else{
+        max = timeSeries.length-1;
+      }
+    }
+
+
+    for(int i = 0;i<max;i++){
       Map map = timeSeries[i];
 
       confirmedTimeSeries.add(double.parse(map[kTotalConfirmed]));
