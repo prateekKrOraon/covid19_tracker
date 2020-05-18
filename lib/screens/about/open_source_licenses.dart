@@ -26,8 +26,10 @@ class _OpenSourceLicensesState extends State<OpenSourceLicenses>{
 
     Size size = MediaQuery.of(context).size;
 
-    if(size.width <= 360){
+    if(size.width < 400){
       scaleFactor = 0.75;
+    }else if(size.width<=450){
+      scaleFactor = 0.9;
     }
 
     List<License> licenses = List();
@@ -144,7 +146,7 @@ class _OpenSourceLicensesState extends State<OpenSourceLicenses>{
           textAlign: TextAlign.start,
           style: TextStyle(
             fontFamily: kQuickSand,
-            fontSize: 22*textScaleFactor,
+            fontSize: 22*scaleFactor,
             color: Theme.of(context).brightness == Brightness.light?Colors.black:Colors.white,
           ),
         ),

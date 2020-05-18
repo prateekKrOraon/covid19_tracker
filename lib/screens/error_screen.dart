@@ -35,8 +35,10 @@ class _ErrorScreenState extends State<ErrorScreen>{
     Size size = MediaQuery.of(context).size;
     ThemeData theme = Theme.of(context);
 
-    if(size.width <=400){
+    if(size.width<400){
       scaleFactor = 0.75;
+    }else if(size.width<=450){
+      scaleFactor = 0.9;
     }
 
     return Container(

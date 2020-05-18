@@ -30,8 +30,10 @@ class _PredictionState extends State<Predictions>{
     AppLocalizations lang = AppLocalizations.of(context);
     ThemeData theme = Theme.of(context);
 
-    if(size.width<=400){
+    if(size.width<400){
       scaleFactor = 0.75;
+    }else if(size.width<=450){
+      scaleFactor = 0.9;
     }
 
     return FutureBuilder(

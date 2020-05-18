@@ -71,8 +71,10 @@ class _StateDataState extends State<StateData>{
     AppLocalizations lang = AppLocalizations.of(context);
     theme = Theme.of(context);
 
-    if(size.width<=400){
+    if(size.width<400){
       scaleFactor = 0.75;
+    }else if(size.width<=450){
+      scaleFactor = 0.9;
     }
 
     return Scaffold(
@@ -819,6 +821,14 @@ class _StateDataState extends State<StateData>{
                   showTitles: true,
                   interval: sideInterval,
                   getTitles: (double value){
+                    if(value>100000){
+                      return "${value.toString().substring(0,3)}.${value.toString().substring(3,4)}";
+                    }else if(value>=10000){
+                      return "${value.toString().substring(0,2)}.${value.toString().substring(2,3)}k";
+                    }else if(value>=1000){
+                      return "${value.toString().substring(0,1)}.${value.toString().substring(1,2)}k";
+                    }
+
                     return value.toInt().toString();
                   },
                   textStyle: TextStyle(
@@ -951,10 +961,16 @@ class _StateDataState extends State<StateData>{
                       fontFamily: kQuickSand,
                     ),
                     getTitles: (double value){
-                      if(value<10000 && value>500){
-                        return '${(value).toString().substring(0,1)}k';
-                      }else if (value>10000){
-                        return '${(value).toString().substring(0,2)}k';
+                      if(value >= 10000000){
+                        return '${(value).toInt().toString().substring(0,2)}m';
+                      }else if(value>=1000000){
+                        return '${(value).toInt().toString().substring(0,1)}.${(value).toInt().toString().substring(1,2)}m';
+                      }else if(value>=100000){
+                        return '${(value).toInt().toString().substring(0,3)}k';
+                      }else if(value>=10000){
+                        return '${(value).toInt().toString().substring(0,2)}.${value.toString().substring(2,3)}k';
+                      }else if(value>=1000){
+                        return '${(value).toInt().toString().substring(0,1)}.${(value).toInt().toString().substring(1,2)}k';
                       }else{
                         return '${(value).toInt().toString()}';
                       }

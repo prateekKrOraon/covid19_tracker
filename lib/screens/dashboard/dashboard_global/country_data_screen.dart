@@ -62,8 +62,10 @@ class _CountryDataScreen extends State<CountryDataScreen>{
 
     AppLocalizations lang = AppLocalizations.of(context);
 
-    if(size.width<=400){
+    if(size.width<400){
       scaleFactor = 0.75;
+    }else if(size.width<=450){
+      scaleFactor = 0.9;
     }
 
     theme = Theme.of(context);
@@ -865,12 +867,16 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                   showTitles: true,
                   interval: sideInterval,
                   getTitles: (double value){
-                    if(value<10000 && value>=1000){
-                      return '${(value).toString().substring(0,1)}k';
-                    }else if (value>=10000 && value<100000){
-                      return '${(value).toString().substring(0,2)}k';
+                    if(value >= 10000000){
+                      return '${(value).toInt().toString().substring(0,2)}m';
+                    }else if(value>=1000000){
+                      return '${(value).toInt().toString().substring(0,1)}.${(value).toInt().toString().substring(1,2)}m';
                     }else if(value>=100000){
-                      return '${(value).toString().substring(0,1)}m';
+                      return '${(value).toInt().toString().substring(0,3)}k';
+                    }else if(value>=10000){
+                      return '${(value).toInt().toString().substring(0,2)}.${value.toString().substring(2,3)}k';
+                    }else if(value>=1000){
+                      return '${(value).toInt().toString().substring(0,1)}.${(value).toInt().toString().substring(1,2)}k';
                     }else{
                       return '${(value).toInt().toString()}';
                     }

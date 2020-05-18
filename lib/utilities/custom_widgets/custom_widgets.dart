@@ -7,8 +7,9 @@ import 'package:covid19_tracker/utilities/helpers/sorting.dart';
 import 'package:covid19_tracker/utilities/models/state_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:intl/intl.dart';
 
-double textScaleFactor = 1;
+double scaleFactor = 1;
 
 class DashboardTile extends StatelessWidget{
 
@@ -24,8 +25,10 @@ class DashboardTile extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    if(size.width <= 360){
-      textScaleFactor = 0.75;
+    if(size.width<400){
+      scaleFactor = 0.75;
+    }else if(size.width<=450){
+      scaleFactor = 0.9;
     }
 
     return Expanded(
@@ -46,32 +49,36 @@ class DashboardTile extends StatelessWidget{
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.max,
               children: <Widget>[
                 Text(
                   mainTitle,
                   style: TextStyle(
                     color: color,
-                    fontSize: 14*textScaleFactor,
+                    fontSize: 14*scaleFactor,
                     fontFamily: kQuickSand,
                   ),
                 ),
-                SizedBox(height: 16*textScaleFactor,),
+                SizedBox(height: 16*scaleFactor,),
                 Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Text(
-                      value,
-                      style: TextStyle(
-                        color: color,
-                        fontSize: 24*textScaleFactor,
-                        fontFamily: kQuickSand,
+                    Expanded(
+                      child: Text(
+                        value == ""?"0":NumberFormat(",###","en_US").format(double.parse(value)),
+                        style: TextStyle(
+                          color: color,
+                          fontSize: 24*scaleFactor,
+                          fontFamily: kQuickSand,
+                        ),
                       ),
                     ),
-                    SizedBox(width: 10*textScaleFactor,),
+                    SizedBox(width: 10*scaleFactor,),
                     Text(
                       delta == ""?"":"(+$delta)",
                       style: TextStyle(
                         color: color,
-                        fontSize: 16*textScaleFactor,
+                        fontSize: 16*scaleFactor,
                         fontFamily: kQuickSand,
                       ),
                     ),
@@ -115,7 +122,7 @@ class TableHeader extends StatelessWidget{
     return Container(
       child: Column(
         children: <Widget>[
-          SizedBox(height: 16*textScaleFactor,),
+          SizedBox(height: 16*scaleFactor,),
           Container(
             child: Row(
               children: <Widget>[
@@ -141,17 +148,17 @@ class TableHeader extends StatelessWidget{
                                 sortingOrder.checkOrder(SortingOrder.STATE_DEC)?
                                 AntDesign.arrowdown:
                                 AntDesign.arrowup,
-                                size: 8*textScaleFactor,
+                                size: 8*scaleFactor,
                               ),
                             ),
                           ),
                         ):SizedBox(),
-                        SizedBox(width: 5*textScaleFactor,),
+                        SizedBox(width: 5*scaleFactor,),
                         Text(
                           dataFor,
                           style: TextStyle(
                             fontFamily: kQuickSand,
-                            fontSize: 14*textScaleFactor,
+                            fontSize: 14*scaleFactor,
                           ),
                         ),
                       ],
@@ -180,12 +187,12 @@ class TableHeader extends StatelessWidget{
                                 sortingOrder.checkOrder(SortingOrder.CNF_DEC)?
                                 AntDesign.arrowdown:
                                 AntDesign.arrowup,
-                                size: 8*textScaleFactor,
+                                size: 8*scaleFactor,
                               ),
                             ),
                           ),
                         ):SizedBox(),
-                        SizedBox(width: 5*textScaleFactor,),
+                        SizedBox(width: 5*scaleFactor,),
                         Text(
                           lang.translate(kConfirmedLang),
                           textAlign: TextAlign.end,
@@ -193,7 +200,7 @@ class TableHeader extends StatelessWidget{
                           style: TextStyle(
                             color: kRedColor,
                             fontFamily: kQuickSand,
-                            fontSize: 14*textScaleFactor,
+                            fontSize: 14*scaleFactor,
                           ),
                         ),
                       ],
@@ -222,19 +229,19 @@ class TableHeader extends StatelessWidget{
                                 sortingOrder.checkOrder(SortingOrder.ACTV_DEC)?
                                 AntDesign.arrowdown:
                                 AntDesign.arrowup,
-                                size: 8*textScaleFactor,
+                                size: 8*scaleFactor,
                               ),
                             ),
                           ),
                         ):SizedBox(),
-                        SizedBox(width: 5*textScaleFactor,),
+                        SizedBox(width: 5*scaleFactor,),
                         Text(
                           lang.translate(kActiveLang),
                           textAlign: TextAlign.end,
                           style: TextStyle(
                             color: kBlueColor,
                             fontFamily: kQuickSand,
-                            fontSize: 14*textScaleFactor,
+                            fontSize: 14*scaleFactor,
                           ),
                         ),
                       ],
@@ -263,19 +270,19 @@ class TableHeader extends StatelessWidget{
                                 sortingOrder.checkOrder(SortingOrder.REC_DEC)?
                                 AntDesign.arrowdown:
                                 AntDesign.arrowup,
-                                size: 8*textScaleFactor,
+                                size: 8*scaleFactor,
                               ),
                             ),
                           ),
                         ):SizedBox(),
-                        SizedBox(width: 5*textScaleFactor,),
+                        SizedBox(width: 5*scaleFactor,),
                         Text(
                           lang.translate(kRecoveredLang),
                           textAlign: TextAlign.end,
                           style: TextStyle(
                             color: kGreenColor,
                             fontFamily: kQuickSand,
-                            fontSize: 14*textScaleFactor,
+                            fontSize: 14*scaleFactor,
                           ),
                         ),
                       ],
@@ -304,19 +311,19 @@ class TableHeader extends StatelessWidget{
                                 sortingOrder.checkOrder(SortingOrder.DET_DEC)?
                                 AntDesign.arrowdown:
                                 AntDesign.arrowup,
-                                size: 8*textScaleFactor,
+                                size: 8*scaleFactor,
                               ),
                             ),
                           ),
                         ):SizedBox(),
-                        SizedBox(width: 5*textScaleFactor,),
+                        SizedBox(width: 5*scaleFactor,),
                         Text(
                           lang.translate(kDeathsLang),
                           textAlign: TextAlign.end,
                           style: TextStyle(
                             color: Colors.grey,
                             fontFamily: kQuickSand,
-                            fontSize: 14*textScaleFactor,
+                            fontSize: 14*scaleFactor,
                           ),
                         ),
                       ],
@@ -326,9 +333,9 @@ class TableHeader extends StatelessWidget{
               ],
             ),
           ),
-          SizedBox(height: 5*textScaleFactor,),
+          SizedBox(height: 5*scaleFactor,),
           Container(height: 1,color: kGreyColor,),
-          SizedBox(height: 5*textScaleFactor,),
+          SizedBox(height: 5*scaleFactor,),
         ],
       ),
     );
@@ -358,14 +365,14 @@ class TableRows extends StatelessWidget{
     ThemeData theme = Theme.of(context);
     return Column(
       children: <Widget>[
-        SizedBox(height: 5*textScaleFactor,),
+        SizedBox(height: 5*scaleFactor,),
         InkWell(
           onTap: onTouchCallback,
           child: Container(
             width: size.width,
             constraints: BoxConstraints(
-              minHeight: 32*textScaleFactor,
-              maxHeight: 56*textScaleFactor,
+              minHeight: 32*scaleFactor,
+              maxHeight: 56*scaleFactor,
             ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -381,23 +388,23 @@ class TableRows extends StatelessWidget{
                         elevation: 1,
                         color: theme.backgroundColor,
                         child: Container(
-                          height: 12*textScaleFactor,
-                          width: 12*textScaleFactor,
+                          height: 12*scaleFactor,
+                          width: 12*scaleFactor,
                           child: Center(
                             child: Icon(
                               Icons.arrow_forward_ios,
-                              size: 8*textScaleFactor,
+                              size: 8*scaleFactor,
                             ),
                           ),
                         ),
                       ),
-                      SizedBox(width: 2*textScaleFactor,),
+                      SizedBox(width: 2*scaleFactor,),
                       Expanded(
                         child: Text(
                           countryData?country.displayName==null?country.countryName:country.displayName:stateInfo.displayName==null?stateInfo.stateName:stateInfo.displayName,
                           style: TextStyle(
                             fontFamily: kNotoSansSc,
-                            fontSize: 12*textScaleFactor,
+                            fontSize: 12*scaleFactor,
                           ),
                         ),
                       ),
@@ -413,16 +420,16 @@ class TableRows extends StatelessWidget{
                         countryData?country.totalCases.toString():stateInfo.confirmed.toString(),
                         style: TextStyle(
                           fontFamily: kNotoSansSc,
-                          fontSize: 14*textScaleFactor,
+                          fontSize: 14*scaleFactor,
                         ),
                       ),
-                      SizedBox(height: 2*textScaleFactor,),
+                      SizedBox(height: 2*scaleFactor,),
                       Text(
                         countryData?country.todayCases==0?"":"(+${country.todayCases})":stateInfo.deltaCnf==0?"":"(+${stateInfo.deltaCnf})",
                         style: TextStyle(
                           color: Colors.red,
                           fontFamily: kNotoSansSc,
-                          fontSize: 12*textScaleFactor,
+                          fontSize: 12*scaleFactor,
                         ),
                       ),
                     ],
@@ -434,7 +441,7 @@ class TableRows extends StatelessWidget{
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: kNotoSansSc,
-                      fontSize: 14*textScaleFactor,
+                      fontSize: 14*scaleFactor,
                     ),
                   ),
                 ),
@@ -447,16 +454,16 @@ class TableRows extends StatelessWidget{
                         countryData?country.recovered==0?"N/A":country.recovered.toString():stateInfo.recovered.toString(),
                         style: TextStyle(
                           fontFamily: kNotoSansSc,
-                          fontSize: 14*textScaleFactor,
+                          fontSize: 14*scaleFactor,
                         ),
                       ),
-                      SizedBox(height: 2*textScaleFactor,),
+                      SizedBox(height: 2*scaleFactor,),
                       Text(
                         countryData?"":stateInfo.deltaRec==0?"":"(+${stateInfo.deltaRec})",
                         style: TextStyle(
                           color: Colors.green,
                           fontFamily: kNotoSansSc,
-                          fontSize: 12*textScaleFactor,
+                          fontSize: 12*scaleFactor,
                         ),
                       ),
                     ],
@@ -471,16 +478,16 @@ class TableRows extends StatelessWidget{
                         countryData?country.deaths.toString():stateInfo.deaths.toString(),
                         style: TextStyle(
                           fontFamily: kNotoSansSc,
-                          fontSize: 14*textScaleFactor,
+                          fontSize: 14*scaleFactor,
                         ),
                       ),
-                      SizedBox(width: 2*textScaleFactor,),
+                      SizedBox(width: 2*scaleFactor,),
                       Text(
                         countryData?"(+${country.todayDeaths})":stateInfo.deltaDet==0?"":"(+${stateInfo.deltaDet})",
                         style: TextStyle(
                           color: Colors.grey,
                           fontFamily: kNotoSansSc,
-                          fontSize: 12*textScaleFactor,
+                          fontSize: 12*scaleFactor,
                         ),
                       ),
                     ],
@@ -490,7 +497,7 @@ class TableRows extends StatelessWidget{
             ),
           ),
         ),
-        SizedBox(height: 5*textScaleFactor,),
+        SizedBox(height: 5*scaleFactor,),
         Container(height: 1,color: theme.brightness == Brightness.light?kGreyColorLight:Colors.grey[800],),
       ],
     );
@@ -513,13 +520,13 @@ class TableHeaderStatic extends StatelessWidget{
         Container(
           child: Row(
             children: <Widget>[
-              SizedBox(width: 8*textScaleFactor,),
+              SizedBox(width: 8*scaleFactor,),
               Expanded(
                 child: Text(
                   dataFor,
                   style: TextStyle(
                     fontFamily: kQuickSand,
-                    fontSize: 14*textScaleFactor,
+                    fontSize: 14*scaleFactor,
                   ),
                 ),
               ),
@@ -530,7 +537,7 @@ class TableHeaderStatic extends StatelessWidget{
                   style: TextStyle(
                     color: kRedColor,
                     fontFamily: kQuickSand,
-                    fontSize: 14*textScaleFactor,
+                    fontSize: 14*scaleFactor,
                   ),
                 ),
               ),
@@ -541,7 +548,7 @@ class TableHeaderStatic extends StatelessWidget{
                   style: TextStyle(
                     color: kBlueColor,
                     fontFamily: kQuickSand,
-                    fontSize: 14*textScaleFactor,
+                    fontSize: 14*scaleFactor,
                   ),
                 ),
               ),
@@ -552,7 +559,7 @@ class TableHeaderStatic extends StatelessWidget{
                   style: TextStyle(
                     color: kGreenColor,
                     fontFamily: kQuickSand,
-                    fontSize: 14*textScaleFactor,
+                    fontSize: 14*scaleFactor,
                   ),
                 ),
               ),
@@ -563,18 +570,18 @@ class TableHeaderStatic extends StatelessWidget{
                   style: TextStyle(
                     color: Colors.grey,
                     fontFamily: kQuickSand,
-                    fontSize: 14*textScaleFactor,
+                    fontSize: 14*scaleFactor,
                   ),
                 ),
               ),
             ],
           ),
         ),
-        SizedBox(height: 5*textScaleFactor,),
+        SizedBox(height: 5*scaleFactor,),
         Container(height: 1,color: kGreyColor,),
-        SizedBox(height: 5*textScaleFactor,),
+        SizedBox(height: 5*scaleFactor,),
       ],
-    );;
+    );
   }
 }
 

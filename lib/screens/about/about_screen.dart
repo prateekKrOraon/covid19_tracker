@@ -58,8 +58,10 @@ class _AboutScreenState extends State<AboutScreen>{
     darkTheme = theme.brightness == Brightness.dark?true:false;
     AppLocalizations lang = AppLocalizations.of(context);
 
-    if(MediaQuery.of(context).size.width<=360){
+    if(MediaQuery.of(context).size.width<400){
       scaleFactor=0.75;
+    }else if(MediaQuery.of(context).size.width<=450){
+      scaleFactor = 0.9;
     }
 
     return SingleChildScrollView(
@@ -545,7 +547,7 @@ class _AboutScreenState extends State<AboutScreen>{
                               ):SizedBox(),
                               SizedBox(width: 5*scaleFactor,),
                               Text(
-                                '1.5.7',
+                                '1.5.8',
                                 style: TextStyle(
                                   fontSize: 16*scaleFactor,
                                 ),
