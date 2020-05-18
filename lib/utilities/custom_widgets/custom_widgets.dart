@@ -28,7 +28,7 @@ class DashboardTile extends StatelessWidget{
     if(size.width<400){
       scaleFactor = 0.75;
     }else if(size.width<=450){
-      scaleFactor = 0.9;
+      scaleFactor = 0.8;
     }
 
     return Expanded(
