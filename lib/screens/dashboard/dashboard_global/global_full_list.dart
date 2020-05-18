@@ -50,8 +50,10 @@ class _FullGlobalList extends State<FullGlobalList>{
 
     AppLocalizations lang = AppLocalizations.of(context);
 
-    if(size.width<=400){
+    if(size.width<400){
       scaleFactor = 0.75;
+    }else if(size.width<=450){
+      scaleFactor = 0.9;
     }
 
     if(sortingOrder.checkOrder(SortingOrder.CNF_DEC)){

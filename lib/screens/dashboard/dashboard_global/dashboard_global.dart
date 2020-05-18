@@ -67,8 +67,10 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
     AppLocalizations lang = AppLocalizations.of(context);
     theme = Theme.of(context);
     Size size = MediaQuery.of(context).size;
-    if(size.width<=400){
+    if(size.width<400){
       scaleFactor = 0.75;
+    }else if(size.width<=450){
+      scaleFactor = 0.9;
     }
 
     return FutureBuilder(
@@ -354,7 +356,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                                   ),
                                   Expanded(
                                     child: Text(
-                                      worldData[kCountryTests].toString(),
+                                      NumberFormat(",###").format(double.parse(worldData[kCountryTests].toString())),
                                       textAlign: TextAlign.end,
                                       style: TextStyle(
                                         color: kDarkBlueColor,

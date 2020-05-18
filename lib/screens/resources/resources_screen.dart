@@ -32,8 +32,10 @@ class _ResourcesScreenState extends State<ResourcesScreen>{
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    if(size.width <= 360){
+    if(size.width<400){
       scaleFactor = 0.75;
+    }else if(size.width<=450){
+      scaleFactor = 0.9;
     }
 
     ThemeData theme = Theme.of(context);
@@ -321,7 +323,6 @@ class _ResourcesScreenState extends State<ResourcesScreen>{
     List<String> keys = map.keys.toList()..sort();
 
     for(int i = 0; i<keys.length;i++){
-      print(keys[i]);
       try{
         list.add(
           Tab(

@@ -138,7 +138,6 @@ class Country{
       this.mild = active-critical;
     }catch(e){
       var ex = e;
-      print("$countryName = ${ex.toString()}");
       initialize();
     }
   }

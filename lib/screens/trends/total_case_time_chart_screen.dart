@@ -37,8 +37,10 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
 
     theme = Theme.of(context);
 
-    if(size.width <= 400){
+    if(size.width<400){
       scaleFactor = 0.75;
+    }else if(size.width<=450){
+      scaleFactor = 0.9;
     }
 
     return FutureBuilder(

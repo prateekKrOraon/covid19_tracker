@@ -59,8 +59,10 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
     size = MediaQuery.of(context).size;
     AppLocalizations lang = AppLocalizations.of(context);
 
-    if(size.width <= 360){
+    if(size.width<400){
       scaleFactor = 0.75;
+    }else if(size.width<=450){
+      scaleFactor = 0.9;
     }
 
     return FutureBuilder(

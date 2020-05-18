@@ -59,8 +59,10 @@ class _OnboardingState extends State<Onboarding>{
 
     Size size = MediaQuery.of(context).size;
 
-    if(size.width<=400){
-      textScaleFactor = 0.75;
+    if(size.width<400){
+      scaleFactor = 0.75;
+    }else if(size.width<=450){
+      scaleFactor = 0.9;
     }
 
     final TextStyle _textStyle = TextStyle(

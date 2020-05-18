@@ -23,7 +23,7 @@ class DemographicsScreen extends StatefulWidget{
 
 class _DemographicsScreenState extends State<DemographicsScreen>{
 
-  double textScaleFactor = 1;
+  double scaleFactor = 1;
   ThemeData theme;
 
   @override
@@ -32,8 +32,10 @@ class _DemographicsScreenState extends State<DemographicsScreen>{
 
     theme = Theme.of(context);
 
-    if(size.width <= 360){
-      textScaleFactor = 0.75;
+    if(size.width<400){
+      scaleFactor = 0.75;
+    }else if(size.width<=450){
+      scaleFactor = 0.9;
     }
 
     return FutureBuilder(
@@ -146,7 +148,7 @@ class _DemographicsScreenState extends State<DemographicsScreen>{
                               'Age Distribution',
                               style: TextStyle(
                                 fontFamily: kQuickSand,
-                                fontSize: 25*textScaleFactor,
+                                fontSize: 25*scaleFactor,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -155,7 +157,7 @@ class _DemographicsScreenState extends State<DemographicsScreen>{
                               style: TextStyle(
                                 color: Colors.grey[500],
                                 fontFamily: kQuickSand,
-                                fontSize: 16*textScaleFactor,
+                                fontSize: 16*scaleFactor,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -188,7 +190,7 @@ class _DemographicsScreenState extends State<DemographicsScreen>{
                                                 showTitles: true,
                                                 interval: 50,
                                                 textStyle: TextStyle(
-                                                  fontSize: 10*textScaleFactor,
+                                                  fontSize: 10*scaleFactor,
                                                   color: theme.brightness == Brightness.light?Colors.black:Colors.white,
                                                 ),
                                                 getTitles: (double value){
@@ -198,7 +200,7 @@ class _DemographicsScreenState extends State<DemographicsScreen>{
                                             bottomTitles: SideTitles(
                                                 showTitles: true,
                                                 textStyle: TextStyle(
-                                                  fontSize: 8*textScaleFactor,
+                                                  fontSize: 8*scaleFactor,
                                                   color: theme.brightness == Brightness.light?Colors.black:Colors.white,
                                                 ),
                                                 getTitles: (double value){
@@ -271,7 +273,7 @@ class _DemographicsScreenState extends State<DemographicsScreen>{
                               'Gender Distribution',
                               style: TextStyle(
                                 fontFamily: kQuickSand,
-                                fontSize: 25*textScaleFactor,
+                                fontSize: 25*scaleFactor,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -280,7 +282,7 @@ class _DemographicsScreenState extends State<DemographicsScreen>{
                               style: TextStyle(
                                 color: Colors.grey[500],
                                 fontFamily: kQuickSand,
-                                fontSize: 16*textScaleFactor,
+                                fontSize: 16*scaleFactor,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),

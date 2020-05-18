@@ -21,8 +21,10 @@ class _PreventionScreenState extends State<PreventionsScreen>{
     Size size = MediaQuery.of(context).size;
     AppLocalizations lang = AppLocalizations.of(context);
 
-    if(size.width<=400){
+    if(size.width<400){
       scaleFactor = 0.75;
+    }else if(size.width<=450){
+      scaleFactor = 0.9;
     }
 
     final List<PreventionAndSymptomsModel> _preventions = [

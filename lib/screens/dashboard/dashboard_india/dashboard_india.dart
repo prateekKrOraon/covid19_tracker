@@ -51,8 +51,10 @@ class _DashboardIndiaState extends State<DashboardIndia>{
     AppLocalizations lang = AppLocalizations.of(context);
     theme = Theme.of(context);
     Size size = MediaQuery.of(context).size;
-    if(size.width<=400.0){
+    if(size.width<400){
       scaleFactor = 0.75;
+    }else if(size.width<=450){
+      scaleFactor = 0.9;
     }
 
     return FutureBuilder(
@@ -263,7 +265,9 @@ class _DashboardIndiaState extends State<DashboardIndia>{
                                   ),
                                   Expanded(
                                     child: Text(
-                                      latestTestedData[kTotalIndividualTested]==""?latestTestedData[kTotalSamplesTested]:latestTestedData[kTotalIndividualTested],
+                                      latestTestedData[kTotalIndividualTested]==""?
+                                      NumberFormat(",###").format(double.parse(latestTestedData[kTotalSamplesTested].toString())):
+                                      NumberFormat(",###").format(double.parse(latestTestedData[kTotalIndividualTested].toString())),
                                       textAlign: TextAlign.end,
                                       style: TextStyle(
                                         color: kDarkBlueColor,
