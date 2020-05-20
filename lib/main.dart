@@ -56,7 +56,7 @@ class _MyAppState extends State<MyApp>{
       data: (brightness) => getTheme(brightness),
       themedWidgetBuilder: (context,theme){
         return MaterialApp(
-          title: 'Covid-19 Tracker',
+          title: 'COVID-19 Tracker',
           theme: theme,
           //List of app supported locales here
           supportedLocales: [

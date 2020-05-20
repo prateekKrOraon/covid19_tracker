@@ -208,6 +208,7 @@ class _StateDataState extends State<StateData>{
 
                     //Table data processing
                     Map districtWiseReport = snapshot.data[0];
+
                     Map zones = snapshot.data[2];
                     List districtData = districtWiseReport[kDistrictData];
                     List<District> districts = List();
@@ -268,149 +269,149 @@ class _StateDataState extends State<StateData>{
                     int j = 0;
                     int k = 0;
                     int l = 0;
-
-                    for(int i = 0; i<dailyReport.length; i++){
-                      Map day = dailyReport[i];
-                      if(i%3==0){
-                        String str = day[stateInfo.stateCode.toLowerCase()];
-                        int currentCnf = 0;
-                        if(str != ""){
-                          currentCnf = int.parse(str);
-                        }
-
-                        if(dailyHighestCnf<currentCnf){
-                          dailyHighestCnf = currentCnf;
-                        }
-                        totalCnf += currentCnf;
-                        if(i>=dailyReport.length-90){
-                          cnfSpots.add(
-                            FlSpot(
-                              (i~/3).toDouble(),
-                              totalCnf.toDouble(),
-                            ),
-                          );
-                          dailyConfirmedChartGroup.add(
-                            BarChartGroupData(
-                              x: i,
-                              showingTooltipIndicators: [],
-                              barRods: [
-                                BarChartRodData(
-                                  y: currentCnf.toDouble(),
-                                  borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(10),
-                                    topLeft: Radius.circular(10),
-                                  ),
-                                  color: theme.accentColor,
-                                  width: 6*scaleFactor,
-                                ),
-                              ],
-                            ),
-                          );
-                        }
-                      }
-                      if(i%3==1){
-                        String str = day[stateInfo.stateCode.toLowerCase()];
-                        int currentRec = 0;
-                        if(str!=""){
-                          currentRec = int.parse(str);
-                        }
-                        if(dailyHighestRec < currentRec){
-                          dailyHighestRec = currentRec;
-                        }
-                        totalRec += currentRec;
-                        if(i>=dailyReport.length-90){
-                          recSpots.add(
-                            FlSpot(
-                              (i~/3).toDouble(),
-                              totalRec.toDouble(),
-                            ),
-                          );
-                          dailyRecChartGroup.add(
-                            BarChartGroupData(
-                              x: i,
-                              showingTooltipIndicators: [],
-                              barRods: [
-                                BarChartRodData(
-                                  y: currentRec.toDouble(),
-                                  borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(10),
-                                    topLeft: Radius.circular(10),
-                                  ),
-                                  color: theme.accentColor,
-                                  width: 6*scaleFactor,
-                                ),
-                              ],
-                            ),
-                          );
-                        }
-                      }
-                      if(i%3==2){
-                        String str = day[stateInfo.stateCode.toLowerCase()];
-                        int currentDet = 0;
-                        if(str != "") {
-                          currentDet = int.parse(str);
-                        }
-
-                        if(dailyHighestDet < currentDet){
-                          dailyHighestDet = currentDet;
-                        }
-                        totalDet += currentDet;
-                        if(i>=dailyReport.length-90){
-                          detSpots.add(
-                            FlSpot(
-                              (i~/3).toDouble(),
-                              totalDet.toDouble(),
-                            ),
-                          );
-                          dailyDetChartGroup.add(
-                            BarChartGroupData(
-                              x: i,
-                              showingTooltipIndicators: [],
-                              barRods: [
-                                BarChartRodData(
-                                  y: currentDet.toDouble(),
-                                  borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(10),
-                                    topLeft: Radius.circular(10),
-                                  ),
-                                  color: theme.accentColor,
-                                  width: 6*scaleFactor,
-                                ),
-                              ],
-                            ),
-                          );
-                        }
-                      }
-                    }
-
                     List<Widget> lineChartLayouts = List();
-
-                    lineChartLayouts.add(
-                      _getLineChartLayout(lang.translate(kConfirmedLang),cnfSpots, totalCnf.toDouble(), 30),
-                    );
-
-                    lineChartLayouts.add(
-                      _getLineChartLayout(lang.translate(kRecoveredLang),recSpots, totalRec.toDouble(), 30),
-                    );
-
-                    lineChartLayouts.add(
-                      _getLineChartLayout(lang.translate(kDeathsLang),detSpots, totalDet.toDouble(), 30),
-                    );
-
                     List<Widget> barChartLayouts = List();
 
-                    barChartLayouts.add(
-                      _getBarChartLayout(lang.translate(kDailyCnfLang), dailyConfirmedChartGroup, (dailyHighestCnf).toDouble(),range~/3),
-                    );
+                    if(stateInfo.stateCode != "UN"){
+                      for(int i = 0; i<dailyReport.length; i++){
+                        Map day = dailyReport[i];
+                        if(i%3==0){
+                          String str = day[stateInfo.stateCode.toLowerCase()];
+                          int currentCnf = 0;
+                          if(str != ""){
+                            currentCnf = int.parse(str);
+                          }
 
-                    barChartLayouts.add(
-                      _getBarChartLayout(lang.translate(kDailyRecLang), dailyRecChartGroup, (dailyHighestRec).toDouble(),range~/3),
-                    );
+                          if(dailyHighestCnf<currentCnf){
+                            dailyHighestCnf = currentCnf;
+                          }
+                          totalCnf += currentCnf;
+                          if(i>=dailyReport.length-90){
+                            cnfSpots.add(
+                              FlSpot(
+                                (i~/3).toDouble(),
+                                totalCnf.toDouble(),
+                              ),
+                            );
+                            dailyConfirmedChartGroup.add(
+                              BarChartGroupData(
+                                x: i,
+                                showingTooltipIndicators: [],
+                                barRods: [
+                                  BarChartRodData(
+                                    y: currentCnf.toDouble(),
+                                    borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(10),
+                                      topLeft: Radius.circular(10),
+                                    ),
+                                    color: theme.accentColor,
+                                    width: 6*scaleFactor,
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                        }
+                        if(i%3==1){
+                          String str = day[stateInfo.stateCode.toLowerCase()];
+                          int currentRec = 0;
+                          if(str!=""){
+                            currentRec = int.parse(str);
+                          }
+                          if(dailyHighestRec < currentRec){
+                            dailyHighestRec = currentRec;
+                          }
+                          totalRec += currentRec;
+                          if(i>=dailyReport.length-90){
+                            recSpots.add(
+                              FlSpot(
+                                (i~/3).toDouble(),
+                                totalRec.toDouble(),
+                              ),
+                            );
+                            dailyRecChartGroup.add(
+                              BarChartGroupData(
+                                x: i,
+                                showingTooltipIndicators: [],
+                                barRods: [
+                                  BarChartRodData(
+                                    y: currentRec.toDouble(),
+                                    borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(10),
+                                      topLeft: Radius.circular(10),
+                                    ),
+                                    color: theme.accentColor,
+                                    width: 6*scaleFactor,
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                        }
+                        if(i%3==2){
+                          String str = day[stateInfo.stateCode.toLowerCase()];
+                          int currentDet = 0;
+                          if(str != "") {
+                            currentDet = int.parse(str);
+                          }
 
-                    barChartLayouts.add(
-                      _getBarChartLayout(lang.translate(kDailyDetLang), dailyDetChartGroup, (dailyHighestDet).toDouble(),range~/3),
-                    );
+                          if(dailyHighestDet < currentDet){
+                            dailyHighestDet = currentDet;
+                          }
+                          totalDet += currentDet;
+                          if(i>=dailyReport.length-90){
+                            detSpots.add(
+                              FlSpot(
+                                (i~/3).toDouble(),
+                                totalDet.toDouble(),
+                              ),
+                            );
+                            dailyDetChartGroup.add(
+                              BarChartGroupData(
+                                x: i,
+                                showingTooltipIndicators: [],
+                                barRods: [
+                                  BarChartRodData(
+                                    y: currentDet.toDouble(),
+                                    borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(10),
+                                      topLeft: Radius.circular(10),
+                                    ),
+                                    color: theme.accentColor,
+                                    width: 6*scaleFactor,
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                        }
+                      }
+                      lineChartLayouts.add(
+                        _getLineChartLayout(lang.translate(kConfirmedLang),cnfSpots, totalCnf.toDouble(), 30),
+                      );
 
+                      lineChartLayouts.add(
+                        _getLineChartLayout(lang.translate(kRecoveredLang),recSpots, totalRec.toDouble(), 30),
+                      );
+
+                      lineChartLayouts.add(
+                        _getLineChartLayout(lang.translate(kDeathsLang),detSpots, totalDet.toDouble(), 30),
+                      );
+
+
+
+                      barChartLayouts.add(
+                        _getBarChartLayout(lang.translate(kDailyCnfLang), dailyConfirmedChartGroup, (dailyHighestCnf).toDouble(),range~/3),
+                      );
+
+                      barChartLayouts.add(
+                        _getBarChartLayout(lang.translate(kDailyRecLang), dailyRecChartGroup, (dailyHighestRec).toDouble(),range~/3),
+                      );
+
+                      barChartLayouts.add(
+                        _getBarChartLayout(lang.translate(kDailyDetLang), dailyDetChartGroup, (dailyHighestDet).toDouble(),range~/3),
+                      );
+                    }
 
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -591,7 +592,7 @@ class _StateDataState extends State<StateData>{
                           ),
                         ),
                         SizedBox(height: 20*scaleFactor,),
-                        Padding(
+                        stateInfo.stateCode != "UN"?Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 6),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -631,9 +632,9 @@ class _StateDataState extends State<StateData>{
                               ),
                             ],
                           ),
-                        ),
+                        ):SizedBox(),
                         SizedBox(height: 20*scaleFactor,),
-                        Container(
+                        stateInfo.stateCode != "UN"?Container(
                           height: size.width*0.7,
                           width: size.width,
                           child: Center(
@@ -649,8 +650,8 @@ class _StateDataState extends State<StateData>{
                                 }
                             ),
                           ),
-                        ),
-                        Container(
+                        ):SizedBox(),
+                        stateInfo.stateCode != "UN"?Container(
                           height: size.width*0.7,
                           width: size.width,
                           child: Center(
@@ -666,7 +667,7 @@ class _StateDataState extends State<StateData>{
                                 }
                             ),
                           ),
-                        ),
+                        ):SizedBox(),
                       ],
                     );
                   },

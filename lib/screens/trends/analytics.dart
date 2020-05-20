@@ -136,125 +136,140 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
         double stateRecRateHighest = 0;
         double stateDetRateHighest = 0;
 
+        List<StateInfo> stateList = List();
 
-
+        int j = 0;
         for(int i=0;i<stateInfo.length;i++){
+
           StateInfo state = stateInfo[i];
+          if(state.stateCode != "UN"){
+            stateList.add(
+              state,
+            );
+            int deaths = state.deaths;
+            int confirmed = state.confirmed;
+            int recovered = state.recovered;
 
-          int deaths = state.deaths;
-          int confirmed = state.confirmed;
-          int recovered = state.recovered;
+            if(confirmed==0){
+              confirmed = 1;
+            }
 
-          if(confirmed==0){
-            confirmed = 1;
-          }
+            if((deaths/confirmed)*100>stateDetRateHighest){
+              stateDetRateHighest = (deaths/confirmed)*100;
+            }
 
-          if((deaths/confirmed)*100>stateDetRateHighest){
-            stateDetRateHighest = (deaths/confirmed)*100;
-          }
-
-          stateMortalityRates.add(
-            BarChartGroupData(
-              showingTooltipIndicators: [],
-              x: i,
-              barRods: [
-                BarChartRodData(
-                  y: (deaths/confirmed)*100,
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(10),
-                    topLeft: Radius.circular(10),
-                  ),
-                  color: theme.accentColor,
-                  width: 6*scaleFactor,
-                ),
-              ],
-            ),
-          );
-
-          if((recovered/confirmed)*100>stateRecRateHighest){
-            stateRecRateHighest = (recovered/confirmed)*100;
-          }
-          stateRecoveryRates.add(
-            BarChartGroupData(
-              showingTooltipIndicators: [],
-              x: i,
-              barRods: [
-                BarChartRodData(
-                  y: (recovered/confirmed)*100,
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(10),
-                    topLeft: Radius.circular(10),
-                  ),
-                  color: theme.accentColor,
-                  width: 6*scaleFactor,
-                ),
-              ],
-            ),
-          );
-
-          int confirmedCasesToday = confirmedDaily[confirmedDaily.length-1][state.stateCode.toLowerCase()]-confirmedDaily[confirmedDaily.length-7][state.stateCode.toLowerCase()];
-          int confirmedCaseWeekAgo = confirmedDaily[confirmedDaily.length-7][state.stateCode.toLowerCase()];
-          if(confirmedCaseWeekAgo==0){
-            confirmedCaseWeekAgo=1;
-          }
-          if(((confirmedCasesToday/confirmedCaseWeekAgo)*100)/7>stateGrowthHighest){
-            stateGrowthHighest = ((confirmedCasesToday/confirmedCaseWeekAgo)*100)/7;
-          }
-
-          stateGrowthRates.add(
-            BarChartGroupData(
-              showingTooltipIndicators: [],
-              x: i,
-              barRods: [
-                BarChartRodData(
-                  y: ((confirmedCasesToday/confirmedCaseWeekAgo)*100)/7,
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(10),
-                    topLeft: Radius.circular(10),
-                  ),
-                  color: theme.accentColor,
-                  width: 6*scaleFactor,
-                ),
-              ],
-            ),
-          );
-
-          if(state.confirmed>cnfHighest){
-            cnfHighest = state.confirmed.toDouble();
-          }
-
-          stateCnfBarGroup.add(
-            BarChartGroupData(
-              showingTooltipIndicators: [],
-              x: i,
-              barRods: [
-                BarChartRodData(
-                  y: state.confirmed.toDouble(),
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(10),
-                    topLeft: Radius.circular(10),
-                  ),
-                  color: theme.accentColor,
-                  width: 6*scaleFactor,
-                ),
-              ]
-            ),
-          );
-
-          if(state.active>restHighest){
-            restHighest = state.active.toDouble();
-          }
-          if(state.recovered>restHighest){
-            restHighest = state.recovered.toDouble();
-          }
-          if(state.deaths>restHighest){
-            restHighest = state.deaths.toDouble();
-          }
-
-          stateRestBarGroup.add(
+            stateMortalityRates.add(
               BarChartGroupData(
                 showingTooltipIndicators: [],
-                  x: i,
+                x: j,
+                barRods: [
+                  BarChartRodData(
+                    y: (deaths/confirmed)*100,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(10),
+                      topLeft: Radius.circular(10),
+                    ),
+                    color: theme.accentColor,
+                    width: 6*scaleFactor,
+                  ),
+                ],
+              ),
+            );
+
+            if((recovered/confirmed)*100>stateRecRateHighest){
+              stateRecRateHighest = (recovered/confirmed)*100;
+            }
+            stateRecoveryRates.add(
+              BarChartGroupData(
+                showingTooltipIndicators: [],
+                x: j,
+                barRods: [
+                  BarChartRodData(
+                    y: (recovered/confirmed)*100,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(10),
+                      topLeft: Radius.circular(10),
+                    ),
+                    color: theme.accentColor,
+                    width: 6*scaleFactor,
+                  ),
+                ],
+              ),
+            );
+
+
+            int casesToday = confirmedDaily[confirmedDaily.length-1][state.stateCode.toLowerCase()];
+            int casesWeekAgo = confirmedDaily[confirmedDaily.length-7][state.stateCode.toLowerCase()];
+            if(casesWeekAgo == null){
+              casesWeekAgo = 0;
+            }
+            if(casesToday == null){
+              casesToday = state.confirmed;
+            }
+            int confirmedCasesToday = casesToday-casesWeekAgo;
+            int confirmedCaseWeekAgo = casesWeekAgo;
+            if(confirmedCaseWeekAgo==0){
+              confirmedCaseWeekAgo=1;
+            }
+            if(((confirmedCasesToday/confirmedCaseWeekAgo)*100)/7>stateGrowthHighest){
+              stateGrowthHighest = ((confirmedCasesToday/confirmedCaseWeekAgo)*100)/7;
+            }
+
+            stateGrowthRates.add(
+              BarChartGroupData(
+                showingTooltipIndicators: [],
+                x: j,
+                barRods: [
+                  BarChartRodData(
+                    y: ((confirmedCasesToday/confirmedCaseWeekAgo)*100)/7,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(10),
+                      topLeft: Radius.circular(10),
+                    ),
+                    color: theme.accentColor,
+                    width: 6*scaleFactor,
+                  ),
+                ],
+              ),
+            );
+
+
+            if(state.confirmed>cnfHighest){
+              cnfHighest = state.confirmed.toDouble();
+            }
+
+            stateCnfBarGroup.add(
+              BarChartGroupData(
+                  showingTooltipIndicators: [],
+                  x: j,
+                  barRods: [
+                    BarChartRodData(
+                      y: state.confirmed.toDouble(),
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(10),
+                        topLeft: Radius.circular(10),
+                      ),
+                      color: theme.accentColor,
+                      width: 6*scaleFactor,
+                    ),
+                  ]
+              ),
+            );
+
+            if(state.active>restHighest){
+              restHighest = state.active.toDouble();
+            }
+            if(state.recovered>restHighest){
+              restHighest = state.recovered.toDouble();
+            }
+            if(state.deaths>restHighest){
+              restHighest = state.deaths.toDouble();
+            }
+
+            stateRestBarGroup.add(
+              BarChartGroupData(
+                  showingTooltipIndicators: [],
+                  x: j,
                   barRods: [
                     BarChartRodData(
                       y: state.active.toDouble(),
@@ -285,7 +300,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                     ),
                   ]
               ),
-          );
+            );
+            j++;
+          }
         }
 
         cases.forEach((key, value) {
@@ -815,7 +832,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                   child: Container(
                     width: size.width,
                     padding: EdgeInsets.all(10),
-                    child: _getBarChart(stateGrowthRates, stateGrowthHighest,stateInfo,numberData: true,category: GraphCategories.AVG_GROWTH_RATE),
+                    child: _getBarChart(stateGrowthRates, stateGrowthHighest,stateList,numberData: true,category: GraphCategories.AVG_GROWTH_RATE),
                   ),
                 ),
                 SizedBox(height: 24*scaleFactor,),
@@ -830,7 +847,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                   child: Container(
                     width: size.width,
                     padding: EdgeInsets.all(10),
-                    child: _getBarChart(stateRecoveryRates, stateRecRateHighest,stateInfo,numberData: true,category: GraphCategories.REC_RATES),
+                    child: _getBarChart(stateRecoveryRates, stateRecRateHighest,stateList,numberData: true,category: GraphCategories.REC_RATES),
                   ),
                 ),
                 SizedBox(height: 24*scaleFactor,),
@@ -845,7 +862,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                   child: Container(
                     width: size.width,
                     padding: EdgeInsets.all(10),
-                    child: _getBarChart(stateMortalityRates, stateDetRateHighest,stateInfo,numberData: true,category: GraphCategories.DET_RATE),
+                    child: _getBarChart(stateMortalityRates, stateDetRateHighest,stateList,numberData: true,category: GraphCategories.DET_RATE),
                   ),
                 ),
                 SizedBox(height: 24*scaleFactor,),
@@ -860,7 +877,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                   child: Container(
                     width: size.width,
                     padding: EdgeInsets.all(10),
-                    child: _getBarChart(stateCnfBarGroup, cnfHighest+1000,stateInfo,numberData:false,category: GraphCategories.CNF_CASES),
+                    child: _getBarChart(stateCnfBarGroup, cnfHighest+1000,stateList,numberData:false,category: GraphCategories.CNF_CASES),
                   ),
                 ),
                 SizedBox(height: 24*scaleFactor,),
@@ -970,7 +987,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                               quarterTurns: 1,
                               child: Container(
                                 width: 800*scaleFactor,
-                                child: _getRestBarChart(stateRestBarGroup, restHighest+1000,stateInfo,rotated: true,category: GraphCategories.STATE_CASES),
+                                child: _getRestBarChart(stateRestBarGroup, restHighest+1000,stateList,rotated: true,category: GraphCategories.STATE_CASES),
                               ),
                             ),
                           ],
