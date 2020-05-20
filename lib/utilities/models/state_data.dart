@@ -20,6 +20,9 @@ class StateInfo{
   StateInfo.fromMap(BuildContext context,Map map){
     this.stateName = map[kState];
     this.displayName = AppLocalizations.of(context).translate(map[kState].toString().toLowerCase().replaceAll(" ", "_"));
+    if(this.displayName == null){
+      displayName = stateName;
+    }
     this.stateCode = map[kStateCode];
     this.active = int.parse(map[kActive]);
     this.confirmed = int.parse(map[kConfirmed]);
