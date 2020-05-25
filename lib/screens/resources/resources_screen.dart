@@ -139,144 +139,146 @@ class _ResourcesScreenState extends State<ResourcesScreen>{
 
       list.add(
         Container(
-          child: ListView.builder(
-            itemCount: map[keys[i]].length,
-            itemBuilder: (BuildContext context,int index){
-              String cityName = lang.translate(resources[index].city.toLowerCase().replaceAll(" ", "_"));
-              String category = lang.translate(resources[index].category.toLowerCase().replaceAll(" ", "_"));
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 4),
-                child: Material(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(10),
-                  ),
-                  elevation: 2,
-                  color: Theme.of(context).backgroundColor,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(10),
-                      ),
+          child: Scrollbar(
+            child: ListView.builder(
+              itemCount: map[keys[i]].length,
+              itemBuilder: (BuildContext context,int index){
+                String cityName = lang.translate(resources[index].city.toLowerCase().replaceAll(" ", "_"));
+                String category = lang.translate(resources[index].category.toLowerCase().replaceAll(" ", "_"));
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 4),
+                  child: Material(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: <Widget>[
-                          Text(
-                            cityName==null?"${resources[index].city}":cityName,
-                            style: TextStyle(
-                              fontSize: 16*scaleFactor,
-                              fontFamily: kNotoSansSc,
-                              color: Theme.of(context).accentColor,
-                              fontWeight: FontWeight.bold,
+                    elevation: 2,
+                    color: Theme.of(context).backgroundColor,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: <Widget>[
+                            Text(
+                              cityName==null?"${resources[index].city}":cityName,
+                              style: TextStyle(
+                                fontSize: 16*scaleFactor,
+                                fontFamily: kNotoSansSc,
+                                color: Theme.of(context).accentColor,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          SizedBox(height: 5*scaleFactor,),
-                          Text(
-                            category==null?"${resources[index].category}":category,
-                            style: TextStyle(
-                              fontSize: 18*scaleFactor,
-                              fontFamily: kNotoSansSc,
-                              fontWeight: FontWeight.bold,
+                            SizedBox(height: 5*scaleFactor,),
+                            Text(
+                              category==null?"${resources[index].category}":category,
+                              style: TextStyle(
+                                fontSize: 18*scaleFactor,
+                                fontFamily: kNotoSansSc,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          SizedBox(height: 10*scaleFactor,),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Icon(
-                                Icons.person_outline,
-                                size: 24*scaleFactor,
-                              ),
-                              SizedBox(width: 10*scaleFactor,),
-                              Expanded(
-                                child: Text(
-                                  resources[index].name,
-                                  style: TextStyle(
-                                    fontSize: 16*scaleFactor,
-                                    fontFamily: kNotoSansSc,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 10*scaleFactor,),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Icon(
-                                MaterialCommunityIcons.information_outline,
-                                size: 24*scaleFactor,
-                              ),
-                              SizedBox(width: 10*scaleFactor,),
-                              Expanded(
-                                child: Text(
-                                  resources[index].description,
-                                  style: TextStyle(
-                                    fontSize: 14*scaleFactor,
-                                    fontFamily: kNotoSansSc,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: 20*scaleFactor,),
-                            ],
-                          ),
-                          SizedBox(height: 10*scaleFactor,),
-                          InkWell(
-                            onTap: (){
-                              _networkHandler.launchInBrowser(resources[index].contactWeb);
-                            },
-                            child: Row(
+                            SizedBox(height: 10*scaleFactor,),
+                            Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Icon(
-                                  MaterialCommunityIcons.web,
+                                  Icons.person_outline,
                                   size: 24*scaleFactor,
                                 ),
                                 SizedBox(width: 10*scaleFactor,),
                                 Expanded(
                                   child: Text(
-                                    resources[index].contactWeb,
-                                    maxLines: 2,
+                                    resources[index].name,
+                                    style: TextStyle(
+                                      fontSize: 16*scaleFactor,
+                                      fontFamily: kNotoSansSc,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 10*scaleFactor,),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Icon(
+                                  MaterialCommunityIcons.information_outline,
+                                  size: 24*scaleFactor,
+                                ),
+                                SizedBox(width: 10*scaleFactor,),
+                                Expanded(
+                                  child: Text(
+                                    resources[index].description,
                                     style: TextStyle(
                                       fontSize: 14*scaleFactor,
                                       fontFamily: kNotoSansSc,
-                                      color: kBlueColor,
-                                      fontStyle: FontStyle.italic,
                                     ),
                                   ),
                                 ),
                                 SizedBox(width: 20*scaleFactor,),
                               ],
                             ),
-                          ),
-                          SizedBox(height: 10*scaleFactor,),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Icon(
-                                MaterialCommunityIcons.phone_outline,
-                                size: 24*scaleFactor,
+                            SizedBox(height: 10*scaleFactor,),
+                            InkWell(
+                              onTap: (){
+                                _networkHandler.launchInBrowser(resources[index].contactWeb);
+                              },
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Icon(
+                                    MaterialCommunityIcons.web,
+                                    size: 24*scaleFactor,
+                                  ),
+                                  SizedBox(width: 10*scaleFactor,),
+                                  Expanded(
+                                    child: Text(
+                                      resources[index].contactWeb,
+                                      maxLines: 2,
+                                      style: TextStyle(
+                                        fontSize: 14*scaleFactor,
+                                        fontFamily: kNotoSansSc,
+                                        color: kBlueColor,
+                                        fontStyle: FontStyle.italic,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 20*scaleFactor,),
+                                ],
                               ),
-                              SizedBox(width: 10*scaleFactor,),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: _getPhoneNum(resources[index].phoneNo),
+                            ),
+                            SizedBox(height: 10*scaleFactor,),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Icon(
+                                  MaterialCommunityIcons.phone_outline,
+                                  size: 24*scaleFactor,
                                 ),
-                              ),
-                              SizedBox(width: 20*scaleFactor,),
-                            ],
-                          ),
-                        ],
+                                SizedBox(width: 10*scaleFactor,),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: _getPhoneNum(resources[index].phoneNo),
+                                  ),
+                                ),
+                                SizedBox(width: 20*scaleFactor,),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
         )
       );
@@ -323,12 +325,17 @@ class _ResourcesScreenState extends State<ResourcesScreen>{
     List<String> keys = map.keys.toList()..sort();
 
     for(int i = 0; i<keys.length;i++){
+      String name = AppLocalizations
+          .of(context)
+          .translate(keys[i].toString().toLowerCase().replaceAll(" ", "_"),);
+
+      if(name == null){
+        name = keys[i].toString();
+      }
       try{
         list.add(
           Tab(
-            text: AppLocalizations
-                .of(context)
-                .translate(keys[i].toString().toLowerCase().replaceAll(" ", "_"),),
+            text: name,
           ),
         );
       }catch(e){

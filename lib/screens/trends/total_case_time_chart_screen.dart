@@ -206,7 +206,7 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                         ),
                       ),
                       Text(
-                        map[kStateWise][0][kConfirmed],
+                        NumberFormat(",###").format(int.parse(map[kStateWise][0][kConfirmed].toString())),
                         style: TextStyle(
                           fontFamily: kQuickSand,
                           fontSize: 25*scaleFactor,
@@ -696,7 +696,7 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
             PieChartSectionData(
               value: active,
               color: kBlueColor,
-              title: touchedIndex == 0?"${active.toInt()}":"${((active/confirmed)*100).toString().substring(0,4)}%",
+              title: touchedIndex == 0?"${NumberFormat(",###").format(active.toInt())}":"${((active/confirmed)*100).toString().substring(0,4)}%",
               titlePositionPercentageOffset: touchedIndex ==0 ?1.4:0.5,
               titleStyle: TextStyle(
                 fontFamily: kQuickSand,
@@ -709,7 +709,7 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
             PieChartSectionData(
               value: recovered,
               color: kGreenColor,
-              title: touchedIndex == 1?"${recovered.toInt()}":"${((recovered/confirmed)*100).toString().substring(0,4)}%",
+              title: touchedIndex == 1?"${NumberFormat(",###").format(recovered.toInt())}":"${((recovered/confirmed)*100).toString().substring(0,4)}%",
               titlePositionPercentageOffset: touchedIndex == 1?1.3:0.5,
               titleStyle: TextStyle(
                 fontFamily: kQuickSand,
@@ -722,7 +722,7 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
             PieChartSectionData(
               value: deaths,
               color: Colors.grey,
-              title: touchedIndex == 2?"${deaths.toInt()}":"${((deaths/confirmed)*100).toString().substring(0,4)}%",
+              title: touchedIndex == 2?"${NumberFormat(",###").format(deaths.toInt())}":"${((deaths/confirmed)*100).toString().substring(0,4)}%",
               titlePositionPercentageOffset: touchedIndex == 2?1.4:0.5,
               titleStyle: TextStyle(
                 fontFamily: kQuickSand,
@@ -773,7 +773,7 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                     );
                     returnList.add(
                       LineTooltipItem(
-                        "${DateFormat("d MMM").format(date)}\n${element.y.toInt()}",
+                        "${DateFormat("d MMM").format(date)}\n${NumberFormat(",###").format(element.y.toInt())}",
                         TextStyle(
                           fontFamily: kQuickSand,
                           fontSize: 12*scaleFactor,

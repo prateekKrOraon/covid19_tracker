@@ -9,7 +9,6 @@ class Source {
   Source.fromMap(BuildContext context,Map map){
     this.name = AppLocalizations.of(context).translate(map[kRegion].toString().toLowerCase().replaceAll(" ", "_"));
     sources = List();
-
     if(map[kSource1] != ""){
       sources.add(map[kSource1]);
     }

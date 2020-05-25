@@ -1017,7 +1017,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                                     style: TextStyle(
                                       fontFamily: kQuickSand,
                                       color: Colors.white,
-                                      fontSize: 16*scaleFactor
+                                      fontSize: 14*scaleFactor
                                     ),
                                   ),
                                 ],
@@ -1102,7 +1102,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                         "${list[groupData.x].displayName}\n${rodData.y.round()}",
                         TextStyle(
                           fontFamily: kQuickSand,
-                          fontSize: 16*scaleFactor,
+                          fontSize: 14*scaleFactor,
                           color: theme.brightness==Brightness.light?Colors.white:Colors.black,
                         ),
                       );
@@ -1115,7 +1115,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                           response.touchInput is! FlLongPressEnd) {
                         showTooltip(
                             list[response.spot.touchedBarGroup.x].displayName,
-                            category == GraphCategories.CNF_CASES?"${response.spot.touchedRodData.y.toInt()}":"${response.spot.touchedRodData.y.toStringAsFixed(1)} %",
+                            category == GraphCategories.CNF_CASES?"${NumberFormat(",###").format(response.spot.touchedRodData.y.toInt())}":"${response.spot.touchedRodData.y.toStringAsFixed(1)} %",
                             response.spot.touchedRodData.color,
                             "cases",
                             (50+response.spot.touchedRodData.y*20*scaleFactor).toInt(),
@@ -1241,7 +1241,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontFamily: kQuickSand,
-                        fontSize: 12*scaleFactor,
+                        fontSize: 14*scaleFactor,
                         color:theme.brightness == Brightness.light?Colors.white:Colors.black,
                       ),
                     ),
@@ -1320,7 +1320,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                   "${list[groupData.x].displayName}\n${rodData.y.round()}",
                   TextStyle(
                     fontFamily: kQuickSand,
-                    fontSize: 16*scaleFactor,
+                    fontSize: 14*scaleFactor,
                     color: theme.brightness==Brightness.light?Colors.white:Colors.black,
                   ),
                 );
@@ -1333,7 +1333,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                     response.touchInput is! FlLongPressEnd) {
                   showTooltip(
                     list[response.spot.touchedBarGroup.x].displayName,
-                    "${response.spot.touchedRodData.y.toInt()}",
+                    "${NumberFormat(",###").format(response.spot.touchedRodData.y.toInt())}",
                     response.spot.touchedRodData.color,
                     "cases",
                     (50+response.spot.touchedBarGroup.x*20*scaleFactor).toInt(),
@@ -1478,7 +1478,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                         "${DateFormat("d MMM y").format(date)}\n${element.y.toStringAsFixed(2)}",
                         TextStyle(
                           fontFamily: kQuickSand,
-                          fontSize: 12*scaleFactor,
+                          fontSize: 14*scaleFactor,
                           color: theme.brightness == Brightness.light?Colors.white:Colors.black,
                         )
                       )

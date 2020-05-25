@@ -17,6 +17,7 @@ ThemeData _getLightTheme(Brightness brightness){
     scaffoldBackgroundColor: Color(0xFFFAFAFA),
     unselectedWidgetColor: Colors.grey,
     primaryColorLight: Colors.white,
+    highlightColor: kBlueColor,
     iconTheme: IconThemeData().copyWith(
       color: Colors.black,
     ),
@@ -51,6 +52,7 @@ ThemeData _getDarkTheme(Brightness brightness){
     unselectedWidgetColor: kCaptionColor,
     scaffoldBackgroundColor: kPrimaryColor,
     backgroundColor: kBackgroundColor,
+    highlightColor: kAccentColor,
     tabBarTheme: TabBarTheme().copyWith(
       labelStyle: TextStyle(
         fontWeight: FontWeight.bold,
