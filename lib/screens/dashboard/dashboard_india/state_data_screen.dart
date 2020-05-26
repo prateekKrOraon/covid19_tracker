@@ -15,7 +15,6 @@ import 'package:covid19_tracker/utilities/helpers/network_handler.dart';
 import 'package:covid19_tracker/utilities/helpers/sorting.dart';
 import 'package:covid19_tracker/utilities/models/state_data.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:intl/intl.dart';
@@ -188,7 +187,13 @@ class _StateDataState extends State<StateData>{
                         child: ErrorScreen(
                           onClickRetry: (){
                             setState(() {
-                              // Future builder will rebuild itself and check for future.
+                              _data = Future.wait(
+                                [
+                                  _networkHandler.getStateData(stateInfo.stateName),
+                                  _networkHandler.getStatesDaily(),
+                                  _networkHandler.getZonesData(stateInfo.stateCode),
+                                ],
+                              );
                             });
                           },
                         ),
@@ -199,7 +204,7 @@ class _StateDataState extends State<StateData>{
                         child: ErrorScreen(
                           onClickRetry: (){
                             setState(() {
-                              //Future builder will rebuild itself and check for future.
+                              _data = Future.wait([_networkHandler.getStateData(stateInfo.stateName),_networkHandler.getStatesDaily(),_networkHandler.getZonesData(stateInfo.stateCode)]);
                             });
                           },
                         ),
@@ -216,7 +221,6 @@ class _StateDataState extends State<StateData>{
                     districtData.forEach((map){
                       //not adding unknown cases now... to be added later at the end of the sorted list
                       if('Unknown' != map[kDistrict].toString()) {
-                        String name = lang.translate(map[kDistrict].toString().toLowerCase().replaceAll(" ", "_"));
                         districts.add(
                           District.fromMap(
                             context,
@@ -289,13 +293,13 @@ class _StateDataState extends State<StateData>{
                           if(i>=dailyReport.length-90){
                             cnfSpots.add(
                               FlSpot(
-                                (i~/3).toDouble(),
+                                j.toDouble(),
                                 totalCnf.toDouble(),
                               ),
                             );
                             dailyConfirmedChartGroup.add(
                               BarChartGroupData(
-                                x: i,
+                                x: j,
                                 showingTooltipIndicators: [],
                                 barRods: [
                                   BarChartRodData(
@@ -310,6 +314,7 @@ class _StateDataState extends State<StateData>{
                                 ],
                               ),
                             );
+                            j++;
                           }
                         }
                         if(i%3==1){
@@ -325,13 +330,13 @@ class _StateDataState extends State<StateData>{
                           if(i>=dailyReport.length-90){
                             recSpots.add(
                               FlSpot(
-                                (i~/3).toDouble(),
+                                (k).toDouble(),
                                 totalRec.toDouble(),
                               ),
                             );
                             dailyRecChartGroup.add(
                               BarChartGroupData(
-                                x: i,
+                                x: k,
                                 showingTooltipIndicators: [],
                                 barRods: [
                                   BarChartRodData(
@@ -346,6 +351,7 @@ class _StateDataState extends State<StateData>{
                                 ],
                               ),
                             );
+                            k++;
                           }
                         }
                         if(i%3==2){
@@ -362,13 +368,13 @@ class _StateDataState extends State<StateData>{
                           if(i>=dailyReport.length-90){
                             detSpots.add(
                               FlSpot(
-                                (i~/3).toDouble(),
+                                l.toDouble(),
                                 totalDet.toDouble(),
                               ),
                             );
                             dailyDetChartGroup.add(
                               BarChartGroupData(
-                                x: i,
+                                x: l,
                                 showingTooltipIndicators: [],
                                 barRods: [
                                   BarChartRodData(
@@ -383,6 +389,7 @@ class _StateDataState extends State<StateData>{
                                 ],
                               ),
                             );
+                            l++;
                           }
                         }
                       }
@@ -781,8 +788,18 @@ class _StateDataState extends State<StateData>{
                 allowTouchBarBackDraw: true,
                 touchTooltipData: BarTouchTooltipData(
                   getTooltipItem: (groupData,a,rodData,b){
+                    String date = DateFormat("d MMM").format(
+                      DateTime(
+                        2020,
+                        DateTime.now().month,
+                        DateTime.now().day-maxX+groupData.x,
+                      ),
+                    );
+                    String val = NumberFormat(",###").format(
+                      rodData.y.toInt(),
+                    );
                     return BarTooltipItem(
-                        "${rodData.y.toInt()}",
+                        "$date\n$val",
                         TextStyle(
                           fontFamily: kQuickSand,
                           fontSize: 12*scaleFactor,
@@ -847,9 +864,9 @@ class _StateDataState extends State<StateData>{
                   getTitles: (double value){
                     DateTime now = DateTime.now();
                     DateTime returnDate = DateTime(
-                        2020,
-                        now.month,
-                        now.day-maxX+value.toInt()
+                      2020,
+                      now.month,
+                      now.day-maxX+value.toInt(),
                     );
                     return DateFormat("d MMM").format(returnDate);
                   },
@@ -864,9 +881,9 @@ class _StateDataState extends State<StateData>{
             backgroundColor: Colors.transparent,
             barGroups: barGroups,
             gridData: FlGridData(
-                drawHorizontalLine: true,
-                horizontalInterval: sideInterval,
-                drawVerticalLine: true
+              drawHorizontalLine: true,
+              horizontalInterval: sideInterval,
+              drawVerticalLine: true,
             ),
           ),
         ),
@@ -902,9 +919,12 @@ class _StateDataState extends State<StateData>{
                       DateTime.now().month,
                       DateTime.now().day-maxX+element.x.toInt(),
                     );
+                    String val = NumberFormat(",###").format(
+                      element.y.toInt(),
+                    );
                     returnList.add(
                       LineTooltipItem(
-                        "${DateFormat("d MMM").format(date)}\n${element.y.toInt()}",
+                        "${DateFormat("d MMM").format(date)}\n$val",
                         TextStyle(
                           fontFamily: kQuickSand,
                           fontSize: 12*scaleFactor,

@@ -645,8 +645,8 @@ class _CompareScreenState extends State<CompareScreen> with SingleTickerProvider
                     lang.translate(kConfirmedCasesLang),
                     countryOneCnfSpots,
                     countryTwoCnfSpots,
-                    countryOneCnfSpots[countryOneCnfSpots.length-1].y.toInt().toString(),
-                    countryTwoCnfSpots[countryTwoCnfSpots.length-1].y.toInt().toString(),
+                    NumberFormat(",###").format(countryOneCnfSpots[countryOneCnfSpots.length-1].y.toInt()),
+                    NumberFormat(",###").format(countryTwoCnfSpots[countryTwoCnfSpots.length-1].y.toInt()),
                     countryOne.flagLink,
                     countryTwo.flagLink,
                     cnfHighest,
@@ -658,8 +658,8 @@ class _CompareScreenState extends State<CompareScreen> with SingleTickerProvider
                     lang.translate(kActiveCasesLang),
                     countryOneActSpots,
                     countryTwoActSpots,
-                    countryOneActSpots[countryOneActSpots.length-1].y.toInt().toString(),
-                    countryTwoActSpots[countryTwoActSpots.length-1].y.toInt().toString(),
+                    NumberFormat(",###").format(countryOneActSpots[countryOneActSpots.length-1].y.toInt()),
+                    NumberFormat(",###").format(countryTwoActSpots[countryTwoActSpots.length-1].y.toInt()),
                     countryOne.flagLink,
                     countryTwo.flagLink,
                     actTotal,
@@ -671,8 +671,8 @@ class _CompareScreenState extends State<CompareScreen> with SingleTickerProvider
                     lang.translate(kRecoveredLang),
                     countryOneRecSpots,
                     countryTwoRecSpots,
-                    countryOneRecSpots[countryOneRecSpots.length-1].y.toInt().toString(),
-                    countryTwoRecSpots[countryTwoRecSpots.length-1].y.toInt().toString(),
+                    NumberFormat(",###").format(countryOneRecSpots[countryOneRecSpots.length-1].y.toInt()),
+                    NumberFormat(",###").format(countryTwoRecSpots[countryTwoRecSpots.length-1].y.toInt()),
                     countryOne.flagLink,
                     countryTwo.flagLink,
                     recTotal,
@@ -684,8 +684,8 @@ class _CompareScreenState extends State<CompareScreen> with SingleTickerProvider
                     lang.translate(kDeceasedCasesLang),
                     countryOneDetSpots,
                     countryTwoDetSpots,
-                    countryOneDetSpots[countryOneDetSpots.length-1].y.toInt().toString(),
-                    countryTwoDetSpots[countryTwoDetSpots.length-1].y.toInt().toString(),
+                    NumberFormat(",###").format(countryOneDetSpots[countryOneDetSpots.length-1].y.toInt()),
+                    NumberFormat(",###").format(countryTwoDetSpots[countryTwoDetSpots.length-1].y.toInt()),
                     countryOne.flagLink,
                     countryTwo.flagLink,
                     detTotal,
@@ -1215,7 +1215,7 @@ class _CompareScreenState extends State<CompareScreen> with SingleTickerProvider
                     );
                     tooltipItems.add(
                       LineTooltipItem(
-                        "${DateFormat("d MMM").format(date)}\n${element.y.toInt()}",
+                        "${DateFormat("d MMM").format(date)}\n${NumberFormat(",###").format(element.y.toInt())}",
                         TextStyle(
                           fontFamily: kQuickSand,
                           fontSize: 14*scaleFactor,
@@ -1275,7 +1275,6 @@ class _CompareScreenState extends State<CompareScreen> with SingleTickerProvider
                       }else{
                         return '${(value).toInt().toString()}';
                       }
-;
                     }
                 ),
                 bottomTitles: SideTitles(
@@ -1423,7 +1422,6 @@ class _CompareScreenState extends State<CompareScreen> with SingleTickerProvider
   Widget _getLineChartForMoreAnalysis(List<FlSpot> spotsOne,List<FlSpot> spotsTwo,double total,int maxX){
     int bottomTitleInterval = 0;
     double sideInterval = 2;
-    double multiplier = 0;
     double maxY = 0;
 
 

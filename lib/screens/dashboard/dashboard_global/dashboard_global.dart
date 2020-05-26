@@ -204,13 +204,13 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
 
         List<Widget> chartsList = List();
         chartsList.add(
-          _getLineChartLayout(lang.translate(kConfirmedLang), globalCnfSeries, totalCnf.toDouble()+500000, globalCnfSeries.length),
+          _getLineChartLayout(lang.translate(kConfirmedLang), globalCnfSeries, totalCnf.toDouble()+500000, range),
         );
         chartsList.add(
-          _getLineChartLayout(lang.translate(kRecoveredLang), globalRecSeries, totalRec.toDouble()+250000, globalRecSeries.length),
+          _getLineChartLayout(lang.translate(kRecoveredLang), globalRecSeries, totalRec.toDouble()+250000, range),
         );
         chartsList.add(
-          _getLineChartLayout(lang.translate(kDeaths), globalDetSeries, totalDet.toDouble()+100000, globalDetSeries.length),
+          _getLineChartLayout(lang.translate(kDeaths), globalDetSeries, totalDet.toDouble()+100000, range),
         );
 
 
@@ -757,7 +757,31 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
             lineTouchData: LineTouchData(
               touchTooltipData: LineTouchTooltipData(
                 tooltipBottomMargin: 50,
-                tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
+                tooltipBgColor: theme.accentColor,
+                getTooltipItems: (List<LineBarSpot> list){
+                  List<LineTooltipItem> items = List();
+                  list.forEach((element) {
+                    DateTime date = DateTime(
+                      2020,
+                      DateTime.now().month,
+                      DateTime.now().day-maxX+element.x.toInt(),
+                    );
+                    String str = DateFormat("d MMM").format(date);
+                    String y = NumberFormat(",###").format(element.y.toInt());
+                    items.add(
+                      LineTooltipItem(
+                        "$str\n$y",
+                        TextStyle(
+                          fontFamily: kQuickSand,
+                          fontSize: 14*scaleFactor,
+                          color: theme.brightness == Brightness.light?Colors.white:Colors.black,
+                        )
+                      ),
+                    );
+                  });
+
+                  return items;
+                }
               ),
               touchCallback: (LineTouchResponse touchResponse) {},
               handleBuiltInTouches: true,

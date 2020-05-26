@@ -834,6 +834,26 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                 allowTouchBarBackDraw: true,
                 touchTooltipData: BarTouchTooltipData(
                   tooltipBgColor: kAccentColor,
+                  getTooltipItem: (groupData,a,rodData,b){
+                    String date = DateFormat("d MMM").format(
+                      DateTime(
+                        2020,
+                        1,
+                        22+groupData.x.toInt()-1,
+                      ),
+                    );
+                    String val = NumberFormat(",###").format(
+                      rodData.y.toInt(),
+                    );
+                    return BarTooltipItem(
+                      "$date\n$val",
+                      TextStyle(
+                        fontFamily: kQuickSand,
+                        fontSize: 14*scaleFactor,
+                        color: theme.brightness == Brightness.light?Colors.white:Colors.black,
+                      )
+                    );
+                  }
                 ),
                 touchCallback: (BarTouchResponse response){
                   setState(() {
@@ -923,8 +943,6 @@ class _CountryDataScreen extends State<CountryDataScreen>{
   }
 
   Widget _getLineChart(List<FlSpot> spots,double total,int maxX){
-
-    //total<=10000?total<=5000?total<500?total<100?50:100:500:5000:total<=50000?10000:total<=100000?25000:total>500000?100000:50000;
 
     double sideInterval = (total/10).toDouble();
     double bottomInterval = 10;
