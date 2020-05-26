@@ -26,19 +26,19 @@ class SIRD{
 
     int max = 0;
     if(lastDate<=30){
-      if((lastDate+1)%31 == DateTime.now().day){
-        max = timeSeries.length;
-      }else{
+      if((lastDate+1)%31 > DateTime.now().day){
         max = timeSeries.length-1;
+      }else{
+        max = timeSeries.length;
       }
     }else if(lastDate==31){
-      if((lastDate+1)%32 == DateTime.now().day){
-        max = timeSeries.length;
-      }else{
+      if((lastDate+1)%32 > DateTime.now().day){
         max = timeSeries.length-1;
+      }else{
+        max = timeSeries.length;
       }
     }else{
-      max = timeSeries.length-1;
+      max = timeSeries.length;
     }
 
     for(int i = 0;i<max;i++){
