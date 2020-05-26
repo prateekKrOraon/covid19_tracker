@@ -164,12 +164,20 @@ class MathFunctions{
       return "600000";
     }else if(n>=500000){
       return "500000";
+    }else if(n>=450000){
+      return "450000";
     }else if(n>=400000){
       return "400000";
+    }else if(n>=350000){
+      return "350000";
     }else if(n>=300000){
       return "300000";
+    }else if(n>=250000){
+      return "250000";
     }else if(n>=200000){
       return "200000";
+    }else if(n>=150000){
+      return "150000";
     }else if(n>=100000){
       return "100000";
     }else if(n>=90000){

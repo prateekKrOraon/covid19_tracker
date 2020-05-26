@@ -445,7 +445,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
         growthMetricsList.add(
           _getChartLayout(
             lang.translate(kGrowthFactorLang),
-            "${lang.translate(kCurGrowthFactLang)} = ${growthFactors[growthFactors.length-2].toString().substring(0,4)}",
+            "${lang.translate(kCurGrowthFactLang)} = ${growthFactors[growthFactors.length-1].toString().substring(0,4)}",
             spots,
             highest+4,
             growthFactors.length,
@@ -455,7 +455,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
         growthMetricsList.add(
           _getChartLayout(
             lang.translate(kGrowthRatioLang),
-            "${lang.translate(kCurGrowthRatioLang)} = ${growthRatios[growthRatios.length-2].toString().substring(0,4)}",
+            "${lang.translate(kCurGrowthRatioLang)} = ${growthRatios[growthRatios.length-1].toString().substring(0,4)}",
             grSpots,
             grHighest+0.5,
             growthRatios.length,
@@ -465,7 +465,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
         growthMetricsList.add(
           _getChartLayout(
             lang.translate(kGrowthRateLang),
-            "${lang.translate(kCurGrowthRateLang)} = ${(growthRates[growthRates.length-2]*100).toString().substring(0,4)} %",
+            "${lang.translate(kCurGrowthRateLang)} = ${(growthRates[growthRates.length-1]*100).toString().substring(0,4)} %",
             gRSpots,
             gRHighest+0.2,
             growthRates.length,
@@ -1475,7 +1475,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                     );
                     list.add(
                       LineTooltipItem(
-                        "${DateFormat("d MMM y").format(date)}\n${element.y.toStringAsFixed(2)}",
+                        "${DateFormat("d MMM y").format(date)}\n${element.y.toStringAsFixed(3)}",
                         TextStyle(
                           fontFamily: kQuickSand,
                           fontSize: 14*scaleFactor,

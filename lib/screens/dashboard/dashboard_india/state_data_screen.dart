@@ -788,8 +788,18 @@ class _StateDataState extends State<StateData>{
                 allowTouchBarBackDraw: true,
                 touchTooltipData: BarTouchTooltipData(
                   getTooltipItem: (groupData,a,rodData,b){
+                    String date = DateFormat("d MMM").format(
+                      DateTime(
+                        2020,
+                        DateTime.now().month,
+                        DateTime.now().day-maxX+groupData.x,
+                      ),
+                    );
+                    String val = NumberFormat(",###").format(
+                      rodData.y.toInt(),
+                    );
                     return BarTooltipItem(
-                        "${rodData.y.toInt()}",
+                        "$date\n$val",
                         TextStyle(
                           fontFamily: kQuickSand,
                           fontSize: 12*scaleFactor,
@@ -909,9 +919,12 @@ class _StateDataState extends State<StateData>{
                       DateTime.now().month,
                       DateTime.now().day-maxX+element.x.toInt(),
                     );
+                    String val = NumberFormat(",###").format(
+                      element.y.toInt(),
+                    );
                     returnList.add(
                       LineTooltipItem(
-                        "${DateFormat("d MMM").format(date)}\n${element.y.toInt()}",
+                        "${DateFormat("d MMM").format(date)}\n$val",
                         TextStyle(
                           fontFamily: kQuickSand,
                           fontSize: 12*scaleFactor,

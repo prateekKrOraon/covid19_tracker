@@ -90,9 +90,9 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
         if(dataRange == DataRange.BEGINNING){
           range = caseTime.length;
         }else if(dataRange == DataRange.MONTH){
-          range = 32;
+          range = 30;
         }else if(dataRange == DataRange.TWO_WEEK){
-          range = 15;
+          range = 14;
         }
 
         String lastUpdate = "";
@@ -549,11 +549,11 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
     if(sideInterval < 0.001){
       sideInterval = 1;
     }
-    int maxX = 31;
+    int maxX = 30;
     if(dataRange == DataRange.BEGINNING){
       maxX = barGroups.length;
     }else if(dataRange == DataRange.MONTH){
-      maxX = 31;
+      maxX = 30;
     }else if(dataRange == DataRange.TWO_WEEK){
       maxX = 14;
     }
@@ -643,7 +643,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
                     DateTime returnDate = DateTime(
                         2020,
                         now.month,
-                        now.day-maxX+value.toInt()
+                        now.day-maxX+value.toInt(),
                     );
                     return DateFormat("d MMM").format(returnDate);
                   },
