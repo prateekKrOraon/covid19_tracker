@@ -103,19 +103,19 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
 
         int max = 0;
         if(lastDate<=30){
-          if((lastDate+1)%31 == DateTime.now().day){
-            max = caseTime.length;
-          }else{
+          if((lastDate+1)%31 > DateTime.now().day){
             max = caseTime.length-1;
+          }else{
+            max = caseTime.length;
           }
         }else if(lastDate==31){
-          if((lastDate+1)%32 == DateTime.now().day){
-            max = caseTime.length;
-          }else{
+          if((lastDate+1)%32 > DateTime.now().day){
             max = caseTime.length-1;
+          }else{
+            max = caseTime.length;
           }
         }else{
-          max = caseTime.length-1;
+          max = caseTime.length;
         }
 
         for(int i = (caseTime.length-range);i<max;i++){
@@ -848,11 +848,10 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                     fontFamily: kNotoSansSc,
                   ),
                   getTitles: (double value){
-                    DateTime now = DateTime.now();
                     DateTime returnDate = DateTime(
                         2020,
-                        now.month,
-                        now.day-maxX+value.toInt(),
+                        1,
+                        30+value.toInt(),
                     );
                     return DateFormat("d MMM").format(returnDate);
                   },

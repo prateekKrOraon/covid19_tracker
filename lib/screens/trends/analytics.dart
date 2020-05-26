@@ -316,7 +316,6 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
         caseModel.sort((a,b) => double.parse(a.key).compareTo(double.parse(b.key)));
 
         List<FlSpot> spots = List();
-        int i = 0;
         double highest = 0;
 
 

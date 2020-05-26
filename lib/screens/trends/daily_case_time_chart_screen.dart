@@ -101,19 +101,19 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
 
         int max = 0;
         if(lastDate<=30){
-          if((lastDate+1)%31 == DateTime.now().day){
-            max = caseTime.length;
-          }else{
+          if((lastDate+1)%31 > DateTime.now().day){
             max = caseTime.length-1;
+          }else{
+            max = caseTime.length;
           }
         }else if(lastDate==31){
-          if((lastDate+1)%32 == DateTime.now().day){
-            max = caseTime.length;
-          }else{
+          if((lastDate+1)%32 > DateTime.now().day){
             max = caseTime.length-1;
+          }else{
+            max = caseTime.length;
           }
         }else{
-          max = caseTime.length-1;
+          max = caseTime.length;
         }
 
         for(int i = caseTime.length-range;i<max;i++){
