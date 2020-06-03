@@ -52,7 +52,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
   }
 
   _getData()async{
-    _data = Future.wait([WorldData.getInstance(),CountryWiseData.getInstance(),GlobalTimeSeriesData.getInstance()]);
+    _data = Future.wait([WorldData.getInstance(),GlobalTimeSeriesData.getInstance()]);
   }
 
   _refreshData()async{
@@ -108,9 +108,9 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
 
         List data = snapshot.data;
 
-        Map worldData = data[0];
-        List countryWiseData = data[1];
-        Map globalTimeSeries = data[2]['result'];
+        Map worldData = data[0]['total'];
+        List countryWiseData = data[0]['country_wise'];
+        Map globalTimeSeries = data[1]['result'];
 
         List<Country> countries = List();
 
@@ -214,476 +214,468 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
         );
 
 
-        return SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
-            child: Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10,),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Expanded(
-                          child: Text(
-                            "${lang.translate(kLastUpdatedAtLang)}: ${DateFormat("d MMM, ").add_jm().format(worldDataLastUpdated)} IST",
-                            style: TextStyle(
-                              color: kGreenColor,
-                              fontSize: 16*scaleFactor,
-                              fontFamily: kQuickSand,
-                            ),
-                          ),
-                        ),
-                        InkWell(
-                          onTap: (){
-                            setState(() {
-                              _refreshData();
-                              //Future.wait([WorldData.refresh(),CountryWiseData.refresh(),GlobalTimeSeriesData.refresh()]);
-                            });
-                          },
-                          child: Container(
-                            child: Center(
-                              child: Icon(
-                                SimpleLineIcons.refresh,
-                                size: 25*scaleFactor,
+        return RefreshIndicator(
+          onRefresh: (){
+            setState(() {
+              _refreshData();
+            });
+            return Future(()=>null);
+          },
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+              child: Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10,),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Expanded(
+                            child: Text(
+                              "${lang.translate(kLastUpdatedAtLang)}: ${DateFormat("d MMM, ").add_jm().format(worldDataLastUpdated)} IST",
+                              style: TextStyle(
+                                color: theme.accentColor,
+                                fontSize: 16*scaleFactor,
+                                fontFamily: kQuickSand,
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 16*scaleFactor,),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 6),
-                    child: Column(
-                      children: <Widget>[
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            DashboardTile(
-                              mainTitle: lang.translate(kTotalCnfLang),
-                              value: worldData[kCountryTotalCases].toString(),
-                              delta: worldData[kCountryTodayCases].toString(),
-                              color: kRedColor,
-                            ),
-                            SizedBox(width: 10*scaleFactor,),
-                            DashboardTile(
-                              mainTitle: lang.translate(kTotalActvLang),
-                              value: worldData[kCountryActive].toString(),
-                              delta: "",
-                              color: kBlueColor,
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 10*scaleFactor,),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            DashboardTile(
-                              mainTitle: lang.translate(kTotalRecLang),
-                              value: worldData[kCountryRecovered].toString(),
-                              delta: "",
-                              color: kGreenColor,
-                            ),
-                            SizedBox(width: 10*scaleFactor,),
-                            DashboardTile(
-                              mainTitle: lang.translate(kTotalDetLang),
-                              value: worldData[kCountryDeaths].toString(),
-                              delta: worldData[kCountryTodayDeaths].toString(),
-                              color: kGreyColor,
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 10*scaleFactor,),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            DashboardTile(
-                              mainTitle: lang.translate(kCriticalLang),
-                              value: worldData[kCountryCritical].toString(),
-                              delta: "",
-                              color: kOrangeColor,
-                            ),
-                            SizedBox(width: 10*scaleFactor,),
-                            DashboardTile(
-                              mainTitle: lang.translate(kAffectedCountriesLang),
-                              value: worldData[kAffectedCountries].toString(),
-                              delta: "",
-                              color: kGreyColor,
-                            ),
-                          ],
-                        ),
-                      ],
+                    SizedBox(height: 16*scaleFactor,),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 6),
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              DashboardTile(
+                                mainTitle: lang.translate(kTotalCnfLang),
+                                value: worldData[kCountryTotalCases].toString(),
+                                delta: worldData[kCountryTodayCases].toString(),
+                                color: kRedColor,
+                              ),
+                              SizedBox(width: 10*scaleFactor,),
+                              DashboardTile(
+                                mainTitle: lang.translate(kTotalActvLang),
+                                value: worldData[kCountryActive].toString(),
+                                delta: "",
+                                color: kBlueColor,
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 10*scaleFactor,),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              DashboardTile(
+                                mainTitle: lang.translate(kTotalRecLang),
+                                value: worldData[kCountryRecovered].toString(),
+                                delta: "",
+                                color: kGreenColor,
+                              ),
+                              SizedBox(width: 10*scaleFactor,),
+                              DashboardTile(
+                                mainTitle: lang.translate(kTotalDetLang),
+                                value: worldData[kCountryDeaths].toString(),
+                                delta: worldData[kCountryTodayDeaths].toString(),
+                                color: kGreyColor,
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 10*scaleFactor,),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              DashboardTile(
+                                mainTitle: lang.translate(kCriticalLang),
+                                value: worldData[kCountryCritical].toString(),
+                                delta: "",
+                                color: kOrangeColor,
+                              ),
+                              SizedBox(width: 10*scaleFactor,),
+                              DashboardTile(
+                                mainTitle: lang.translate(kAffectedCountriesLang),
+                                value: worldData[kAffectedCountries].toString(),
+                                delta: "",
+                                color: kGreyColor,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 10*scaleFactor,),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 6),
-                    child: Material(
+                    SizedBox(height: 10*scaleFactor,),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      child: Material(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                        elevation: 2,
+                        color: theme.backgroundColor,
+                        child: Container(
+                          decoration:BoxDecoration(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: <Widget>[
+                                Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Text(
+                                        lang.translate(kTotalTestedLang),
+                                        style: TextStyle(
+                                          fontFamily: kQuickSand,
+                                          fontSize: 24*scaleFactor,
+                                          color: kDarkBlueColor,
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        NumberFormat(",###").format(double.parse(worldData[kCountryTests].toString())),
+                                        textAlign: TextAlign.end,
+                                        style: TextStyle(
+                                          color: kDarkBlueColor,
+                                          fontSize: 24*scaleFactor,
+                                          fontFamily: kQuickSand,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 16*scaleFactor,),
+                    Material(
                       borderRadius: BorderRadius.all(
                         Radius.circular(10),
                       ),
                       elevation: 2,
                       color: theme.backgroundColor,
                       child: Container(
-                        decoration:BoxDecoration(
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(
                             Radius.circular(10),
                           ),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: <Widget>[
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Text(
-                                      lang.translate(kTotalTestedLang),
-                                      style: TextStyle(
-                                        fontFamily: kQuickSand,
-                                        fontSize: 24*scaleFactor,
-                                        color: kDarkBlueColor,
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      NumberFormat(",###").format(double.parse(worldData[kCountryTests].toString())),
-                                      textAlign: TextAlign.end,
-                                      style: TextStyle(
-                                        color: kDarkBlueColor,
-                                        fontSize: 24*scaleFactor,
-                                        fontFamily: kQuickSand,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 16*scaleFactor,),
-                  Material(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
-                    ),
-                    elevation: 2,
-                    color: theme.backgroundColor,
-                    child: Container(
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: <Widget>[
-                          Row(
-                            crossAxisAlignment:CrossAxisAlignment.baseline,
-                            textBaseline: TextBaseline.alphabetic,
-                            children: <Widget>[
-                              Expanded(
-                                child: Text(
-                                  lang.translate(kWorstAffectedCountriesLang),
-                                  textAlign: TextAlign.start,
-                                  style: TextStyle(
-                                    color: kGreyColor,
-                                    fontFamily: kNotoSansSc,
-                                    fontSize: 24*scaleFactor,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: 5*scaleFactor,),
-                              InkWell(
-                                onTap: (){
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => FullGlobalList(countries),
-                                      )
-                                  );
-                                },
-                                child: Container(
-                                  child: Row(
-                                    children: <Widget>[
-                                      Text(
-                                        lang.translate(kCompleteListLang),
-                                        style: TextStyle(
-                                          fontFamily: kQuickSand,
-                                          color: kGreyColor,
-                                          fontSize: 16*scaleFactor,
-                                        ),
-                                      ),
-                                      SizedBox(width: 5*scaleFactor,),
-                                      Icon(
-                                        AntDesign.arrowright,
-                                        color: kGreyColor,
-                                        size: 18,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: 16*scaleFactor,),
-                          TableHeaderStatic(lang.translate(kCountryLang)),
-                          ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: worstAffectedCountries.length,
-                            itemBuilder: (BuildContext context,int index){
-
-                              if(countries[index].totalCases == 0){
-                                return SizedBox();
-                              }
-
-                              return TableRows(
-                                country: worstAffectedCountries[index],
-                                onTouchCallback: (){
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (BuildContext context) => CountryDataScreen(worstAffectedCountries[index]),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 24*scaleFactor,),
-                  Material(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
-                    ),
-                    elevation: 2,
-                    color: theme.backgroundColor,
-                    child: Container(
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            lang.translate(kGlobalRatioLang),
-                            style: TextStyle(
-                              fontFamily: kQuickSand,
-                              color: kGreyColor,
-                              fontSize: 24*scaleFactor,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 6),
-                            child: _createGlobalRatioGraph(countries, worldData[kCountryTotalCases]),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 24*scaleFactor,),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 6),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: <Widget>[
-                            Text(
-                              lang.translate(kSpreadTrendsLang),
-                              style: TextStyle(
-                                fontFamily: kQuickSand,
-                                fontSize: 25*scaleFactor,
-                              ),
-                            ),
-                            Text(
-                              dataRangeStr,
-                              style: TextStyle(
-                                color: Colors.grey[500],
-                                fontFamily: kQuickSand,
-                                fontSize: 16*scaleFactor,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10,),
-                          child: Container(
-                            height: 20*scaleFactor,
-                            width: 20*scaleFactor,
-                            child: Center(
-                              child: Icon(
-                                SimpleLineIcons.arrow_right,
-                                size: 20*scaleFactor,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 5*scaleFactor,),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 6),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Text(
-                            lang.translate(kShowingDataLang),
-                            style: TextStyle(
-                              color: kGreyColor,
-                              fontFamily: kNotoSansSc,
-                              fontSize: 16*scaleFactor,
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 10*scaleFactor,),
-                        Material(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(10),
-                          ),
-                          elevation: 2,
-                          child: Container(
-                            child: Row(
+                            Row(
+                              crossAxisAlignment:CrossAxisAlignment.baseline,
+                              textBaseline: TextBaseline.alphabetic,
                               children: <Widget>[
-                                InkWell(
-                                  onTap: (){
-                                    if(dataRange != DataRange.BEGINNING){
-                                      setState(() {
-                                        dataRange = DataRange.BEGINNING;
-                                      });
-                                    }
-                                  },
-                                  child: Container(
-                                    height: 35*scaleFactor,
-                                    padding: EdgeInsets.symmetric(horizontal: 8),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.only(
-                                          topLeft:Radius.circular(10),
-                                          bottomLeft: Radius.circular(10)
-                                      ),
-                                      color: dataRange != DataRange.BEGINNING?theme.backgroundColor:theme.accentColor,
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        lang.translate(kBeginningLang),
-                                        style: TextStyle(
-                                          fontFamily: kQuickSand,
-                                          fontSize: 14*scaleFactor,
-                                          color: dataRange != DataRange.BEGINNING?
-                                          theme.brightness == Brightness.light?Colors.black:Colors.white:
-                                          theme.brightness == Brightness.light?Colors.white:Colors.black,
-                                        ),
-                                      ),
+                                Expanded(
+                                  child: Text(
+                                    lang.translate(kWorstAffectedCountriesLang),
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(
+                                      color: kGreyColor,
+                                      fontFamily: kNotoSansSc,
+                                      fontSize: 24*scaleFactor,
                                     ),
                                   ),
                                 ),
+                                SizedBox(width: 5*scaleFactor,),
                                 InkWell(
                                   onTap: (){
-                                    if(dataRange != DataRange.MONTH){
-                                      setState(() {
-                                        dataRange = DataRange.MONTH;
-                                      });
-                                    }
-
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => FullGlobalList(countries),
+                                        )
+                                    );
                                   },
                                   child: Container(
-                                    height: 35*scaleFactor,
-                                    padding: EdgeInsets.symmetric(horizontal: 8),
-                                    decoration: BoxDecoration(
-                                      color: dataRange != DataRange.MONTH?theme.backgroundColor:theme.accentColor,
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        lang.translate(k1MonthLang),
-                                        style: TextStyle(
-                                          fontFamily: kQuickSand,
-                                          fontSize: 14*scaleFactor,
-                                          color: dataRange != DataRange.MONTH?
-                                          theme.brightness == Brightness.light?Colors.black:Colors.white:
-                                          theme.brightness == Brightness.light?Colors.white:Colors.black,
+                                    child: Row(
+                                      children: <Widget>[
+                                        Text(
+                                          lang.translate(kCompleteListLang),
+                                          style: TextStyle(
+                                            fontFamily: kQuickSand,
+                                            color: kGreyColor,
+                                            fontSize: 16*scaleFactor,
+                                          ),
                                         ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                InkWell(
-                                  onTap: (){
-                                    if(dataRange != DataRange.TWO_WEEK){
-                                      setState(() {
-                                        dataRange = DataRange.TWO_WEEK;
-                                      });
-                                    }
-                                  },
-                                  child: Container(
-                                    height: 35*scaleFactor,
-                                    padding: EdgeInsets.symmetric(horizontal: 8),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.only(
-                                        bottomRight: Radius.circular(10),
-                                        topRight: Radius.circular(10),
-                                      ),
-                                      color: dataRange != DataRange.TWO_WEEK?theme.backgroundColor:theme.accentColor,
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        lang.translate(k2WeekLang),
-                                        style: TextStyle(
-                                          fontFamily: kQuickSand,
-                                          fontSize: 14*scaleFactor,
-                                          color: dataRange != DataRange.TWO_WEEK?
-                                          theme.brightness == Brightness.light?Colors.black:Colors.white:
-                                          theme.brightness == Brightness.light?Colors.white:Colors.black,
+                                        SizedBox(width: 5*scaleFactor,),
+                                        Icon(
+                                          AntDesign.arrowright,
+                                          color: kGreyColor,
+                                          size: 18,
                                         ),
-                                      ),
+                                      ],
                                     ),
                                   ),
                                 ),
                               ],
                             ),
+                            SizedBox(height: 16*scaleFactor,),
+                            TableHeaderStatic(lang.translate(kCountryLang)),
+                            ListView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: worstAffectedCountries.length,
+                              itemBuilder: (BuildContext context,int index){
+
+                                if(countries[index].totalCases == 0){
+                                  return SizedBox();
+                                }
+
+                                return TableRows(
+                                  country: worstAffectedCountries[index],
+                                  onTouchCallback: (){
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (BuildContext context) => CountryDataScreen(worstAffectedCountries[index]),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 24*scaleFactor,),
+                    Material(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                      elevation: 2,
+                      color: theme.backgroundColor,
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
                           ),
                         ),
-                        SizedBox(width: 10*scaleFactor,),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 24*scaleFactor,),
-                  Container(
-                    height: size.width*0.7,
-                    width: size.width,
-                    child: PageView.builder(
-                      controller: PageController(
-                        initialPage: 0,
-                        viewportFraction: 0.95,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              lang.translate(kGlobalRatioLang),
+                              style: TextStyle(
+                                fontFamily: kQuickSand,
+                                color: kGreyColor,
+                                fontSize: 24*scaleFactor,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 6),
+                              child: _createGlobalRatioGraph(countries, worldData[kCountryTotalCases]),
+                            ),
+                          ],
+                        ),
                       ),
-                      scrollDirection: Axis.horizontal,
-                      itemCount: chartsList.length,
-                      itemBuilder: (BuildContext context,int index){
-                        return chartsList[index];
-                      },
                     ),
-                  ),
-                ],
+                    SizedBox(height: 24*scaleFactor,),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                lang.translate(kSpreadTrendsLang),
+                                style: TextStyle(
+                                  fontFamily: kQuickSand,
+                                  fontSize: 25*scaleFactor,
+                                ),
+                              ),
+                              Text(
+                                dataRangeStr,
+                                style: TextStyle(
+                                  color: Colors.grey[500],
+                                  fontFamily: kQuickSand,
+                                  fontSize: 16*scaleFactor,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10,),
+                            child: Container(
+                              height: 20*scaleFactor,
+                              width: 20*scaleFactor,
+                              child: Center(
+                                child: Icon(
+                                  SimpleLineIcons.arrow_right,
+                                  size: 20*scaleFactor,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 5*scaleFactor,),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Text(
+                              lang.translate(kShowingDataLang),
+                              style: TextStyle(
+                                color: kGreyColor,
+                                fontFamily: kNotoSansSc,
+                                fontSize: 16*scaleFactor,
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 10*scaleFactor,),
+                          Material(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                            elevation: 2,
+                            child: Container(
+                              child: Row(
+                                children: <Widget>[
+                                  InkWell(
+                                    onTap: (){
+                                      if(dataRange != DataRange.BEGINNING){
+                                        setState(() {
+                                          dataRange = DataRange.BEGINNING;
+                                        });
+                                      }
+                                    },
+                                    child: Container(
+                                      height: 35*scaleFactor,
+                                      padding: EdgeInsets.symmetric(horizontal: 8),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                            topLeft:Radius.circular(10),
+                                            bottomLeft: Radius.circular(10)
+                                        ),
+                                        color: dataRange != DataRange.BEGINNING?theme.backgroundColor:theme.accentColor,
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          lang.translate(kBeginningLang),
+                                          style: TextStyle(
+                                            fontFamily: kQuickSand,
+                                            fontSize: 14*scaleFactor,
+                                            color: dataRange != DataRange.BEGINNING?
+                                            theme.brightness == Brightness.light?Colors.black:Colors.white:
+                                            theme.brightness == Brightness.light?Colors.white:Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: (){
+                                      if(dataRange != DataRange.MONTH){
+                                        setState(() {
+                                          dataRange = DataRange.MONTH;
+                                        });
+                                      }
+
+                                    },
+                                    child: Container(
+                                      height: 35*scaleFactor,
+                                      padding: EdgeInsets.symmetric(horizontal: 8),
+                                      decoration: BoxDecoration(
+                                        color: dataRange != DataRange.MONTH?theme.backgroundColor:theme.accentColor,
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          lang.translate(k1MonthLang),
+                                          style: TextStyle(
+                                            fontFamily: kQuickSand,
+                                            fontSize: 14*scaleFactor,
+                                            color: dataRange != DataRange.MONTH?
+                                            theme.brightness == Brightness.light?Colors.black:Colors.white:
+                                            theme.brightness == Brightness.light?Colors.white:Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: (){
+                                      if(dataRange != DataRange.TWO_WEEK){
+                                        setState(() {
+                                          dataRange = DataRange.TWO_WEEK;
+                                        });
+                                      }
+                                    },
+                                    child: Container(
+                                      height: 35*scaleFactor,
+                                      padding: EdgeInsets.symmetric(horizontal: 8),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                          bottomRight: Radius.circular(10),
+                                          topRight: Radius.circular(10),
+                                        ),
+                                        color: dataRange != DataRange.TWO_WEEK?theme.backgroundColor:theme.accentColor,
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          lang.translate(k2WeekLang),
+                                          style: TextStyle(
+                                            fontFamily: kQuickSand,
+                                            fontSize: 14*scaleFactor,
+                                            color: dataRange != DataRange.TWO_WEEK?
+                                            theme.brightness == Brightness.light?Colors.black:Colors.white:
+                                            theme.brightness == Brightness.light?Colors.white:Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 10*scaleFactor,),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 24*scaleFactor,),
+                    Container(
+                      height: size.width*0.7,
+                      width: size.width,
+                      child: PageView.builder(
+                        controller: PageController(
+                          initialPage: 0,
+                          viewportFraction: 0.95,
+                        ),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: chartsList.length,
+                        itemBuilder: (BuildContext context,int index){
+                          return chartsList[index];
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -974,8 +966,13 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                   margin: 15*scaleFactor,
                   reservedSize: 15*scaleFactor,
                   getTitles: (double value){
-
-                    return countries[value.toInt()].displayName;
+                    String name;
+                    if(AppLocalizations.of(context).locale.languageCode=="en"){
+                      name = countries[value.toInt()].countryName;
+                    }else{
+                      name = countries[value.toInt()].countryNameHI;
+                    }
+                    return name;
                   },
                   textStyle: TextStyle(
                     color: theme.brightness == Brightness.light?Colors.black:Colors.white,

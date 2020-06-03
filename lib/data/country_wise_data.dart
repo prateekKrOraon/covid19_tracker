@@ -16,14 +16,14 @@ class CountryWiseData{
   static Future getInstance(){
     if(_data== null){
 
-      _data = _networkHandler.getCountryWiseData();
+      //_data = _networkHandler.getCountryWiseData();
     }
 
     return _data;
   }
 
   static Future refresh(){
-    _data = _networkHandler.getCountryWiseData();
+    //_data = _networkHandler.getCountryWiseData();
     return Future((){
       return null;
     });

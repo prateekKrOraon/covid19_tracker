@@ -12,7 +12,7 @@ class MathFunctions{
   List<DateTime> dateTimeSeries;
 
   void parseData(Map data){
-    List timeSeries = data[kCaseTimeSeries];
+    List timeSeries = data['timeseries'];
 
     confirmedTimeSeries = List();
     infectedTimeSeries = List();

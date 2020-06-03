@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'dart:convert';
 import 'package:covid19_tracker/constants/api_constants.dart';
 import 'package:covid19_tracker/constants/app_constants.dart';
@@ -7,7 +6,6 @@ import 'package:url_launcher/url_launcher.dart' as browser;
 
 
 class NetworkHandler{
-
 
   static NetworkHandler _instance;
 
@@ -30,118 +28,76 @@ class NetworkHandler{
     }
   }
 
-  Future getData()async{
-    var res = await http.get(stateWiseLink);
+  Future getStateData(String stateCode)async{
+    var res = await http.get("$BASE_API/india/state_data/$stateCode",);
     return jsonDecode(res.body);
   }
 
-  Future getStateData(String name)async{
-    var res = await http.get(districtWiseLink);
-    List list = jsonDecode(res.body);
-    Map state;
-    for(int i=0;i<list.length;i++){
-      Map map = list[i];
-      if(map[kState].toString() == name){
-        state = map;
-      }else{
-        map = HashMap();
-      }
-    }
-    return state;
+  Future getNationalTimeSeries()async{
+    var res = await http.get("$BASE_API/india/time_series");
+    return jsonDecode(res.body);
   }
 
+  Future getIndiaDashboard()async{
+    var res = await http.get("$BASE_API/india/state_wise");
+    return jsonDecode(res.body);
+  }
+
+  // Deprecated
   Future getRawData()async{
     var res = await http.get(rawDataLink);
     return jsonDecode(res.body);
   }
 
-  Future getStatesDaily()async{
-    var res = await http.get(stateWiseDailyLink);
-    return jsonDecode(res.body);
-  }
-
-  Future getStateTestedDaily(String name)async{
-    var res = await http.get(stateWiseTestLink);
-    Map statesTestedData = jsonDecode(res.body);
-    List list = statesTestedData[kStatesTestedData];
-    Map stateData;
-    for(int i = list.length;i<list.length; i++){
-      Map map = list[i];
-      if(map[kState] == name){
-        stateData = map;
-        break;
-      }
-    }
-    return stateData;
-  }
-
   Future getSourceList()async{
-    var res = await http.get(sourcesLink);
+    var res = await http.get("$BASE_API/sources");
     return jsonDecode(res.body);
   }
   
   Future getResourcesList()async{
-    var res = await http.get(resourcesListLink);
+    var res = await http.get('$BASE_API/resources');
     return jsonDecode(res.body);
   }
 
   Future getUpdateLogs(String langCode)async{
-    Map<String,String> header = {"Accept":"application/json"};
-    var res = await http.post(updateLogLink,headers: header,body: {kLangCode:langCode});
-    return jsonDecode(res.body);
-  }
-
-  Future getCountryWiseData()async{
-    var res = await http.get(countryWiseDataUrl);
+    var res = await http.get("$BASE_API/update_logs/$langCode");
     return jsonDecode(res.body);
   }
 
   Future getWorldData()async{
-    var res = await http.get(worldDataUrl);
+    //var res = await http.get(worldDataUrl);
+    var res = await http.get("$BASE_API/global_data");
     return jsonDecode(res.body);
   }
 
   Future getCountryTimeSeries(String iso3)async{
-    var res = await http.get("$countryDataUrl$iso3");
-    return jsonDecode(res.body);
-  }
-
-  Future getCountryData(String iso3)async{
-    var res = await http.get("$countryDataUrl2$iso3");
+    var res = await http.get("$BASE_API/country/${iso3.toUpperCase()}");
     return jsonDecode(res.body);
   }
 
   Future getGlobalTimeSeriesData()async{
-    var res = await http.get(globalTimeSeriesLink);
+    var res = await http.get("$BASE_API/global_time_series");
     return jsonDecode(res.body);
   }
 
   Future getFAQs(String langCode)async{
-    Map<String,String> header = {"Accept":"application/json"};
-    var res = await http.post(faqsLink,headers: header,body: {kLangCode:langCode});
+    var res = await http.get('$BASE_API/faqs/$langCode');
     return jsonDecode(res.body);
   }
 
   Future checkForUpdates(String version)async{
-    Map<String,String> header = {"Accept":"application/json"};
-    var res = await http.post(checkForUpdateLink,headers: header,body: {kVersion:version});
-    return jsonDecode(res.body);
-  }
-
-  Future getZonesData(String stateCode)async{
-    Map<String,String> header = {"Accept":"application/json"};
-    var res = await http.post(zonesDataLink,headers: header,body: {'state_code':stateCode});
+    Map<String,String> header = {"Content-Type":"application/json"};
+    var res = await http.post("$BASE_API/check_for_updates",headers: header,body: jsonEncode({kVersion:version}));
     return jsonDecode(res.body);
   }
 
   Future getStatesDailyChanges()async{
-    var res = await http.get(statesDailyChangesLink);
+    var res = await http.get("$BASE_API/india/states_time_series");
     return jsonDecode(res.body);
   }
 
   Future getCompareResult(String countryOne, String countryTwo)async{
-    Map<String,String> header = {"Accept":"application/json"};
-    var res = await http.post(compareCountryLink,headers: header,body: {"country_one":countryOne,"country_two":countryTwo});
+    var res = await http.get("$BASE_API/compare?country_one=$countryOne&country_two=$countryTwo");
     return jsonDecode(res.body);
   }
 

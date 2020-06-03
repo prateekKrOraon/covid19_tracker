@@ -1,11 +1,10 @@
 import 'package:covid19_tracker/constants/api_constants.dart';
-import 'package:covid19_tracker/localization/app_localization.dart';
 import 'package:flutter/material.dart';
 
 class Country{
 
   String countryName;
-  String displayName;
+  String countryNameHI;
   String continent;
   String flagLink;
   int id;
@@ -32,11 +31,11 @@ class Country{
     if(countryName == null){
       countryName = "";
     }
-    if(displayName == null){
+    if(countryNameHI == null){
       if(countryName != null){
-        displayName = countryName;
+        countryNameHI = countryName;
       }else{
-        displayName = "";
+        countryNameHI = "";
       }
     }
     if(continent == null){
@@ -119,7 +118,7 @@ class Country{
       this.countryName = map[kCountry];
       this.continent = map[kCountryContinent];
       this.flagLink = map[kCountryInfo][kFlagLink];
-      this.displayName = AppLocalizations.of(context).translate(this.countryName.toLowerCase().replaceAll(" ","_"));
+      this.countryNameHI = map['country_hi'];
       this.updated = DateTime.fromMillisecondsSinceEpoch(map[kCountryUpdated]);
       this.id = map[kCountryInfo][kCountryID];
       this.iso2 = map[kCountryInfo][kISO2];
@@ -137,7 +136,6 @@ class Country{
       this.testPerOneMil = double.parse(map[kCountryTestsPerOneMil].toString());
       this.mild = active-critical;
     }catch(e){
-      var ex = e;
       initialize();
     }
   }

@@ -131,55 +131,63 @@ class _UpdatesScreenState extends State<UpdatesScreen>{
             );
           }
 
-          return SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: updates.length,
-                  itemBuilder: (BuildContext context, int index){
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8,horizontal: 10),
-                      child: Material(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10)
-                        ),
-                        color: theme.backgroundColor,
-                        elevation: 2,
-                        child: Container(
-                          width: size.width*0.7,
-                          child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  DateFormat("d MMM").add_jm().format(updates[index].timestamp),
-                                  style: TextStyle(
-                                    fontFamily: kQuickSand,
-                                    fontSize: 16*scaleFactor,
-                                    fontWeight: FontWeight.bold,
-                                    color: theme.accentColor,
+          return RefreshIndicator(
+            onRefresh: (){
+              setState(() {
+                UpdateLog.refresh(lang.locale.languageCode);
+              });
+              return Future(() => null);
+            },
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: updates.length,
+                    itemBuilder: (BuildContext context, int index){
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8,horizontal: 10),
+                        child: Material(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10)
+                          ),
+                          color: theme.backgroundColor,
+                          elevation: 2,
+                          child: Container(
+                            width: size.width*0.7,
+                            child: Padding(
+                              padding: const EdgeInsets.all(10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text(
+                                    DateFormat("d MMM").add_jm().format(updates[index].timestamp),
+                                    style: TextStyle(
+                                      fontFamily: kQuickSand,
+                                      fontSize: 16*scaleFactor,
+                                      fontWeight: FontWeight.bold,
+                                      color: theme.accentColor,
+                                    ),
                                   ),
-                                ),
-                                Divider(color: kGreyColor,),
-                                Text(
-                                  updates[index].update,
-                                  style: TextStyle(
-                                    fontFamily: kQuickSand,
-                                    fontSize: 16*scaleFactor,
+                                  Divider(color: kGreyColor,),
+                                  Text(
+                                    updates[index].update,
+                                    style: TextStyle(
+                                      fontFamily: kQuickSand,
+                                      fontSize: 16*scaleFactor,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    );
-                  },
-                ),
-              ],
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
           );
         },

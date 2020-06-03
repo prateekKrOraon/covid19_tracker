@@ -44,7 +44,6 @@ class _DashboardIndiaState extends State<DashboardIndia>{
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
 
@@ -58,7 +57,7 @@ class _DashboardIndiaState extends State<DashboardIndia>{
     }
 
     return FutureBuilder(
-      future: StateWiseData.getInstance(),
+      future: StateWiseData.getIndiaDashboard(),
       builder: (context,snapshot){
         if(snapshot.connectionState == ConnectionState.waiting){
           return Center(child: CircularProgressIndicator(),);
@@ -98,9 +97,8 @@ class _DashboardIndiaState extends State<DashboardIndia>{
           int.parse(lastUpdateStr.substring(17,19)),
         );
 
-        List tested = map[kTested];
-        Map latestTestedData = tested[tested.length-1];
-        String dateStr = latestTestedData[kUpdateTimeStamp];
+        Map tested = map[kTotalTested];
+        String dateStr = tested[kUpdateTimeStamp];
         DateTime testedLastUpdate = DateTime(
           int.parse(dateStr.substring(6,10)),
           int.parse(dateStr.substring(3,5)),
@@ -144,356 +142,344 @@ class _DashboardIndiaState extends State<DashboardIndia>{
         }
 
 
-        return SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
-            child: Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
+        return RefreshIndicator(
+          onRefresh: (){
+            setState(() {
+              StateWiseData.refresh();
+            });
+            return Future(()=>null);
+          },
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+              child: Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
 
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Expanded(
-                          child: Text(
-                            "${lang.translate(kLastUpdatedAtLang)}: ${DateFormat("d MMM, ").add_jm().format(lastUpdate)} IST",
-                            style: TextStyle(
-                              color: kGreenColor,
-                              fontSize: 16*scaleFactor,
-                              fontFamily: kQuickSand,
-                            ),
-                          ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Text(
+                        "${lang.translate(kLastUpdatedAtLang)}: ${DateFormat("d MMM, ").add_jm().format(lastUpdate)} IST",
+                        style: TextStyle(
+                          color: theme.accentColor,
+                          fontSize: 16*scaleFactor,
+                          fontFamily: kQuickSand,
                         ),
-                        InkWell(
-                          onTap: (){
-                            setState(() {
-                              StateWiseData.refresh();
-                            });
-                          },
-                          child: Container(
-                            child: Center(
-                              child: Icon(
-                                SimpleLineIcons.refresh,
+                      ),
+                    ),
+                    SizedBox(height: 16*scaleFactor,),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 6),
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              DashboardTile(
+                                mainTitle: lang.translate(kTotalCnfLang),
+                                value: map[kStateWise][0][kConfirmed],
+                                delta: map[kStateWise][0][kDeltaConfirmed],
+                                color: kRedColor,
                               ),
+                              SizedBox(width: 10*scaleFactor,),
+                              DashboardTile(
+                                mainTitle: lang.translate(kTotalActvLang),
+                                value: map[kStateWise][0][kActive],
+                                delta: "",
+                                color: kBlueColor,
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 10*scaleFactor,),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              DashboardTile(
+                                mainTitle: lang.translate(kTotalRecLang),
+                                value: map[kStateWise][0][kRecovered],
+                                delta: map[kStateWise][0][kDeltaRecovered],
+                                color: kGreenColor,
+                              ),
+                              SizedBox(width: 10*scaleFactor,),
+                              DashboardTile(
+                                mainTitle: lang.translate(kTotalDetLang),
+                                value: map[kStateWise][0][kDeaths],
+                                delta: map[kStateWise][0][kDeltaDeaths],
+                                color: Colors.grey,
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 10*scaleFactor,),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      child: Material(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                        elevation: 2,
+                        color: theme.backgroundColor,
+                        child: Container(
+                          decoration:BoxDecoration(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: <Widget>[
+                                Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: Text(
+                                        tested[kTotalIndividualTested]==""?lang.translate(kTotalSampleTestedLang):lang.translate(kTotalTestedLang),
+                                        style: TextStyle(
+                                          fontFamily: kQuickSand,
+                                          fontSize: 24*scaleFactor,
+                                          color: kDarkBlueColor,
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        tested[kTotalIndividualTested]==""?
+                                        NumberFormat(",###").format(double.parse(tested[kTotalSamplesTested].toString())):
+                                        NumberFormat(",###").format(double.parse(tested[kTotalIndividualTested].toString())),
+                                        textAlign: TextAlign.end,
+                                        style: TextStyle(
+                                          color: kDarkBlueColor,
+                                          fontSize: 24*scaleFactor,
+                                          fontFamily: kQuickSand,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(height: 5*scaleFactor,),
+                                Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      flex: 2,
+                                      child: Text(
+                                        '${lang.translate(kLastUpdatedAtLang)} ${testedLastUpdate.millisecondsSinceEpoch>DateTime.now().millisecondsSinceEpoch?"\t--\t":DateFormat("d MMM, ").add_jm().format(testedLastUpdate)}',
+                                        style: TextStyle(
+                                          fontFamily: kQuickSand,
+                                          fontSize: 14*scaleFactor,
+                                          color: kGreyColor,
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: InkWell(
+                                        onTap: (){
+                                          NetworkHandler.getInstance().launchInBrowser(tested[kSource]);
+                                        },
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: <Widget>[
+                                            Text(
+                                              lang.translate(kSourceLang),
+                                              style: TextStyle(
+                                                color: kGreyColor,
+                                                fontSize: 12*scaleFactor,
+                                                fontFamily: kNotoSansSc,
+                                              ),
+                                            ),
+                                            SizedBox(width: 5*scaleFactor,),
+                                            Icon(
+                                              Icons.launch,
+                                              color: kGreyColor,
+                                              size: 12*scaleFactor,
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 16*scaleFactor,),
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 6),
-                    child: Column(
-                      children: <Widget>[
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            DashboardTile(
-                              mainTitle: lang.translate(kTotalCnfLang),
-                              value: map[kStateWise][0][kConfirmed],
-                              delta: map[kStateWise][0][kDeltaConfirmed],
-                              color: kRedColor,
-                            ),
-                            SizedBox(width: 10*scaleFactor,),
-                            DashboardTile(
-                              mainTitle: lang.translate(kTotalActvLang),
-                              value: map[kStateWise][0][kActive],
-                              delta: "",
-                              color: kBlueColor,
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 10*scaleFactor,),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            DashboardTile(
-                              mainTitle: lang.translate(kTotalRecLang),
-                              value: map[kStateWise][0][kRecovered],
-                              delta: map[kStateWise][0][kDeltaRecovered],
-                              color: kGreenColor,
-                            ),
-                            SizedBox(width: 10*scaleFactor,),
-                            DashboardTile(
-                              mainTitle: lang.translate(kTotalDetLang),
-                              value: map[kStateWise][0][kDeaths],
-                              delta: map[kStateWise][0][kDeltaDeaths],
-                              color: Colors.grey,
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 10*scaleFactor,),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 6),
-                    child: Material(
+                    SizedBox(height: 24*scaleFactor,),
+                    Material(
                       borderRadius: BorderRadius.all(
                         Radius.circular(10),
                       ),
                       elevation: 2,
                       color: theme.backgroundColor,
                       child: Container(
-                        decoration:BoxDecoration(
+                        padding: EdgeInsets.all(8),
+                        decoration: BoxDecoration(
                           borderRadius: BorderRadius.all(
                             Radius.circular(10),
                           ),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: <Widget>[
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Text(
-                                      latestTestedData[kTotalIndividualTested]==""?lang.translate(kTotalSampleTestedLang):lang.translate(kTotalTestedLang),
-                                      style: TextStyle(
-                                        fontFamily: kQuickSand,
-                                        fontSize: 24*scaleFactor,
-                                        color: kDarkBlueColor,
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      latestTestedData[kTotalIndividualTested]==""?
-                                      NumberFormat(",###").format(double.parse(latestTestedData[kTotalSamplesTested].toString())):
-                                      NumberFormat(",###").format(double.parse(latestTestedData[kTotalIndividualTested].toString())),
-                                      textAlign: TextAlign.end,
-                                      style: TextStyle(
-                                        color: kDarkBlueColor,
-                                        fontSize: 24*scaleFactor,
-                                        fontFamily: kQuickSand,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: <Widget>[
+                            Text(
+                              lang.translate(kMainTableTitleLang),
+                              textAlign: TextAlign.start,
+                              style: TextStyle(
+                                fontFamily: kNotoSansSc,
+                                color: kGreyColor,
+                                fontSize: 18*scaleFactor,
                               ),
-                              SizedBox(height: 5*scaleFactor,),
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Text(
-                                      '${lang.translate(kLastUpdatedAtLang)} ${testedLastUpdate.millisecondsSinceEpoch>DateTime.now().millisecondsSinceEpoch?"\t--\t":DateFormat("d MMM, ").add_jm().format(testedLastUpdate)}',
-                                      style: TextStyle(
-                                        fontFamily: kQuickSand,
-                                        fontSize: 14*scaleFactor,
-                                        color: kGreenColor,
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: InkWell(
-                                      onTap: (){
-                                        NetworkHandler.getInstance().launchInBrowser(latestTestedData[kSource]);
-                                      },
-                                      child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.end,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: <Widget>[
-                                          Text(
-                                            lang.translate(kSourceLang),
-                                            style: TextStyle(
-                                              color: kGreyColor,
-                                              fontSize: 12*scaleFactor,
-                                              fontFamily: kNotoSansSc,
-                                            ),
-                                          ),
-                                          SizedBox(width: 5*scaleFactor,),
-                                          Icon(
-                                            Icons.launch,
-                                            color: kGreyColor,
-                                            size: 12*scaleFactor,
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 24*scaleFactor,),
-                  Material(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
-                    ),
-                    elevation: 2,
-                    color: theme.backgroundColor,
-                    child: Container(
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: <Widget>[
-                          Text(
-                            lang.translate(kMainTableTitleLang),
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                              fontFamily: kNotoSansSc,
-                              color: kGreyColor,
-                              fontSize: 18*scaleFactor,
                             ),
-                          ),
-                          SizedBox(height: 5*scaleFactor,),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: <Widget>[
-                              Expanded(
-                                child: Text(
-                                  lang.translate(kMainTableNoteLang),
-                                  textAlign: TextAlign.start,
-                                  style: TextStyle(
-                                    fontFamily: kNotoSansSc,
-                                    color: kGreyColor,
-                                    fontSize: 12*scaleFactor,
+                            SizedBox(height: 5*scaleFactor,),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: <Widget>[
+                                Expanded(
+                                  child: Text(
+                                    lang.translate(kMainTableNoteLang),
+                                    textAlign: TextAlign.start,
+                                    style: TextStyle(
+                                      fontFamily: kNotoSansSc,
+                                      color: kGreyColor,
+                                      fontSize: 12*scaleFactor,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Expanded(
-                                child: InkWell(
-                                  onTap: (){
+                                Expanded(
+                                  child: InkWell(
+                                    onTap: (){
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => SourcesListScreen(),
+                                        ),
+                                      );
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: <Widget>[
+                                        Icon(
+                                          AntDesign.infocirlceo,
+                                          color: kGreyColor,
+                                          size: 14*scaleFactor,
+                                        ),
+                                        SizedBox(width: 5*scaleFactor,),
+                                        Text(
+                                          lang.translate(kKnowMoreLang),
+                                          style: TextStyle(
+                                            color: kGreyColor,
+                                            fontSize: 12*scaleFactor,
+                                            fontFamily: kNotoSansSc,
+                                          ),
+                                        ),
+                                        SizedBox(width: 5*scaleFactor,),
+                                        Icon(
+                                          Icons.arrow_forward,
+                                          color: kGreyColor,
+                                          size: 14*scaleFactor,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            TableHeader(
+                              dataFor: lang.translate(kStateUTLang),
+                              onTap: (){
+                                setState(() {
+                                  if(sortingOrder.checkOrder(SortingOrder.STATE_INC)){
+                                    sortingOrder.setOrder(SortingOrder.STATE_DEC);
+                                  }else if(sortingOrder.checkOrder(SortingOrder.STATE_DEC)){
+                                    sortingOrder.setOrder(SortingOrder.STATE_INC);
+                                  }else{
+                                    sortingOrder.setOrder(SortingOrder.STATE_INC);
+                                  }
+                                });
+                              },
+                              onTapCnf: (){
+                                setState(() {
+                                  if(sortingOrder.checkOrder(SortingOrder.CNF_INC)){
+                                    sortingOrder.setOrder(SortingOrder.CNF_DEC);
+                                  }else if(sortingOrder.checkOrder(SortingOrder.CNF_DEC)){
+                                    sortingOrder.setOrder(SortingOrder.CNF_INC);
+                                  }else{
+                                    sortingOrder.setOrder(SortingOrder.CNF_DEC);
+                                  }
+                                });
+                              },
+                              onTapAct: (){
+                                setState(() {
+                                  if(sortingOrder.checkOrder(SortingOrder.ACTV_INC)){
+                                    sortingOrder.setOrder(SortingOrder.ACTV_DEC);
+                                  }else if(sortingOrder.checkOrder(SortingOrder.ACTV_DEC)){
+                                    sortingOrder.setOrder(SortingOrder.ACTV_INC);
+                                  }else{
+                                    sortingOrder.setOrder(SortingOrder.ACTV_DEC);
+                                  }
+                                });
+                              },
+                              onTapRec: (){
+                                setState(() {
+                                  if(sortingOrder.checkOrder(SortingOrder.REC_INC)){
+                                    sortingOrder.setOrder(SortingOrder.REC_DEC);
+                                  }else if(sortingOrder.checkOrder(SortingOrder.REC_DEC)){
+                                    sortingOrder.setOrder(SortingOrder.REC_INC);
+                                  }else{
+                                    sortingOrder.setOrder(SortingOrder.REC_DEC);
+                                  }
+                                });
+                              },
+                              onTapDet: (){
+                                setState(() {
+                                  if(sortingOrder.checkOrder(SortingOrder.DET_INC)){
+                                    sortingOrder.setOrder(SortingOrder.DET_DEC);
+                                  }else if(sortingOrder.checkOrder(SortingOrder.DET_DEC)){
+                                    sortingOrder.setOrder(SortingOrder.DET_INC);
+                                  }else{
+                                    sortingOrder.setOrder(SortingOrder.DET_DEC);
+                                  }
+                                });
+                              },
+                              sortingOrder: sortingOrder,
+                            ),
+                            ListView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: stateList.length,
+                              itemBuilder: (BuildContext context,int index){
+
+                                if(stateList[index].confirmed == 0){
+                                  return SizedBox();
+                                }
+
+                                return TableRows(
+                                  onTouchCallback: (){
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => SourcesListScreen(),
+                                        builder: (BuildContext context) => StateData(stateInfo: stateList[index],),
                                       ),
                                     );
                                   },
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: <Widget>[
-                                      Icon(
-                                        AntDesign.infocirlceo,
-                                        color: kGreyColor,
-                                        size: 14*scaleFactor,
-                                      ),
-                                      SizedBox(width: 5*scaleFactor,),
-                                      Text(
-                                        lang.translate(kKnowMoreLang),
-                                        style: TextStyle(
-                                          color: kGreyColor,
-                                          fontSize: 12*scaleFactor,
-                                          fontFamily: kNotoSansSc,
-                                        ),
-                                      ),
-                                      SizedBox(width: 5*scaleFactor,),
-                                      Icon(
-                                        Icons.arrow_forward,
-                                        color: kGreyColor,
-                                        size: 14*scaleFactor,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          TableHeader(
-                            dataFor: lang.translate(kStateUTLang),
-                            onTap: (){
-                              setState(() {
-                                if(sortingOrder.checkOrder(SortingOrder.STATE_INC)){
-                                  sortingOrder.setOrder(SortingOrder.STATE_DEC);
-                                }else if(sortingOrder.checkOrder(SortingOrder.STATE_DEC)){
-                                  sortingOrder.setOrder(SortingOrder.STATE_INC);
-                                }else{
-                                  sortingOrder.setOrder(SortingOrder.STATE_INC);
-                                }
-                              });
-                            },
-                            onTapCnf: (){
-                              setState(() {
-                                if(sortingOrder.checkOrder(SortingOrder.CNF_INC)){
-                                  sortingOrder.setOrder(SortingOrder.CNF_DEC);
-                                }else if(sortingOrder.checkOrder(SortingOrder.CNF_DEC)){
-                                  sortingOrder.setOrder(SortingOrder.CNF_INC);
-                                }else{
-                                  sortingOrder.setOrder(SortingOrder.CNF_DEC);
-                                }
-                              });
-                            },
-                            onTapAct: (){
-                              setState(() {
-                                if(sortingOrder.checkOrder(SortingOrder.ACTV_INC)){
-                                  sortingOrder.setOrder(SortingOrder.ACTV_DEC);
-                                }else if(sortingOrder.checkOrder(SortingOrder.ACTV_DEC)){
-                                  sortingOrder.setOrder(SortingOrder.ACTV_INC);
-                                }else{
-                                  sortingOrder.setOrder(SortingOrder.ACTV_DEC);
-                                }
-                              });
-                            },
-                            onTapRec: (){
-                              setState(() {
-                                if(sortingOrder.checkOrder(SortingOrder.REC_INC)){
-                                  sortingOrder.setOrder(SortingOrder.REC_DEC);
-                                }else if(sortingOrder.checkOrder(SortingOrder.REC_DEC)){
-                                  sortingOrder.setOrder(SortingOrder.REC_INC);
-                                }else{
-                                  sortingOrder.setOrder(SortingOrder.REC_DEC);
-                                }
-                              });
-                            },
-                            onTapDet: (){
-                              setState(() {
-                                if(sortingOrder.checkOrder(SortingOrder.DET_INC)){
-                                  sortingOrder.setOrder(SortingOrder.DET_DEC);
-                                }else if(sortingOrder.checkOrder(SortingOrder.DET_DEC)){
-                                  sortingOrder.setOrder(SortingOrder.DET_INC);
-                                }else{
-                                  sortingOrder.setOrder(SortingOrder.DET_DEC);
-                                }
-                              });
-                            },
-                            sortingOrder: sortingOrder,
-                          ),
-                          ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: stateList.length,
-                            itemBuilder: (BuildContext context,int index){
-
-                              if(stateList[index].confirmed == 0){
-                                return SizedBox();
-                              }
-
-                              return TableRows(
-                                onTouchCallback: (){
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (BuildContext context) => StateData(stateInfo: stateList[index],),
-                                    ),
-                                  );
-                                },
-                                stateInfo: stateList[index],
-                              );
-                            },
-                          ),
-                        ],
+                                  stateInfo: stateList[index],
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  )
-                ],
+                    )
+                  ],
+                ),
               ),
             ),
           ),
