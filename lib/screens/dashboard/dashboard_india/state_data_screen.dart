@@ -19,7 +19,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:intl/intl.dart';
 import 'dart:math' as math;
-
 import '../../error_screen.dart';
 
 class StateData extends StatefulWidget{
@@ -60,7 +59,7 @@ class _StateDataState extends State<StateData>{
   }
 
   Future _getData()async{
-    _data = Future.wait([_networkHandler.getStateData(stateInfo.stateName),_networkHandler.getStatesDaily(),_networkHandler.getZonesData(stateInfo.stateCode)]);
+    _data = _networkHandler.getStateData(this.stateInfo.stateCode.toUpperCase());
   }
 
   @override
@@ -92,7 +91,7 @@ class _StateDataState extends State<StateData>{
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
                       Text(
-                        stateInfo.displayName,
+                        lang.locale.languageCode=="en"?stateInfo.stateName:stateInfo.stateNameHI,
                         style: TextStyle(
                           fontFamily: kQuickSand,
                           fontSize: 30*scaleFactor,
@@ -163,7 +162,7 @@ class _StateDataState extends State<StateData>{
                       children: <Widget>[
                         SizedBox(height: 10*scaleFactor,),
                         Text(
-                          "Note:\n${stateInfo.stateNotes}\nThe colored dots represents zones",
+                          "Note:\n${stateInfo.stateNotes}",
                           style: TextStyle(
                             fontFamily: kNotoSansSc,
                             fontSize: 13*scaleFactor,
@@ -187,24 +186,18 @@ class _StateDataState extends State<StateData>{
                         child: ErrorScreen(
                           onClickRetry: (){
                             setState(() {
-                              _data = Future.wait(
-                                [
-                                  _networkHandler.getStateData(stateInfo.stateName),
-                                  _networkHandler.getStatesDaily(),
-                                  _networkHandler.getZonesData(stateInfo.stateCode),
-                                ],
-                              );
+                              _data = _networkHandler.getStateData(stateInfo.stateCode.toUpperCase());
                             });
                           },
                         ),
                       );
                     }
-                    if(snapshot.data[0]==null){
+                    if(snapshot.data['district_wise']==null){
                       return Center(
                         child: ErrorScreen(
                           onClickRetry: (){
                             setState(() {
-                              _data = Future.wait([_networkHandler.getStateData(stateInfo.stateName),_networkHandler.getStatesDaily(),_networkHandler.getZonesData(stateInfo.stateCode)]);
+                              _data = _networkHandler.getStateData(stateInfo.stateCode.toUpperCase());
                             });
                           },
                         ),
@@ -212,10 +205,22 @@ class _StateDataState extends State<StateData>{
                     }
 
                     //Table data processing
-                    Map districtWiseReport = snapshot.data[0];
+                    //Map zones = snapshot.data['zones'];
+                    List districtData = snapshot.data['district_wise'];
+                    Map test_data = snapshot.data['test_data'];
 
-                    Map zones = snapshot.data[2];
-                    List districtData = districtWiseReport[kDistrictData];
+                    String totalTested = test_data['total_tested'];
+                    String testSource = test_data['source'];
+                    DateTime testLastUpdated;
+
+                    if(test_data['last_update'] != ""){
+                      testLastUpdated = DateTime(
+                        int.parse(test_data['last_update'].substring(6,10)),
+                        int.parse(test_data['last_update'].substring(3,5)),
+                        int.parse(test_data['last_update'].substring(0,2)),
+                      );
+                    }
+
                     List<District> districts = List();
 
                     districtData.forEach((map){
@@ -225,7 +230,6 @@ class _StateDataState extends State<StateData>{
                           District.fromMap(
                             context,
                             map,
-                            zones,
                           ),
                         );
                       }
@@ -237,17 +241,14 @@ class _StateDataState extends State<StateData>{
                     //unknown cases is appended at the end of the sorted list is there is any
                     if(districtData[districtData.length-1][kDistrict] == 'Unknown'){
                       districts.add(
-                        District.fromMap(context, districtData[districtData.length-1],zones),
+                        District.fromMap(context, districtData[districtData.length-1]),
                       );
                     }
 
                     //Table data processing ends here
 
                     //Charts data Processing
-
-                    Map statesDailyReport = snapshot.data[1];
-
-                    List dailyReport = statesDailyReport[kStatesDaily];
+                    List dailyReport = snapshot.data['timeseries'];
                     int totalCnf = 0;
                     int totalRec = 0;
                     int totalDet = 0;
@@ -423,6 +424,104 @@ class _StateDataState extends State<StateData>{
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                          child: Material(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(10),
+                            ),
+                            elevation: 2,
+                            color: theme.backgroundColor,
+                            child: Container(
+                              decoration:BoxDecoration(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10),
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: Text(
+                                            lang.translate(kTotalTestedLang),
+                                            style: TextStyle(
+                                              fontFamily: kQuickSand,
+                                              fontSize: 24*scaleFactor,
+                                              color: kDarkBlueColor,
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            NumberFormat(",###").format(double.parse(totalTested)),
+                                            textAlign: TextAlign.end,
+                                            style: TextStyle(
+                                              color: kDarkBlueColor,
+                                              fontSize: 24*scaleFactor,
+                                              fontFamily: kQuickSand,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: 5*scaleFactor,),
+                                    Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          flex: 2,
+                                          child: Text(
+                                            "${lang.translate(kLastUpdatedAtLang)} ${testLastUpdated==null?"--/--/----":DateFormat("d MMM y").format(testLastUpdated)}",
+                                            style: TextStyle(
+                                              fontFamily: kQuickSand,
+                                              fontSize: 14*scaleFactor,
+                                              color: kGreyColor,
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: InkWell(
+                                            splashColor: Colors.transparent,
+                                            highlightColor: Colors.transparent,
+                                            onTap: (){
+                                              if(testSource != ""){
+                                                NetworkHandler.getInstance().launchInBrowser(testSource);
+                                              }
+                                            },
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.end,
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: <Widget>[
+                                                Text(
+                                                  lang.translate(kSourceLang),
+                                                  style: TextStyle(
+                                                    color: kGreyColor,
+                                                    fontSize: 12*scaleFactor,
+                                                    fontFamily: kNotoSansSc,
+                                                  ),
+                                                ),
+                                                SizedBox(width: 5*scaleFactor,),
+                                                Icon(
+                                                  Icons.launch,
+                                                  color: kGreyColor,
+                                                  size: 12*scaleFactor,
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10*scaleFactor,),
                         Material(
                           borderRadius: BorderRadius.all(
                             Radius.circular(10),
@@ -467,25 +566,25 @@ class _StateDataState extends State<StateData>{
                                                 child: Row(
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: <Widget>[
-                                                    Container(
-                                                      width: 20*scaleFactor,
-                                                      height: 20*scaleFactor,
-                                                      child: Center(
-                                                        child: Container(
-                                                          height: 10*scaleFactor,
-                                                          width: 10*scaleFactor,
-                                                          decoration: BoxDecoration(
-                                                            borderRadius: BorderRadius.all(
-                                                              Radius.circular(5,),
-                                                            ),
-                                                            color: district.zone,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
+//                                                    Container(
+//                                                      width: 20*scaleFactor,
+//                                                      height: 20*scaleFactor,
+//                                                      child: Center(
+//                                                        child: Container(
+//                                                          height: 10*scaleFactor,
+//                                                          width: 10*scaleFactor,
+//                                                          decoration: BoxDecoration(
+//                                                            borderRadius: BorderRadius.all(
+//                                                              Radius.circular(5,),
+//                                                            ),
+//                                                            color: district.zone,
+//                                                          ),
+//                                                        ),
+//                                                      ),
+//                                                    ),
                                                     Expanded(
                                                       child: Text(
-                                                        district.name,
+                                                        lang.locale.languageCode=="en"?district.districtName:district.districtNameHI,
                                                         style: TextStyle(
                                                           fontFamily: kQuickSand,
                                                           fontSize: 14*scaleFactor,

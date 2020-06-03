@@ -15,7 +15,7 @@ class SIRD{
 
   void parseData(Map data){
 
-    List timeSeries = data[kCaseTimeSeries];
+    List timeSeries = data['timeseries'];
 
     infectedTimeSeries = List();
     recoveredTimeSeries = List();

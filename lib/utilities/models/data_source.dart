@@ -1,13 +1,12 @@
 import 'package:covid19_tracker/constants/api_constants.dart';
-import 'package:covid19_tracker/localization/app_localization.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class Source {
   String name;
   List<String> sources;
 
   Source.fromMap(BuildContext context,Map map){
-    this.name = AppLocalizations.of(context).translate(map[kRegion].toString().toLowerCase().replaceAll(" ", "_"));
+    this.name = map[kRegion];
     sources = List();
     if(map[kSource1] != ""){
       sources.add(map[kSource1]);

@@ -49,7 +49,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
   }
 
   void _getData()async{
-    _data = Future.wait([StateWiseData.getInstance(),StatesDailyChanges.getInstance()]);
+    _data = Future.wait([StateWiseData.getIndiaTimeSeries(),StateWiseData.getIndiaDashboard(),StatesDailyChanges.getInstance()]);
   }
 
   @override
@@ -77,6 +77,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
               onClickRetry: (){
                 setState(() {
                   StateWiseData.refresh();
+                  StatesDailyChanges.refresh();
+                  _data = Future.wait([StateWiseData.getIndiaTimeSeries(),StateWiseData.getIndiaDashboard(),StatesDailyChanges.getInstance()]);
                 });
               },
             ),
@@ -112,11 +114,11 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
         List<BarChartGroupData> stateMortalityRates = List();
         List<BarChartGroupData> stateRecoveryRates = List();
 
-        Map statesDailyChanges = snapshot.data[1];
+        Map statesDailyChanges = snapshot.data[2];
         List confirmedDaily = statesDailyChanges[kConfirmed];
 
 
-        List stateWise = map[kStateWise];
+        List stateWise = snapshot.data[1][kStateWise];
         List<StateInfo> stateInfo = List();
 
         for(int i = 1;i<stateWise.length;i++){
@@ -1098,7 +1100,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                     tooltipBgColor: theme.accentColor,
                     getTooltipItem: (groupData,a,rodData,b){
                       return BarTooltipItem(
-                        "${list[groupData.x].displayName}\n${rodData.y.round()}",
+                        AppLocalizations.of(context).locale.languageCode=="en"?
+                        "${list[groupData.x].stateName}\n${rodData.y.round()}":
+                        "${list[groupData.x].stateNameHI}\n${rodData.y.round()}",
                         TextStyle(
                           fontFamily: kQuickSand,
                           fontSize: 14*scaleFactor,
@@ -1112,8 +1116,11 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                       if (response.spot != null &&
                           response.touchInput is! FlPanEnd &&
                           response.touchInput is! FlLongPressEnd) {
+                        String str = AppLocalizations.of(context).locale.languageCode=="en"?
+                                        list[response.spot.touchedBarGroup.x].stateName:
+                                        list[response.spot.touchedBarGroup.x].stateNameHI;
                         showTooltip(
-                            list[response.spot.touchedBarGroup.x].displayName,
+                            str,
                             category == GraphCategories.CNF_CASES?"${NumberFormat(",###").format(response.spot.touchedRodData.y.toInt())}":"${response.spot.touchedRodData.y.toStringAsFixed(1)} %",
                             response.spot.touchedRodData.color,
                             "cases",
@@ -1316,7 +1323,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
               tooltipBgColor: theme.accentColor,
               getTooltipItem: (groupData,a,rodData,b){
                 return BarTooltipItem(
-                  "${list[groupData.x].displayName}\n${rodData.y.round()}",
+                  AppLocalizations.of(context).locale.languageCode=="en"?
+                  "${list[groupData.x].stateName}\n${rodData.y.round()}":
+                  "${list[groupData.x].stateNameHI}\n${rodData.y.round()}",
                   TextStyle(
                     fontFamily: kQuickSand,
                     fontSize: 14*scaleFactor,
@@ -1330,8 +1339,11 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                 if (response.spot != null &&
                     response.touchInput is! FlPanEnd &&
                     response.touchInput is! FlLongPressEnd) {
+                  String str = AppLocalizations.of(context).locale.languageCode=="en"?
+                  list[response.spot.touchedBarGroup.x].stateName:
+                  list[response.spot.touchedBarGroup.x].stateNameHI;
                   showTooltip(
-                    list[response.spot.touchedBarGroup.x].displayName,
+                    str,
                     "${NumberFormat(",###").format(response.spot.touchedRodData.y.toInt())}",
                     response.spot.touchedRodData.color,
                     "cases",

@@ -9,7 +9,6 @@ import 'package:covid19_tracker/utilities/helpers/network_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:intl/intl.dart';
-
 import '../error_screen.dart';
 
 class Predictions extends StatefulWidget{
@@ -37,7 +36,7 @@ class _PredictionState extends State<Predictions>{
     }
 
     return FutureBuilder(
-      future: StateWiseData.getInstance(),
+      future: StateWiseData.getIndiaTimeSeries(),
       builder: (BuildContext context,snapshot){
         if(snapshot.connectionState == ConnectionState.waiting){
           return Center(child: CircularProgressIndicator(),);
@@ -67,8 +66,8 @@ class _PredictionState extends State<Predictions>{
 
         SIRD sird = SIRD();
         Map map = snapshot.data;
-
-        String lastUpdateStr = map[kStateWise][0][kLastUpdated].toString();
+        print(map);
+        String lastUpdateStr = map['total'][kLastUpdated].toString();
 
         DateTime lastUpdate = DateTime(
           int.parse(lastUpdateStr.substring(6,10)),
@@ -179,7 +178,7 @@ class _PredictionState extends State<Predictions>{
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
-                                  NumberFormat(",###").format(int.parse(map[kStateWise][0][kConfirmed].toString())),
+                                  NumberFormat(",###").format(int.parse(map['total'][kConfirmed].toString())),
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontFamily: kQuickSand,
@@ -188,7 +187,7 @@ class _PredictionState extends State<Predictions>{
                                   ),
                                 ),
                                 Text(
-                                  "(+${NumberFormat(",###").format(int.parse(map[kStateWise][0][kDeltaConfirmed].toString()))})",
+                                  "(+${NumberFormat(",###").format(int.parse(map['total'][kDeltaConfirmed].toString()))})",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontFamily: kQuickSand,
@@ -204,7 +203,7 @@ class _PredictionState extends State<Predictions>{
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
-                                  NumberFormat(",###").format(int.parse(map[kStateWise][0][kActive].toString())),
+                                  NumberFormat(",###").format(int.parse(map['total'][kActive].toString())),
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontFamily: kQuickSand,
@@ -229,7 +228,7 @@ class _PredictionState extends State<Predictions>{
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
-                                  NumberFormat(",###").format(int.parse(map[kStateWise][0][kRecovered].toString())),
+                                  NumberFormat(",###").format(int.parse(map['total'][kRecovered].toString())),
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontFamily: kQuickSand,
@@ -238,7 +237,7 @@ class _PredictionState extends State<Predictions>{
                                   ),
                                 ),
                                 Text(
-                                  "(+${NumberFormat(",###").format(int.parse(map[kStateWise][0][kDeltaRecovered].toString()))})",
+                                  "(+${NumberFormat(",###").format(int.parse(map['total'][kDeltaRecovered].toString()))})",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontFamily: kQuickSand,
@@ -254,7 +253,7 @@ class _PredictionState extends State<Predictions>{
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
-                                  NumberFormat(",###").format(int.parse(map[kStateWise][0][kDeaths].toString())),
+                                  NumberFormat(",###").format(int.parse(map['total'][kDeaths].toString())),
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontFamily: kQuickSand,
@@ -263,7 +262,7 @@ class _PredictionState extends State<Predictions>{
                                   ),
                                 ),
                                 Text(
-                                  "(+${NumberFormat(",###").format(int.parse(map[kStateWise][0][kDeltaDeaths].toString()))})",
+                                  "(+${NumberFormat(",###").format(int.parse(map['total'][kDeltaDeaths].toString()))})",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontFamily: kQuickSand,

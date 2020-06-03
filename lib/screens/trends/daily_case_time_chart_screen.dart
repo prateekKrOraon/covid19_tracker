@@ -44,7 +44,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
     }
 
     return FutureBuilder(
-      future: StateWiseData.getInstance(),
+      future: StateWiseData.getIndiaTimeSeries(),
       builder:(BuildContext context, snapshot){
 
         if(snapshot.connectionState == ConnectionState.waiting){
@@ -74,7 +74,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
         }
 
         Map map = snapshot.data;
-        List caseTime = map[kCaseTimeSeries];
+        List caseTime = map['timeseries'];
         double dailyHighestCnf = 0;
         double dailyHighestRec = 0;
         double dailyHighestDet = 0;

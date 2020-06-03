@@ -5,28 +5,17 @@
 *
 */
 
-String stateWiseLink = "https://api.covid19india.org/data.json";
-String districtWiseLink = "https://api.covid19india.org/v2/state_district_wise.json";
+//New API
+const String BASE_API = 'https://api-covid19-tracker.herokuapp.com';
+
 String rawDataLink = "https://api.covid19india.org/raw_data.json";
-String stateWiseDailyLink = "https://api.covid19india.org/states_daily.json";
-String zonesDataLink = "http://course-finder-prateek.000webhostapp.com/covid19_tracker/services/getZones.php";
-String statesDailyChangesLink = "http://course-finder-prateek.000webhostapp.com/covid19_tracker/services/getStatesDailyChanges.php";
 String stateWiseTestLink = "https://api.covid19india.org/state_test_data.json";
 String sourcesLink = "https://api.covid19india.org/sources_list.json";
 String resourcesListLink = 'https://api.covid19india.org/resources/resources.json';
-String updateLogLink = "https://course-finder-prateek.000webhostapp.com/covid19_tracker/services/getUpdateLog.php";
-String faqsLink = "http://course-finder-prateek.000webhostapp.com/covid19_tracker/services/getFAQs.php";
-String checkForUpdateLink = "https://course-finder-prateek.000webhostapp.com/covid19_tracker/services/checkForUpdates.php";
-String compareCountryLink = "https://course-finder-prateek.000webhostapp.com/covid19_tracker/services/getCompareResult.php";
 
 //world data url
-String countryWiseDataUrl = "https://corona.lmao.ninja/v2/countries?sort=cases";
-String worldDataUrl = "https://corona.lmao.ninja/v2/all";
-String countryDataUrl = "https://covidapi.info/api/v1/country/";
-String countryDataUrl2 = "https://corona.lmao.ninja/v2/countries/";
 
 //Global time-series from 22-01-2020
-String globalTimeSeriesLink = "https://covidapi.info/api/v1/global/count";
 
 String crowdSourcedDatabaseLink = "https://docs.google.com/spreadsheets/u/1/d/e/2PACX-1vSz8Qs1gE_IYpzlkFkCXGcL_BqR8hZieWVi-rphN1gfrO3H4lDtVZs4kd0C3P8Y9lhsT1rhoB-Q_cP4/pubhtml";
 String developerPrateekGitHubLink = "https://github.com/prateekKrOraon";
@@ -132,6 +121,7 @@ String kAffectedCountries = "affectedCountries";
 String kQuestion = "question";
 String kAnswer = "answer";
 String kFAQs = "faqs";
+String kTotalTested = "total_tested";
 
 //<a href="https://www.freevector.com/network-hosting-element-vectors-21383#">FreeVector.com</a>
 

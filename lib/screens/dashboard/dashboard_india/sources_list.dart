@@ -11,10 +11,8 @@ import 'package:covid19_tracker/constants/colors.dart';
 import 'package:covid19_tracker/constants/app_constants.dart';
 import 'package:covid19_tracker/constants/language_constants.dart';
 import 'package:covid19_tracker/localization/app_localization.dart';
-
 import 'package:covid19_tracker/utilities/models/data_source.dart';
 import 'package:covid19_tracker/utilities/helpers/network_handler.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../error_screen.dart';

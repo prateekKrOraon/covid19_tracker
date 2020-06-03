@@ -44,7 +44,7 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
     }
 
     return FutureBuilder(
-      future: StateWiseData.getInstance(),
+      future: StateWiseData.getIndiaTimeSeries(),
       builder: (BuildContext context, snapshot){
 
         if(snapshot.connectionState == ConnectionState.waiting){
@@ -74,7 +74,7 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
         }
 
         Map map = snapshot.data;
-        List caseTime = map[kCaseTimeSeries];
+        List caseTime = map['timeseries'];
 
         List<FlSpot> totalCnfSpots = List();
         List<FlSpot> totalRecSpots = List();
@@ -206,7 +206,7 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                         ),
                       ),
                       Text(
-                        NumberFormat(",###").format(int.parse(map[kStateWise][0][kConfirmed].toString())),
+                        NumberFormat(",###").format(int.parse(map['total'][kConfirmed].toString())),
                         style: TextStyle(
                           fontFamily: kQuickSand,
                           fontSize: 25*scaleFactor,
@@ -309,10 +309,10 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                       SizedBox(height: 20*scaleFactor,),
                       Center(
                         child: _getPieChart(
-                          double.parse(map[kStateWise][0][kConfirmed]),
-                          double.parse(map[kStateWise][0][kActive]),
-                          double.parse(map[kStateWise][0][kRecovered]),
-                          double.parse(map[kStateWise][0][kDeaths]),
+                          double.parse(map["total"][kConfirmed]),
+                          double.parse(map["total"][kActive]),
+                          double.parse(map["total"][kRecovered]),
+                          double.parse(map["total"][kDeaths]),
                         ),
                       ),
                     ],

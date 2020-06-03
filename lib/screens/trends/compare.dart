@@ -19,7 +19,7 @@ class CompareScreen extends StatefulWidget{
   }
 }
 
-class _CompareScreenState extends State<CompareScreen> with SingleTickerProviderStateMixin{
+class _CompareScreenState extends State<CompareScreen>{
 
   double searchBoxHeight = 0;
   String _countryOne = "";
@@ -846,7 +846,9 @@ class _CompareScreenState extends State<CompareScreen> with SingleTickerProvider
                               height:50*scaleFactor,
                               child: Center(
                                 child: Text(
-                                  countryOne.displayName,
+                                  lang.locale.languageCode=="en"?
+                                  countryOne.countryName:
+                                  countryOne.countryNameHI,
                                   style: TextStyle(
                                     fontFamily: kQuickSand,
                                     fontSize: 18*scaleFactor,
@@ -875,7 +877,9 @@ class _CompareScreenState extends State<CompareScreen> with SingleTickerProvider
                               height:50*scaleFactor,
                               child: Center(
                                 child: Text(
-                                  countryTwo.displayName,
+                                  lang.locale.languageCode=="en"?
+                                  countryTwo.countryName:
+                                  countryTwo.countryNameHI,
                                   textAlign:TextAlign.center,
                                   style: TextStyle(
                                     fontFamily: kQuickSand,
@@ -1436,41 +1440,6 @@ class _CompareScreenState extends State<CompareScreen> with SingleTickerProvider
 
     sideInterval = (total/8);
     maxY = total;
-//    if(total>3000){
-//      sideInterval = 700;
-//      maxY = total+500;
-//    }else if(total>2000){
-//      sideInterval = 500;
-//      maxY = total+500;
-//    }else if(total > 500){
-//      sideInterval = 300;
-//      maxY = total+250;
-//    }else if(total >100){
-//      sideInterval = 100;
-//      maxY = total+50;
-//    }else if(total > 50){
-//      sideInterval = 20;
-//      maxY = total+25;
-//    }else if(total > 10){
-//      sideInterval = 10;
-//      maxY = total+5;
-//    }else if(total > 6){
-//      sideInterval = 1;
-//      maxY = total+500+3;
-//    }else if(total > 3){
-//      sideInterval = 1;
-//      maxY = total+1.5;
-//    }else if (total > 1){
-//      sideInterval = 0.5;
-//      maxY = total+0.5;
-//    }else if(sideInterval>0.5){
-//      sideInterval = 0.1;
-//      maxY = total+0.25;
-//    }else{
-//      sideInterval = 0.05;
-//      maxY = total;
-//    }
-
 
     return Padding(
       padding: const EdgeInsets.all(6),

@@ -34,8 +34,7 @@ APK can be downloaded from [here](https://github.com/prateekKrOraon/covid-19-tra
 ![India Dashboard](screenshots/1.png)   ![Global Dashboard](screenshots/2.png)   ![Cumulative Graphical representation](screenshots/3.png)    ![Daily graphical representation](screenshots/4.png)    ![State wise information of various public welfare organisations](screenshots/5.png)   ![About screen](screenshots/6.png)    ![District wise data and state data represented as graphs](screenshots/7.png)    ![Country specific data screen](screenshots/8.png)    ![India Dashboard - Light theme](screenshots/9.png)    ![Cumulative Graphical representation - Light theme](screenshots/10.png)   ![About screen - Light theme](screenshots/11.png)
 
 ## Data
-* India data: [api.covid19india.org](https://api.covid19india.org) and [Crowdsourced Patient Database](https://docs.google.com/spreadsheets/u/1/d/e/2PACX-1vSz8Qs1gE_IYpzlkFkCXGcL_BqR8hZieWVi-rphN1gfrO3H4lDtVZs4kd0C3P8Y9lhsT1rhoB-Q_cP4/pubhtml)
-* Global data: [corona.lmao.ninja](https://corona.lmao.ninja) and [covidapi.info](https://covidapi.info)
+* [COVID-19 Tracker API](https://github.com/prateekKrOraon/covid-19-tracker-api)
 
 ## Special thanks
 Special thanks to these two guys for testing the app and giving feedback, suggestions and ideas. This app would have been a mess without you.

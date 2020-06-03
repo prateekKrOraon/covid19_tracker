@@ -1,11 +1,10 @@
 import 'package:covid19_tracker/constants/api_constants.dart';
-import 'package:covid19_tracker/localization/app_localization.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class StateInfo{
 
   String stateName;
-  String displayName;
+  String stateNameHI;
   String stateCode;
   int active = 0;
   int confirmed = 0;
@@ -16,13 +15,13 @@ class StateInfo{
   int deltaDet = 0;
   DateTime lastUpdated;
   String stateNotes;
+  int totalTested = 0;
+  DateTime testLastUpdated;
+  String testSource;
 
   StateInfo.fromMap(BuildContext context,Map map){
     this.stateName = map[kState];
-    this.displayName = AppLocalizations.of(context).translate(map[kState].toString().toLowerCase().replaceAll(" ", "_"));
-    if(this.displayName == null){
-      displayName = stateName;
-    }
+    this.stateNameHI = map['state_hi'];
     this.stateCode = map[kStateCode];
     this.active = int.parse(map[kActive]);
     this.confirmed = int.parse(map[kConfirmed]);
@@ -32,6 +31,7 @@ class StateInfo{
     this.deltaRec = int.parse(map[kDeltaRecovered]);
     this.deltaDet = int.parse(map[kDeltaDeaths]);
     this.stateNotes = map[kStateNotes];
+
     this.lastUpdated = DateTime(
       int.parse(map[kLastUpdated].substring(6,10)),
       int.parse(map[kLastUpdated].substring(3,5)),

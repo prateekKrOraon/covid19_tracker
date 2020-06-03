@@ -88,7 +88,7 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            country.displayName,
+                            lang.locale.languageCode=="en"?country.countryName:country.countryNameHI,
                             style: TextStyle(
                               fontFamily: kQuickSand,
                               fontSize: 30*scaleFactor,
@@ -110,7 +110,7 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                         style: TextStyle(
                           fontFamily: kQuickSand,
                           fontSize: 14*scaleFactor,
-                          color: Colors.green,
+                          color: theme.accentColor,
                         ),
                       ),
                     ],
@@ -236,8 +236,8 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                         child: Center(
                           child: Text(
                             lang.locale.languageCode=="hi"?
-                            "${country.displayName} ${lang.translate(kCountryDataErrorLang)}":
-                            "${lang.translate(kCountryDataErrorLang)} ${country.displayName}",
+                            "${country.countryNameHI} ${lang.translate(kCountryDataErrorLang)}":
+                            "${lang.translate(kCountryDataErrorLang)} ${country.countryNameHI}",
                             style: TextStyle(
                               fontFamily: kQuickSand,
                               fontSize: 18*scaleFactor,
