@@ -115,7 +115,7 @@ class _PredictionState extends State<Predictions>{
                   style: TextStyle(
                     fontFamily: kQuickSand,
                     fontSize: 14*scaleFactor,
-                    color: kGreenColor,
+                    color: theme.accentColor,
                   ),
                 ),
                 Container(
