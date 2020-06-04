@@ -102,7 +102,7 @@ class _StateDataState extends State<StateData>{
                         style: TextStyle(
                           fontFamily: kQuickSand,
                           fontSize: 14*scaleFactor,
-                          color: Colors.green,
+                          color: theme.accentColor,
                         ),
                       ),
                     ],
@@ -154,25 +154,6 @@ class _StateDataState extends State<StateData>{
                     ],
                   ),
                 ),
-                stateInfo.stateNotes!=""?Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 6,),
-                  child: Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: <Widget>[
-                        SizedBox(height: 10*scaleFactor,),
-                        Text(
-                          "Note:\n${stateInfo.stateNotes}",
-                          style: TextStyle(
-                            fontFamily: kNotoSansSc,
-                            fontSize: 13*scaleFactor,
-                            color:kGreyColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ):SizedBox(),
                 SizedBox(height: 10*scaleFactor,),
                 FutureBuilder(
                   future: _data,
@@ -210,6 +191,9 @@ class _StateDataState extends State<StateData>{
                     Map test_data = snapshot.data['test_data'];
 
                     String totalTested = test_data['total_tested'];
+                    if(totalTested == ""){
+                      totalTested = "0";
+                    }
                     String testSource = test_data['source'];
                     DateTime testLastUpdated;
 
@@ -521,6 +505,25 @@ class _StateDataState extends State<StateData>{
                             ),
                           ),
                         ),
+                        stateInfo.stateNotes!=""?Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 6,),
+                          child: Container(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: <Widget>[
+                                SizedBox(height: 10*scaleFactor,),
+                                Text(
+                                  "Note:\n${stateInfo.stateNotes}",
+                                  style: TextStyle(
+                                    fontFamily: kNotoSansSc,
+                                    fontSize: 13*scaleFactor,
+                                    color:kGreyColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ):SizedBox(),
                         SizedBox(height: 10*scaleFactor,),
                         Material(
                           borderRadius: BorderRadius.all(

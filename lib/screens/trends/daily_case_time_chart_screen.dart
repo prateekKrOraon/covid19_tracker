@@ -369,7 +369,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
                 Text(
                   "${lang.translate(kLastUpdatedAtLang)}: $lastUpdate\2020",
                   style: TextStyle(
-                    color: kGreenColor,
+                    color: theme.accentColor,
                     fontSize: 16*scaleFactor,
                     fontFamily: kQuickSand,
                   ),
