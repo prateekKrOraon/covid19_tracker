@@ -67,177 +67,71 @@ class _AboutScreenState extends State<AboutScreen>{
     return SingleChildScrollView(
       child: Container(
         child: Padding(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.symmetric(vertical: 10),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               SizedBox(height: 20,),
-              Image(
-                height: 100*scaleFactor,
-                width: 100*scaleFactor,
-                image: AssetImage('assets/app_icon_large.png'),
-              ),
-              SizedBox(height: 16*scaleFactor,),
-              Text(
-                lang.translate(kAppNameLang),
-                style: TextStyle(
-                  fontSize: 30*scaleFactor,
-                  fontFamily: kQuickSand,
-                ),
-              ),
-              SizedBox(height: 16*scaleFactor,),
-              Center(
-                child: Material(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(10),
-                  ),
-                  elevation: 2,
-                  color: theme.backgroundColor,
-                  child: InkWell(
-                    onTap: (){
-                      _networkHandler.launchInBrowser("https://github.com/prateekKrOraon/covid19_tracker");
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width*0.3,
-                      padding: EdgeInsets.symmetric(vertical: 16,horizontal: 8,),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(
-                            AntDesign.github,
-                            color: theme.accentColor,
-                            size: 24*scaleFactor,
-                          ),
-                          SizedBox(width: 10*scaleFactor,),
-                          Text(
-                            lang.translate(kGitHubLang),
-                            style: TextStyle(
-                              fontSize: 16*scaleFactor,
-                              fontFamily: kQuickSand,
-                            ),
-                          )
-                        ],
+              Container(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Image(
+                      height: 100*scaleFactor,
+                      width: 100*scaleFactor,
+                      image: AssetImage('assets/app_icon_large.png'),
+                    ),
+                    SizedBox(height: 16*scaleFactor,),
+                    Text(
+                      lang.translate(kAppNameLang),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 30*scaleFactor,
+                        fontFamily: kQuickSand,
                       ),
                     ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 32*scaleFactor,),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Text(
+                  lang.translate(kCOVID19Lang),
+                  style: TextStyle(
+                    fontSize: 25*scaleFactor,
+                    fontFamily: kQuickSand,
                   ),
                 ),
               ),
               SizedBox(height: 16*scaleFactor,),
-              Material(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(10),
-                ),
-                elevation: 2,
-                color: theme.backgroundColor,
+              InkWell(
+                onTap: (){
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FAQsScreen(),
+                      )
+                  );
+                },
                 child: Container(
-                  padding: EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                  height: 56*scaleFactor,
+                  child: Row(
                     children: <Widget>[
-                      Text(
-                        lang.translate(kCOVID19Lang),
-                        style: TextStyle(
-                          fontSize: 25*scaleFactor,
-                          fontFamily: kQuickSand,
-                        ),
+                      SizedBox(width: 20*scaleFactor,),
+                      Icon(
+                        AntDesign.questioncircleo,
+                        size: 24*scaleFactor,
+                        color: theme.accentColor,
                       ),
-                      InkWell(
-                        onTap: (){
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => FAQsScreen(),
-                              )
-                          );
-                        },
-                        child: Container(
-                          height: 56*scaleFactor,
-                          child: Row(
-                            children: <Widget>[
-                              SizedBox(width: 20*scaleFactor,),
-                              Icon(
-                                AntDesign.questioncircleo,
-                                size: 24*scaleFactor,
-                                color: theme.accentColor,
-                              ),
-                              SizedBox(width: 30*scaleFactor,),
-                              Expanded(
-                                child: Text(
-                                  lang.translate(kFAQsLang),
-                                  style: TextStyle(
-                                    fontSize: 16*scaleFactor,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: (){
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => SymptomsScreen(),
-                              )
-                          );
-                        },
-                        child: Container(
-                          height: 56*scaleFactor,
-                          child: Row(
-                            children: <Widget>[
-                              SizedBox(width: 20*scaleFactor,),
-                              Icon(
-                                AntDesign.medicinebox,
-                                size: 24*scaleFactor,
-                                color: theme.accentColor,
-                              ),
-                              SizedBox(width: 30*scaleFactor,),
-                              Expanded(
-                                child: Text(
-                                  lang.translate(kSymptomsLang),
-                                  style: TextStyle(
-                                    fontSize: 16*scaleFactor,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: (){
-                         Navigator.push(
-                           context,
-                           MaterialPageRoute(
-                             builder: (context) => PreventionsScreen(),
-                           )
-                         );
-                        },
-                        child: Container(
-                          height: 56*scaleFactor,
-                          child: Row(
-                            children: <Widget>[
-                              SizedBox(width: 20*scaleFactor,),
-                              Icon(
-                                MaterialCommunityIcons.block_helper,
-                                size: 24*scaleFactor,
-                                color: theme.accentColor,
-                              ),
-                              SizedBox(width: 30*scaleFactor,),
-                              Expanded(
-                                child: Text(
-                                  lang.translate(kPreventionLang),
-                                  style: TextStyle(
-                                    fontSize: 16*scaleFactor,
-                                  ),
-                                ),
-                              ),
-                            ],
+                      SizedBox(width: 20*scaleFactor,),
+                      Expanded(
+                        child: Text(
+                          lang.translate(kFAQsLang),
+                          style: TextStyle(
+                            fontFamily: kQuickSand,
+                            fontSize: 16*scaleFactor,
                           ),
                         ),
                       ),
@@ -245,518 +139,350 @@ class _AboutScreenState extends State<AboutScreen>{
                   ),
                 ),
               ),
+              Divider(),
+              InkWell(
+                onTap: (){
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SymptomsScreen(),
+                      )
+                  );
+                },
+                child: Container(
+                  height: 56*scaleFactor,
+                  child: Row(
+                    children: <Widget>[
+                      SizedBox(width: 20*scaleFactor,),
+                      Icon(
+                        AntDesign.medicinebox,
+                        size: 24*scaleFactor,
+                        color: theme.accentColor,
+                      ),
+                      SizedBox(width: 20*scaleFactor,),
+                      Expanded(
+                        child: Text(
+                          lang.translate(kSymptomsLang),
+                          style: TextStyle(
+                            fontFamily: kQuickSand,
+                            fontSize: 16*scaleFactor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Divider(),
+              InkWell(
+                onTap: (){
+                 Navigator.push(
+                   context,
+                   MaterialPageRoute(
+                     builder: (context) => PreventionsScreen(),
+                   )
+                 );
+                },
+                child: Container(
+                  height: 56*scaleFactor,
+                  child: Row(
+                    children: <Widget>[
+                      SizedBox(width: 20*scaleFactor,),
+                      Icon(
+                        MaterialCommunityIcons.block_helper,
+                        size: 24*scaleFactor,
+                        color: theme.accentColor,
+                      ),
+                      SizedBox(width: 20*scaleFactor,),
+                      Expanded(
+                        child: Text(
+                          lang.translate(kPreventionLang),
+                          style: TextStyle(
+                            fontFamily: kQuickSand,
+                            fontSize: 16*scaleFactor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Divider(),
+              SizedBox(height: 32*scaleFactor,),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Text(
+                  lang.translate(kDeveloperLang),
+                  style: TextStyle(
+                    fontSize: 25*scaleFactor,
+                    fontFamily: kQuickSand,
+                  ),
+                ),
+              ),
               SizedBox(height: 16*scaleFactor,),
-              Material(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(10),
-                ),
-                elevation: 2,
-                color: theme.backgroundColor,
+              InkWell(
+                onTap: (){
+                  _networkHandler.launchInBrowser(developerPrateekGitHubLink);
+                },
                 child: Container(
-                  padding: EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                  height: 56*scaleFactor,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Text(
-                        lang.translate(kSourceLang),
-                        style: TextStyle(
-                          fontSize: 25*scaleFactor,
-                          fontFamily: kQuickSand,
-                        ),
+                      SizedBox(width: 20*scaleFactor,),
+                      Icon(
+                        AntDesign.github,
+                        size: 24*scaleFactor,
+                        color: theme.accentColor,
                       ),
-                      InkWell(
-                        onTap: (){
-                          _networkHandler.launchInBrowser(crowdSourcedDatabaseLink);
-                        },
-                        child: Container(
-                          height: 56*scaleFactor,
-                          child: Row(
-                            children: <Widget>[
-                              SizedBox(width: 20*scaleFactor,),
-                              Icon(
-                                Icons.storage,
-                                size: 24*scaleFactor,
-                                color: theme.accentColor,
-                              ),
-                              SizedBox(width: 30*scaleFactor,),
-                              Expanded(
-                                child: Text(
-                                  lang.translate(kCrowdSrcDBLang),
-                                  style: TextStyle(
-                                    fontSize: 16*scaleFactor,
-                                  ),
-                                ),
-                              ),
-                              Icon(
-                                Icons.launch,
-                                size: 24*scaleFactor,
-                                color: theme.accentColor,
-                              ),
-                            ],
+                      SizedBox(width: 20*scaleFactor,),
+                      Expanded(
+                        child: Text(
+                          lang.translate(kDeveloperNameLang),
+                          style: TextStyle(
+                            fontFamily: kQuickSand,
+                            fontSize: 16*scaleFactor,
                           ),
                         ),
                       ),
-                      InkWell(
-                        onTap: (){
-                          _networkHandler.launchInBrowser(covid19IndiaAPILink);
-                        },
-                        child: Container(
-                          height: 56*scaleFactor,
-                          child: Row(
-                            children: <Widget>[
-                              SizedBox(width: 20*scaleFactor,),
-                              Icon(
-                                Icons.web_asset,
-                                size: 24*scaleFactor,
-                                color: theme.accentColor,
-                              ),
-                              SizedBox(width: 30*scaleFactor,),
-                              Expanded(
-                                child: Text(
-                                  'api.covid19india.org',
-                                  style: TextStyle(
-                                      fontSize: 16*scaleFactor,
-                                  ),
-                                ),
-                              ),
-                              Icon(
-                                Icons.launch,
-                                size: 24*scaleFactor,
-                                color: theme.accentColor,
-                              ),
-                            ],
-                          ),
-                        ),
+                      Icon(
+                        Icons.launch,
+                        size: 24*scaleFactor,
+                        color: theme.accentColor,
                       ),
-                      InkWell(
-                        onTap: (){
-                          _networkHandler.launchInBrowser(coronaLMAONinjaAPILink);
-                        },
-                        child: Container(
-                          height: 56*scaleFactor,
-                          child: Row(
-                            children: <Widget>[
-                              SizedBox(width: 20*scaleFactor,),
-                              Icon(
-                                Icons.web_asset,
-                                size: 24*scaleFactor,
-                                color: theme.accentColor,
-                              ),
-                              SizedBox(width: 30*scaleFactor,),
-                              Expanded(
-                                child: Text(
-                                  'corona.lmao.ninja',
-                                  style: TextStyle(
-                                    fontSize: 16*scaleFactor,
-                                  ),
-                                ),
-                              ),
-                              Icon(
-                                Icons.launch,
-                                size: 24*scaleFactor,
-                                color: theme.accentColor,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: (){
-                          _networkHandler.launchInBrowser(covidAPILink);
-                        },
-                        child: Container(
-                          height: 56*scaleFactor,
-                          child: Row(
-                            children: <Widget>[
-                              SizedBox(width: 20*scaleFactor,),
-                              Icon(
-                                Icons.web_asset,
-                                size: 24*scaleFactor,
-                                color: theme.accentColor,
-                              ),
-                              SizedBox(width: 30*scaleFactor,),
-                              Expanded(
-                                child: Text(
-                                  'covidapi.info',
-                                  style: TextStyle(
-                                    fontSize: 16*scaleFactor,
-                                  ),
-                                ),
-                              ),
-                              Icon(
-                                Icons.launch,
-                                size: 24*scaleFactor,
-                                color: theme.accentColor,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                      SizedBox(width: 20,),
                     ],
                   ),
                 ),
               ),
-              SizedBox(height: 10*scaleFactor,),
-              Material(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(10),
-                ),
-                elevation: 2,
-                color: theme.backgroundColor,
-                child: Container(
-                  padding: EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Text(
-                        lang.translate(kDeveloperLang),
-                        style: TextStyle(
-                          fontSize: 25*scaleFactor,
-                          fontFamily: kQuickSand,
-                        ),
-                      ),
-                      InkWell(
-                        onTap: (){
-                          _networkHandler.launchInBrowser(developerPrateekGitHubLink);
-                        },
-                        child: Container(
-                          height: 56*scaleFactor,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              SizedBox(width: 20*scaleFactor,),
-                              Icon(
-                                AntDesign.github,
-                                size: 24*scaleFactor,
-                                color: theme.accentColor,
-                              ),
-                              SizedBox(width: 30*scaleFactor,),
-                              Expanded(
-                                child: Text(
-                                  lang.translate(kDeveloperNameLang),
-                                  style: TextStyle(
-                                      fontSize: 16*scaleFactor,
-                                  ),
-                                ),
-                              ),
-                              Icon(
-                                Icons.launch,
-                                size: 24*scaleFactor,
-                                color: theme.accentColor,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
+              Divider(),
+              SizedBox(height: 32*scaleFactor,),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Text(
+                  lang.translate(kApplicationLang),
+                  style: TextStyle(
+                    fontSize: 25*scaleFactor,
+                    fontFamily: kQuickSand,
                   ),
                 ),
               ),
-              SizedBox(height: 10*scaleFactor,),
-              Material(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(10),
-                ),
-                elevation: 2,
-                color: theme.backgroundColor,
+              SizedBox(height: 16*scaleFactor,),
+              InkWell(
+                splashColor: Colors.transparent,
+                onTap: (){
+                  if(isUpdateAvailable){
+                    _networkHandler.launchInBrowser(update['link']);
+                  }
+                },
                 child: Container(
-                  padding: EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                  height: 56*scaleFactor,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Text(
-                        lang.translate(kApplicationLang),
-                        style: TextStyle(
-                          fontSize: 25*scaleFactor,
-                          fontFamily: kQuickSand,
-                        ),
+                      SizedBox(width: 20*scaleFactor,),
+                      Icon(
+                        AntDesign.infocirlceo,
+                        size: 24*scaleFactor,
+                        color: theme.accentColor,
                       ),
-                      InkWell(
-                        splashColor: Colors.transparent,
-                        onTap: (){
-                          if(isUpdateAvailable){
-                            _networkHandler.launchInBrowser(update['link']);
-                          }
-                        },
-                        child: Container(
-                          height: 56*scaleFactor,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              SizedBox(width: 20*scaleFactor,),
-                              Icon(
-                                AntDesign.infocirlceo,
-                                size: 24*scaleFactor,
-                                color: theme.accentColor,
-                              ),
-                              SizedBox(width: 30*scaleFactor,),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      lang.translate(kVersionLang),
-                                      style: TextStyle(
-                                        fontSize: 16*scaleFactor,
-                                      ),
-                                    ),
-                                    isUpdateAvailable?Text(
-                                      "${lang.translate(kUpdateAvailableLang)} (v${update['version']}). ${lang.translate(kClickToDownloadLang)}",
-                                      style: TextStyle(
-                                        fontSize: 10*scaleFactor,
-                                        color: theme.accentColor,
-                                      ),
-                                    ):SizedBox(),
-                                  ],
-                                ),
-                              ),
-                              isUpdateAvailable?Container(
-                                width: 20*scaleFactor,
-                                height: 20*scaleFactor,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(10),
-                                  ),
-                                  color: kRedColor,
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    'N',
-                                    style: TextStyle(
-                                      fontFamily: kQuickSand,
-                                      fontSize: 10*scaleFactor
-                                    ),
-                                  ),
-                                ),
-                              ):SizedBox(),
-                              SizedBox(width: 5*scaleFactor,),
-                              Text(
-                                '1.6.0',
-                                style: TextStyle(
-                                  fontSize: 16*scaleFactor,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 56*scaleFactor,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                      SizedBox(width: 20*scaleFactor,),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            SizedBox(width: 20*scaleFactor,),
-                            Icon(
-                              darkTheme?Icons.brightness_2:Icons.brightness_5,
-                              size: 24*scaleFactor,
-                              color: theme.accentColor,
-                            ),
-                            SizedBox(width: 30*scaleFactor,),
-                            Expanded(
-                              child: Text(
-                                darkTheme?lang.translate(kLightThemeLang):lang.translate(kDarkThemeLang),
-                                style: TextStyle(
-                                  fontSize: 16*scaleFactor,
-                                ),
+                            Text(
+                              lang.translate(kVersionLang),
+                              style: TextStyle(
+                                fontFamily: kQuickSand,
+                                fontSize: 16*scaleFactor,
                               ),
                             ),
-                            Switch(
-                              value: darkTheme,
-                              activeColor: theme.accentColor,
-                              onChanged: (bool value){
-                                changeBrightness();
-                                setState(() {
-                                  darkTheme = value;
-                                });
-                              },
-                            )
+                            isUpdateAvailable?Text(
+                              "${lang.translate(kUpdateAvailableLang)} (v${update['version']}). ${lang.translate(kClickToDownloadLang)}",
+                              style: TextStyle(
+                                fontFamily: kQuickSand,
+                                fontSize: 10*scaleFactor,
+                                color: theme.accentColor,
+                              ),
+                            ):SizedBox(),
                           ],
                         ),
                       ),
-                      InkWell(
-                        onTap: (){
-                          showDialog<Map<String,String>>(
-                            context: context,
-                            builder: (BuildContext context){
-                              return SimpleDialog(
-                                title: Text(
-                                  lang.translate(kChooseLanguageLang),
-                                  style: TextStyle(
-                                    fontFamily: kQuickSand,
-                                    fontSize: 16*scaleFactor,
-                                  ),
-                                ),
-                                children: <Widget>[
-                                  ListTile(
-                                    title: Text(
-                                      "English - US",
-                                      style: TextStyle(
-                                        fontFamily: kQuickSand,
-                                        fontSize: 16*scaleFactor
-                                      ),
-                                    ),
-                                    trailing: Container(
-                                      height: 20*scaleFactor,
-                                      width: 20*scaleFactor,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(10),
-                                        ),
-                                        border: Border.all(
-                                          width: 2,
-                                          color: theme.accentColor,
-                                        ),
-                                        color: lang.locale.languageCode == "en"?theme.accentColor:Colors.transparent,
-                                      ),
-                                    ),
-                                    onTap: (){
-                                      Map<String,String> map = {
-                                        "lang_code":"en",
-                                        "country_code":"US",
-                                      };
-                                      Navigator.pop(context,map);
-                                    },
-                                  ),
-                                  ListTile(
-                                    title: Text(
-                                      "हिन्दी - भारत",
-                                      style: TextStyle(
-                                        fontFamily: kQuickSand,
-                                        fontSize: 16*scaleFactor
-                                      ),
-                                    ),
-                                    trailing: Container(
-                                      height: 20*scaleFactor,
-                                      width: 20*scaleFactor,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(10),
-                                        ),
-                                        border: Border.all(
-                                          width: 2,
-                                          color: theme.accentColor,
-                                        ),
-                                        color: lang.locale.languageCode == "hi"?theme.accentColor:Colors.transparent,
-                                      ),
-                                    ),
-                                    onTap: (){
-                                      Map<String,String> map = {
-                                        "lang_code":"hi",
-                                        "country_code":"IN",
-                                      };
-                                      Navigator.pop(context,map);
-                                    },
-                                  ),
-                                ],
-                              );
-                            }
-                          ).then((Map<String,String> returnVal){
-                            if(returnVal != null){
-                              widget.onLocaleChange(Locale(returnVal["lang_code"],returnVal["country_code"]));
-                              setState(() {
-                                UpdateLog.refresh(returnVal["lang_code"]);
-                              });
-                            }
-                          });
-                        },
-                        child: Container(
-                          height: 56*scaleFactor,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              SizedBox(width: 20*scaleFactor,),
-                              Icon(
-                                MaterialCommunityIcons.translate,
-                                size: 24*scaleFactor,
-                                color: theme.accentColor,
-                              ),
-                              SizedBox(width: 30*scaleFactor,),
-                              Expanded(
-                                child: Text(
-                                  lang.translate(kChangeLanguageLang),
-                                  style: TextStyle(
-                                    fontSize: 16*scaleFactor,
-                                  ),
-                                ),
-                              ),
-                            ],
+                      isUpdateAvailable?Container(
+                        width: 20*scaleFactor,
+                        height: 20*scaleFactor,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
                           ),
+                          color: kRedColor,
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(height: 10*scaleFactor,),
-              Material(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(10),
-                ),
-                elevation: 2,
-                color: theme.backgroundColor,
-                child: Container(
-                  padding: EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10),
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Text(
-                        lang.translate(kLicenseLang),
-                        style: TextStyle(
-                          fontSize: 25*scaleFactor,
-                          fontFamily: kQuickSand,
-                        ),
-                      ),
-                      InkWell(
-                        onTap: (){
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => OpenSourceLicenses(),
+                        child: Center(
+                          child: Text(
+                            'N',
+                            style: TextStyle(
+                              fontFamily: kQuickSand,
+                              fontSize: 10*scaleFactor
                             ),
-                          );
-                        },
-                        child: Container(
-                          height: 56*scaleFactor,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              SizedBox(width: 20*scaleFactor,),
-                              Icon(
-                                MaterialCommunityIcons.license,
-                                size: 24*scaleFactor,
-                                color: theme.accentColor,
+                          ),
+                        ),
+                      ):SizedBox(),
+                      SizedBox(width: 5*scaleFactor,),
+                      Text(
+                        '1.6.0',
+                        style: TextStyle(
+                          fontFamily: kQuickSand,
+                          fontSize: 16*scaleFactor,
+                        ),
+                      ),
+                      SizedBox(width: 20,),
+                    ],
+                  ),
+                ),
+              ),
+              Divider(),
+              Container(
+                height: 56*scaleFactor,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(width: 20*scaleFactor,),
+                    Icon(
+                      darkTheme?Icons.brightness_2:Icons.brightness_5,
+                      size: 24*scaleFactor,
+                      color: theme.accentColor,
+                    ),
+                    SizedBox(width: 20*scaleFactor,),
+                    Expanded(
+                      child: Text(
+                        darkTheme?lang.translate(kLightThemeLang):lang.translate(kDarkThemeLang),
+                        style: TextStyle(
+                          fontFamily: kQuickSand,
+                          fontSize: 16*scaleFactor,
+                        ),
+                      ),
+                    ),
+                    Switch(
+                      value: darkTheme,
+                      activeColor: theme.accentColor,
+                      onChanged: (bool value){
+                        changeBrightness();
+                        setState(() {
+                          darkTheme = value;
+                        });
+                      },
+                    ),
+                    SizedBox(width: 20,),
+                  ],
+                ),
+              ),
+              Divider(),
+              InkWell(
+                onTap: (){
+                  showDialog<Map<String,String>>(
+                    context: context,
+                    builder: (BuildContext context){
+                      return SimpleDialog(
+                        title: Text(
+                          lang.translate(kChooseLanguageLang),
+                          style: TextStyle(
+                            fontFamily: kQuickSand,
+                            fontSize: 16*scaleFactor,
+                          ),
+                        ),
+                        children: <Widget>[
+                          ListTile(
+                            title: Text(
+                              "English - US",
+                              style: TextStyle(
+                                fontFamily: kQuickSand,
+                                fontSize: 16*scaleFactor
                               ),
-                              SizedBox(width: 30*scaleFactor,),
-                              Expanded(
-                                child: Text(
-                                  lang.translate(kOpenSrcLang),
-                                  style: TextStyle(
-                                    fontSize: 16*scaleFactor,
-                                  ),
+                            ),
+                            trailing: Container(
+                              height: 20*scaleFactor,
+                              width: 20*scaleFactor,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10),
                                 ),
+                                border: Border.all(
+                                  width: 2,
+                                  color: theme.accentColor,
+                                ),
+                                color: lang.locale.languageCode == "en"?theme.accentColor:Colors.transparent,
                               ),
-                            ],
+                            ),
+                            onTap: (){
+                              Map<String,String> map = {
+                                "lang_code":"en",
+                                "country_code":"US",
+                              };
+                              Navigator.pop(context,map);
+                            },
+                          ),
+                          ListTile(
+                            title: Text(
+                              "हिन्दी - भारत",
+                              style: TextStyle(
+                                fontFamily: kQuickSand,
+                                fontSize: 16*scaleFactor
+                              ),
+                            ),
+                            trailing: Container(
+                              height: 20*scaleFactor,
+                              width: 20*scaleFactor,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10),
+                                ),
+                                border: Border.all(
+                                  width: 2,
+                                  color: theme.accentColor,
+                                ),
+                                color: lang.locale.languageCode == "hi"?theme.accentColor:Colors.transparent,
+                              ),
+                            ),
+                            onTap: (){
+                              Map<String,String> map = {
+                                "lang_code":"hi",
+                                "country_code":"IN",
+                              };
+                              Navigator.pop(context,map);
+                            },
+                          ),
+                        ],
+                      );
+                    }
+                  ).then((Map<String,String> returnVal){
+                    if(returnVal != null){
+                      widget.onLocaleChange(Locale(returnVal["lang_code"],returnVal["country_code"]));
+                      setState(() {
+                        UpdateLog.refresh(returnVal["lang_code"]);
+                      });
+                    }
+                  });
+                },
+                child: Container(
+                  height: 56*scaleFactor,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(width: 20*scaleFactor,),
+                      Icon(
+                        MaterialCommunityIcons.translate,
+                        size: 24*scaleFactor,
+                        color: theme.accentColor,
+                      ),
+                      SizedBox(width: 20*scaleFactor,),
+                      Expanded(
+                        child: Text(
+                          lang.translate(kChangeLanguageLang),
+                          style: TextStyle(
+                            fontFamily: kQuickSand,
+                            fontSize: 16*scaleFactor,
                           ),
                         ),
                       ),
@@ -764,6 +490,126 @@ class _AboutScreenState extends State<AboutScreen>{
                   ),
                 ),
               ),
+              Divider(),
+              InkWell(
+                onTap: (){
+                  _networkHandler.launchInBrowser("https://github.com/prateekKrOraon/covid19_tracker");
+                },
+                child: Container(
+                  height: 56*scaleFactor,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(width: 20*scaleFactor,),
+                      Icon(
+                        AntDesign.github,
+                        size: 24*scaleFactor,
+                        color: theme.accentColor,
+                      ),
+                      SizedBox(width: 20*scaleFactor,),
+                      Expanded(
+                        child: Text(
+                          "Source Code",//lang.translate(kDeveloperNameLang),
+                          style: TextStyle(
+                            fontFamily: kQuickSand,
+                            fontSize: 16*scaleFactor,
+                          ),
+                        ),
+                      ),
+                      Icon(
+                        Icons.launch,
+                        size: 24*scaleFactor,
+                        color: theme.accentColor,
+                      ),
+                      SizedBox(width: 20,),
+                    ],
+                  ),
+                ),
+              ),
+              Divider(),
+              InkWell(
+                onTap: (){
+                  _networkHandler.launchInBrowser("https://github.com/prateekKrOraon/covid-19-tracker-api");
+                },
+                child: Container(
+                  height: 56*scaleFactor,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(width: 20*scaleFactor,),
+                      Icon(
+                        AntDesign.github,
+                        size: 24*scaleFactor,
+                        color: theme.accentColor,
+                      ),
+                      SizedBox(width: 20*scaleFactor,),
+                      Expanded(
+                        child: Text(
+                          "API",//lang.translate(kDeveloperNameLang),
+                          style: TextStyle(
+                            fontFamily: kQuickSand,
+                            fontSize: 16*scaleFactor,
+                          ),
+                        ),
+                      ),
+                      Icon(
+                        Icons.launch,
+                        size: 24*scaleFactor,
+                        color: theme.accentColor,
+                      ),
+                      SizedBox(width: 20,),
+                    ],
+                  ),
+                ),
+              ),
+              Divider(),
+              SizedBox(height: 32*scaleFactor,),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Text(
+                  lang.translate(kLicenseLang),
+                  style: TextStyle(
+                    fontSize: 25*scaleFactor,
+                    fontFamily: kQuickSand,
+                  ),
+                ),
+              ),
+              SizedBox(height: 16*scaleFactor,),
+              InkWell(
+                onTap: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => OpenSourceLicenses(),
+                    ),
+                  );
+                },
+                child: Container(
+                  height: 56*scaleFactor,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(width: 20*scaleFactor,),
+                      Icon(
+                        MaterialCommunityIcons.license,
+                        size: 24*scaleFactor,
+                        color: theme.accentColor,
+                      ),
+                      SizedBox(width: 20*scaleFactor,),
+                      Expanded(
+                        child: Text(
+                          lang.translate(kOpenSrcLang),
+                          style: TextStyle(
+                            fontFamily: kQuickSand,
+                            fontSize: 16*scaleFactor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Divider(),
             ],
           ),
         ),

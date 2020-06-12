@@ -463,7 +463,7 @@ class _StateDataState extends State<StateData>{
                                           ),
                                           Expanded(
                                             child: Text(
-                                              NumberFormat(",###").format(double.parse(totalTested)),
+                                              NumberFormat(",##,###","hi_IN").format(double.parse(totalTested)),
                                               textAlign: TextAlign.end,
                                               style: TextStyle(
                                                 color: kDarkBlueColor,
@@ -629,7 +629,7 @@ class _StateDataState extends State<StateData>{
                                                               ),
                                                               SizedBox(height: 3*scaleFactor,),
                                                               Text(
-                                                                district.deltaCnf==0?"":"(+${district.deltaCnf})",
+                                                                district.deltaCnf==0?"":"(${district.deltaCnf<0?"":"+"}${district.deltaCnf})",
                                                                 textAlign: TextAlign.center,
                                                                 style: TextStyle(
                                                                   fontFamily: kQuickSand,
@@ -670,7 +670,7 @@ class _StateDataState extends State<StateData>{
                                                               ),
                                                               SizedBox(height: 3*scaleFactor,),
                                                               Text(
-                                                                district.deltaRec==0?"":"(+${district.deltaRec})",
+                                                                district.deltaRec==0?"":"(${district.deltaRec<0?"":"+"}${district.deltaRec})",
                                                                 textAlign: TextAlign.center,
                                                                 style: TextStyle(
                                                                   fontFamily: kQuickSand,
@@ -695,7 +695,7 @@ class _StateDataState extends State<StateData>{
                                                               ),
                                                               SizedBox(height: 3*scaleFactor,),
                                                               Text(
-                                                                district.deltaDet==0?"":"(+${district.deltaDet})",
+                                                                district.deltaDet==0?"":"(${district.deltaDet<0?"":"+"}${district.deltaDet})",
                                                                 textAlign: TextAlign.center,
                                                                 style: TextStyle(
                                                                   fontFamily: kQuickSand,
@@ -920,7 +920,7 @@ class _StateDataState extends State<StateData>{
                         DateTime.now().day-maxX+groupData.x,
                       ),
                     );
-                    String val = NumberFormat(",###").format(
+                    String val = NumberFormat(",##,###","hi_IN").format(
                       rodData.y.toInt(),
                     );
                     return BarTooltipItem(
@@ -1044,7 +1044,7 @@ class _StateDataState extends State<StateData>{
                       DateTime.now().month,
                       DateTime.now().day-maxX+element.x.toInt(),
                     );
-                    String val = NumberFormat(",###").format(
+                    String val = NumberFormat(",##,###","hi_IN").format(
                       element.y.toInt(),
                     );
                     returnList.add(

@@ -868,7 +868,7 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                         22+groupData.x.toInt()-1,
                       ),
                     );
-                    String val = NumberFormat(",###").format(
+                    String val = NumberFormat(",##,###","hi_IN").format(
                       rodData.y.toInt(),
                     );
                     return BarTooltipItem(
@@ -999,7 +999,7 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                     );
                     items.add(
                       LineTooltipItem(
-                        "${DateFormat("d MMM").format(date)}\n${element.y.toStringAsFixed(2)}",
+                        "${DateFormat("d MMM").format(date)}\n${NumberFormat(",##,###","hi_IN").format(element.y)}",
                         TextStyle(
                           fontFamily: kQuickSand,
                           fontSize: 12*scaleFactor,

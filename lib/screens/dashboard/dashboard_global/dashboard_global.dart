@@ -360,7 +360,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                                   ),
                                   Expanded(
                                     child: Text(
-                                      NumberFormat(",###").format(double.parse(worldData[kCountryTests].toString())),
+                                      NumberFormat(",##,###","hi_IN").format(double.parse(worldData[kCountryTests].toString())),
                                       textAlign: TextAlign.end,
                                       style: TextStyle(
                                         color: kDarkBlueColor,
@@ -771,7 +771,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                       DateTime.now().day-maxX+element.x.toInt(),
                     );
                     String str = DateFormat("d MMM").format(date);
-                    String y = NumberFormat(",###").format(element.y.toInt());
+                    String y = NumberFormat(",##,###","hi_IN").format(element.y.toInt());
                     items.add(
                       LineTooltipItem(
                         "$str\n$y",

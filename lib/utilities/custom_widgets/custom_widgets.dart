@@ -66,7 +66,7 @@ class DashboardTile extends StatelessWidget{
                   children: <Widget>[
                     Expanded(
                       child: Text(
-                        value == ""?"0":NumberFormat(",###","en_US").format(double.parse(value)),
+                        value == ""?"0":NumberFormat(",##,###","hi_IN").format(double.parse(value)),
                         style: TextStyle(
                           color: color,
                           fontSize: 24*scaleFactor,
@@ -76,7 +76,7 @@ class DashboardTile extends StatelessWidget{
                     ),
                     SizedBox(width: 10*scaleFactor,),
                     Text(
-                      delta == ""?"":"(+$delta)",
+                      delta == ""?"":"(+${NumberFormat(",##,###","hi_IN").format(int.parse(delta))})",
                       style: TextStyle(
                         color: color,
                         fontSize: 16*scaleFactor,
@@ -154,7 +154,7 @@ class TableHeader extends StatelessWidget{
                             ),
                           ),
                         ):SizedBox(),
-                        SizedBox(width: 5*scaleFactor,),
+                        SizedBox(width: 4*scaleFactor,),
                         Text(
                           dataFor,
                           style: TextStyle(
@@ -193,7 +193,7 @@ class TableHeader extends StatelessWidget{
                             ),
                           ),
                         ):SizedBox(),
-                        SizedBox(width: 5*scaleFactor,),
+                        SizedBox(width: 4*scaleFactor,),
                         Text(
                           lang.translate(kConfirmedLang),
                           textAlign: TextAlign.end,
@@ -235,7 +235,7 @@ class TableHeader extends StatelessWidget{
                             ),
                           ),
                         ):SizedBox(),
-                        SizedBox(width: 5*scaleFactor,),
+                        SizedBox(width: 4*scaleFactor,),
                         Text(
                           lang.translate(kActiveLang),
                           textAlign: TextAlign.end,
@@ -276,10 +276,11 @@ class TableHeader extends StatelessWidget{
                             ),
                           ),
                         ):SizedBox(),
-                        SizedBox(width: 5*scaleFactor,),
+                        SizedBox(width: 4*scaleFactor,),
                         Text(
                           lang.translate(kRecoveredLang),
                           textAlign: TextAlign.end,
+                          overflow: TextOverflow.fade,
                           style: TextStyle(
                             color: kGreenColor,
                             fontFamily: kQuickSand,
@@ -317,9 +318,10 @@ class TableHeader extends StatelessWidget{
                             ),
                           ),
                         ):SizedBox(),
-                        SizedBox(width: 5*scaleFactor,),
+                        SizedBox(width: 4*scaleFactor,),
                         Text(
                           lang.translate(kDeathsLang),
+                          overflow: TextOverflow.clip,
                           textAlign: TextAlign.end,
                           style: TextStyle(
                             color: Colors.grey,
@@ -432,7 +434,7 @@ class TableRows extends StatelessWidget{
                       ),
                       SizedBox(height: 2*scaleFactor,),
                       Text(
-                        countryData?country.todayCases==0?"":"(+${country.todayCases})":stateInfo.deltaCnf==0?"":"(+${stateInfo.deltaCnf})",
+                        countryData?country.todayCases==0?"":"(+${country.todayCases})":stateInfo.deltaCnf==0?"":"(${stateInfo.deltaCnf<0?"":"+"}${stateInfo.deltaCnf})",
                         style: TextStyle(
                           color: Colors.red,
                           fontFamily: kNotoSansSc,
@@ -466,7 +468,7 @@ class TableRows extends StatelessWidget{
                       ),
                       SizedBox(height: 2*scaleFactor,),
                       Text(
-                        countryData?"":stateInfo.deltaRec==0?"":"(+${stateInfo.deltaRec})",
+                        countryData?"":stateInfo.deltaRec==0?"":"(${stateInfo.deltaRec<0?"":"+"}${stateInfo.deltaRec})",
                         style: TextStyle(
                           color: Colors.green,
                           fontFamily: kNotoSansSc,
@@ -490,7 +492,7 @@ class TableRows extends StatelessWidget{
                       ),
                       SizedBox(width: 2*scaleFactor,),
                       Text(
-                        countryData?"(+${country.todayDeaths})":stateInfo.deltaDet==0?"":"(+${stateInfo.deltaDet})",
+                        countryData?"(+${country.todayDeaths})":stateInfo.deltaDet==0?"":"(${stateInfo.deltaDet<0?"":"+"}${stateInfo.deltaDet})",
                         style: TextStyle(
                           color: Colors.grey,
                           fontFamily: kNotoSansSc,

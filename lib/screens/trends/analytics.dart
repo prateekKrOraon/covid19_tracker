@@ -1137,7 +1137,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                                         list[response.spot.touchedBarGroup.x].stateNameHI;
                         showTooltip(
                             str,
-                            category == GraphCategories.CNF_CASES?"${NumberFormat(",###").format(response.spot.touchedRodData.y.toInt())}":"${response.spot.touchedRodData.y.toStringAsFixed(1)} %",
+                            category == GraphCategories.CNF_CASES?"${NumberFormat(",##,###","hi_IN").format(response.spot.touchedRodData.y.toInt())}":"${response.spot.touchedRodData.y.toStringAsFixed(1)} %",
                             response.spot.touchedRodData.color,
                             "cases",
                             (50+response.spot.touchedRodData.y*20*scaleFactor).toInt(),
@@ -1360,7 +1360,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                   list[response.spot.touchedBarGroup.x].stateNameHI;
                   showTooltip(
                     str,
-                    "${NumberFormat(",###").format(response.spot.touchedRodData.y.toInt())}",
+                    "${NumberFormat(",##,###","hi_IN").format(response.spot.touchedRodData.y.toInt())}",
                     response.spot.touchedRodData.color,
                     "cases",
                     (50+response.spot.touchedBarGroup.x*20*scaleFactor).toInt(),

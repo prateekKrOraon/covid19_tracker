@@ -590,7 +590,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
                     30+groupData.x.toInt(),
                   );
                   return BarTooltipItem(
-                    "${DateFormat("d MMM").format(date)}\n${NumberFormat(",###").format(rodData.y.toInt())}",
+                    "${DateFormat("d MMM").format(date)}\n${NumberFormat(",##,###","hi_IN").format(rodData.y.toInt())}",
                     TextStyle(
                       fontFamily: kQuickSand,
                       fontSize: 12*scaleFactor,

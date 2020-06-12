@@ -163,7 +163,7 @@ class _UpdatesScreenState extends State<UpdatesScreen>{
                     itemCount: updates.length,
                     itemBuilder: (BuildContext context, int index){
                       return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8,horizontal: 10),
+                        padding: const EdgeInsets.symmetric(vertical: 4,horizontal: 8),
                         child: Material(
                           borderRadius: BorderRadius.all(
                             Radius.circular(10)

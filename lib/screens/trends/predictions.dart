@@ -193,7 +193,7 @@ class _PredictionState extends State<Predictions>{
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
-                                  NumberFormat(",###").format(int.parse(map['total'][kConfirmed].toString())),
+                                  NumberFormat(",##,###","hi_IN").format(int.parse(map['total'][kConfirmed].toString())),
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontFamily: kQuickSand,
@@ -202,7 +202,7 @@ class _PredictionState extends State<Predictions>{
                                   ),
                                 ),
                                 Text(
-                                  "(+${NumberFormat(",###").format(int.parse(map['total'][kDeltaConfirmed].toString()))})",
+                                  "(+${NumberFormat(",##,###","hi_IN").format(int.parse(map['total'][kDeltaConfirmed].toString()))})",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontFamily: kQuickSand,
@@ -218,7 +218,7 @@ class _PredictionState extends State<Predictions>{
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
-                                  NumberFormat(",###").format(int.parse(map['total'][kActive].toString())),
+                                  NumberFormat(",##,###","hi_IN").format(int.parse(map['total'][kActive].toString())),
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontFamily: kQuickSand,
@@ -243,7 +243,7 @@ class _PredictionState extends State<Predictions>{
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
-                                  NumberFormat(",###").format(int.parse(map['total'][kRecovered].toString())),
+                                  NumberFormat(",##,###","hi_IN").format(int.parse(map['total'][kRecovered].toString())),
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontFamily: kQuickSand,
@@ -252,7 +252,7 @@ class _PredictionState extends State<Predictions>{
                                   ),
                                 ),
                                 Text(
-                                  "(+${NumberFormat(",###").format(int.parse(map['total'][kDeltaRecovered].toString()))})",
+                                  "(+${NumberFormat(",##,###","hi_IN").format(int.parse(map['total'][kDeltaRecovered].toString()))})",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontFamily: kQuickSand,
@@ -268,7 +268,7 @@ class _PredictionState extends State<Predictions>{
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 Text(
-                                  NumberFormat(",###").format(int.parse(map['total'][kDeaths].toString())),
+                                  NumberFormat(",##,###","hi_IN").format(int.parse(map['total'][kDeaths].toString())),
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontFamily: kQuickSand,
@@ -277,7 +277,7 @@ class _PredictionState extends State<Predictions>{
                                   ),
                                 ),
                                 Text(
-                                  "(+${NumberFormat(",###").format(int.parse(map['total'][kDeltaDeaths].toString()))})",
+                                  "(+${NumberFormat(",##,###","hi_IN").format(int.parse(map['total'][kDeltaDeaths].toString()))})",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontFamily: kQuickSand,
@@ -445,7 +445,7 @@ class _PredictionState extends State<Predictions>{
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
                                           Text(
-                                            NumberFormat(",###").format(predictions[index].confirmed),
+                                            NumberFormat(",##,###","hi_IN").format(predictions[index].confirmed),
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontFamily: kQuickSand,
@@ -454,7 +454,7 @@ class _PredictionState extends State<Predictions>{
                                             ),
                                           ),
                                           Text(
-                                            "(+${NumberFormat(",###").format(predictions[index].deltaConfirmed)})",
+                                            "(+${NumberFormat(",##,###","hi_IN").format(predictions[index].deltaConfirmed)})",
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontFamily: kQuickSand,
@@ -470,7 +470,7 @@ class _PredictionState extends State<Predictions>{
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
                                           Text(
-                                            NumberFormat(",###").format(predictions[index].active),
+                                            NumberFormat(",##,###","hi_IN").format(predictions[index].active),
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontFamily: kQuickSand,
@@ -479,7 +479,7 @@ class _PredictionState extends State<Predictions>{
                                             ),
                                           ),
                                           Text(
-                                            "(+${NumberFormat(",###").format(predictions[index].deltaActive)})",
+                                            "(+${NumberFormat(",##,###","hi_IN").format(predictions[index].deltaActive)})",
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontFamily: kQuickSand,
@@ -495,7 +495,7 @@ class _PredictionState extends State<Predictions>{
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
                                           Text(
-                                            NumberFormat(",###").format(predictions[index].recovered),
+                                            NumberFormat(",##,###","hi_IN").format(predictions[index].recovered),
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontFamily: kQuickSand,
@@ -504,7 +504,7 @@ class _PredictionState extends State<Predictions>{
                                             ),
                                           ),
                                           Text(
-                                            "(+${NumberFormat(",###").format(predictions[index].deltaRecovered)})",
+                                            "(+${NumberFormat(",##,###","hi_IN").format(predictions[index].deltaRecovered)})",
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontFamily: kQuickSand,
@@ -520,7 +520,7 @@ class _PredictionState extends State<Predictions>{
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
                                           Text(
-                                            NumberFormat(",###").format(predictions[index].deaths),
+                                            NumberFormat(",##,###","hi_IN").format(predictions[index].deaths),
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontFamily: kQuickSand,
@@ -529,7 +529,7 @@ class _PredictionState extends State<Predictions>{
                                             ),
                                           ),
                                           Text(
-                                            "(+${NumberFormat(",###").format(predictions[index].deltaDeaths)})",
+                                            "(+${NumberFormat(",##,###","hi_IN").format(predictions[index].deltaDeaths)})",
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                               fontFamily: kQuickSand,

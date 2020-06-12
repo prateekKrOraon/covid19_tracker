@@ -236,43 +236,40 @@ class _DashboardIndiaState extends State<DashboardIndia> with SingleTickerProvid
                 ):SizedBox(height: 3,),
                 Container(
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 10),
+                    padding: EdgeInsets.symmetric(horizontal: 8*scaleFactor,vertical: 8*scaleFactor),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: InkWell(
-                            splashColor: Colors.transparent,
-                            onTap: (){
-                              if(_dateSelectorAnimationController.value == 1){
-                                _dateSelectorAnimationController.reverse();
-                              }else{
-                                _dateSelectorAnimationController.forward();
-                              }
-                            },
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    "${lang.translate(kLastUpdatedAtLang)}: ${DateFormat("d MMM, ").add_jm().format(lastUpdate)} IST",
-                                    style: TextStyle(
-                                      color: theme.accentColor,
-                                      fontSize: 16*scaleFactor,
-                                      fontFamily: kQuickSand,
-                                    ),
+                        InkWell(
+                          splashColor: Colors.transparent,
+                          onTap: (){
+                            if(_dateSelectorAnimationController.value == 1){
+                              _dateSelectorAnimationController.reverse();
+                            }else{
+                              _dateSelectorAnimationController.forward();
+                            }
+                          },
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  "${lang.translate(kLastUpdatedAtLang)}: ${DateFormat("d MMM, ").add_jm().format(lastUpdate)} IST",
+                                  style: TextStyle(
+                                    color: theme.accentColor,
+                                    fontSize: 16*scaleFactor,
+                                    fontFamily: kQuickSand,
                                   ),
                                 ),
-                                Transform.rotate(
-                                  angle: pi*_dateSelectorAnimationController.value*0.5,
-                                  child: Icon(
-                                    Icons.arrow_forward_ios,
-                                    size: 12*scaleFactor,
-                                  ),
+                              ),
+                              Transform.rotate(
+                                angle: pi*_dateSelectorAnimationController.value*0.5,
+                                child: Icon(
+                                  Icons.arrow_forward_ios,
+                                  size: 12*scaleFactor,
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ),
                         SizedBox(height: 8*scaleFactor,),
@@ -425,8 +422,8 @@ class _DashboardIndiaState extends State<DashboardIndia> with SingleTickerProvid
                                       Expanded(
                                         child: Text(
                                           tested[kTotalIndividualTested]==""?
-                                          NumberFormat(",###").format(double.parse(tested[kTotalSamplesTested].toString())):
-                                          NumberFormat(",###").format(double.parse(tested[kTotalIndividualTested].toString())),
+                                          NumberFormat(",##,###","hi_IN").format(double.parse(tested[kTotalSamplesTested].toString())):
+                                          NumberFormat(",##,###","hi_IN").format(double.parse(tested[kTotalIndividualTested].toString())),
                                           textAlign: TextAlign.end,
                                           style: TextStyle(
                                             color: kDarkBlueColor,
