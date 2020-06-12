@@ -43,6 +43,7 @@ class DashboardTile extends StatelessWidget{
             borderRadius: BorderRadius.all(
               Radius.circular(10),
             ),
+            color: Theme.of(context).brightness == Brightness.light?color.withOpacity(0.2):Colors.transparent,
           ),
           child: Padding(
             padding: const EdgeInsets.all(10),

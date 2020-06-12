@@ -44,25 +44,22 @@ class _ResourcesScreenState extends State<ResourcesScreen>{
       builder: (BuildContext context, snapshot){
 
         if(snapshot.connectionState == ConnectionState.waiting){
-          return Container(
-            height: double.infinity,
-            width: size.width,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Center(
-                  child: CircularProgressIndicator(),
+          return Column(
+            children: [
+              LinearProgressIndicator(
+                minHeight: 3,
+                backgroundColor: theme.scaffoldBackgroundColor,
+              ),
+              SizedBox(
+                height: size.height*0.4,
+              ),
+              Text(
+                AppLocalizations.of(context).translate(kLoadingMessageLang),
+                style: TextStyle(
+                  fontFamily: kQuickSand,
                 ),
-                SizedBox(height: 10*scaleFactor,),
-                Text(
-                  AppLocalizations.of(context).translate(kLoadingMessageLang),
-                  style: TextStyle(
-                    fontFamily: kNotoSansSc,
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           );
         }
         if(snapshot.hasError){

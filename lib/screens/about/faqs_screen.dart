@@ -49,7 +49,23 @@ class _FAQsScreenState extends State<FAQsScreen>{
         builder: (BuildContext context,snapshot){
 
           if(snapshot.connectionState == ConnectionState.waiting){
-            return Container(height:size.width,child: Center(child: CircularProgressIndicator(),));
+            return Column(
+              children: [
+                LinearProgressIndicator(
+                  minHeight: 3,
+                  backgroundColor: theme.scaffoldBackgroundColor,
+                ),
+                SizedBox(
+                  height: size.height*0.4,
+                ),
+                Text(
+                  AppLocalizations.of(context).translate(kLoadingMessageLang),
+                  style: TextStyle(
+                    fontFamily: kQuickSand,
+                  ),
+                ),
+              ],
+            );
           }
           if(snapshot.hasError){
             return Center(

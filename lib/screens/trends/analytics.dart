@@ -69,7 +69,23 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
       future: _data,
       builder: (BuildContext context,snapshot){
         if(snapshot.connectionState == ConnectionState.waiting){
-          return Center(child: CircularProgressIndicator(),);
+          return Column(
+            children: [
+              LinearProgressIndicator(
+                minHeight: 3,
+                backgroundColor: theme.scaffoldBackgroundColor,
+              ),
+              SizedBox(
+                height: size.height*0.4,
+              ),
+              Text(
+                lang.translate(kLoading),
+                style: TextStyle(
+                  fontFamily: kQuickSand,
+                ),
+              ),
+            ],
+          );
         }
         if(snapshot.hasError){
           return Center(

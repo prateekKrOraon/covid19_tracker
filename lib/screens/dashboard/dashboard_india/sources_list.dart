@@ -61,7 +61,23 @@ class _SourcesListScreen extends State<SourcesListScreen>{
             future: NetworkHandler.getInstance().getSourceList(),
             builder: (BuildContext context, snapshot){
               if(snapshot.connectionState == ConnectionState.waiting){
-                return Container(height:size.width,child: Center(child: CircularProgressIndicator(),));
+                return Column(
+                  children: [
+                    LinearProgressIndicator(
+                      minHeight: 3,
+                      backgroundColor: theme.scaffoldBackgroundColor,
+                    ),
+                    SizedBox(
+                      height: size.height*0.4,
+                    ),
+                    Text(
+                      lang.translate(kLoading),
+                      style: TextStyle(
+                        fontFamily: kQuickSand,
+                      ),
+                    ),
+                  ],
+                );
               }
               if(snapshot.hasError){
                 return Center(

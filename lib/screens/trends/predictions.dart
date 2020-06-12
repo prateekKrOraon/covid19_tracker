@@ -39,7 +39,23 @@ class _PredictionState extends State<Predictions>{
       future: StateWiseData.getIndiaTimeSeries(),
       builder: (BuildContext context,snapshot){
         if(snapshot.connectionState == ConnectionState.waiting){
-          return Center(child: CircularProgressIndicator(),);
+          return Column(
+            children: [
+              LinearProgressIndicator(
+                minHeight: 3,
+                backgroundColor: theme.scaffoldBackgroundColor,
+              ),
+              SizedBox(
+                height: size.height*0.4,
+              ),
+              Text(
+                lang.translate(kLoading),
+                style: TextStyle(
+                  fontFamily: kQuickSand,
+                ),
+              ),
+            ],
+          );
         }
         if(snapshot.hasError){
           return Center(
@@ -66,7 +82,6 @@ class _PredictionState extends State<Predictions>{
 
         SIRD sird = SIRD();
         Map map = snapshot.data;
-        print(map);
         String lastUpdateStr = map['total'][kLastUpdated].toString();
 
         DateTime lastUpdate = DateTime(

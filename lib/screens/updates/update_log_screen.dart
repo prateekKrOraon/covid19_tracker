@@ -38,7 +38,7 @@ class _UpdatesScreenState extends State<UpdatesScreen>{
       appBar: AppBar(
         backgroundColor: theme.scaffoldBackgroundColor,
         title:Container(
-          padding: EdgeInsets.symmetric(horizontal: 16,vertical: 8),
+          padding: EdgeInsets.symmetric(vertical: 8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
@@ -67,7 +67,23 @@ class _UpdatesScreenState extends State<UpdatesScreen>{
         builder: (BuildContext context,snapshot){
 
           if(snapshot.connectionState == ConnectionState.waiting){
-            return Center(child: CircularProgressIndicator(),);
+            return Column(
+              children: [
+                LinearProgressIndicator(
+                  minHeight: 3,
+                  backgroundColor: theme.scaffoldBackgroundColor,
+                ),
+                SizedBox(
+                  height: size.height*0.4,
+                ),
+                Text(
+                  lang.translate(kLoading),
+                  style: TextStyle(
+                    fontFamily: kQuickSand,
+                  ),
+                ),
+              ],
+            );
           }
           if(snapshot.hasError){
             return Center(

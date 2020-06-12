@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:covid19_tracker/constants/api_constants.dart';
 import 'package:covid19_tracker/constants/app_constants.dart';
+import 'package:covid19_tracker/data/state_wise_data.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart' as browser;
 
@@ -40,6 +41,11 @@ class NetworkHandler{
 
   Future getIndiaDashboard()async{
     var res = await http.get("$BASE_API/india/state_wise");
+    return jsonDecode(res.body);
+  }
+
+  Future getCasesOnDate(String date)async{
+    var res = await http.get("$BASE_API/india/on_date/$date");
     return jsonDecode(res.body);
   }
 

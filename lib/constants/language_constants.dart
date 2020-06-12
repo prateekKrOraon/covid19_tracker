@@ -152,3 +152,5 @@ String kStateWiseAvgGrowthRatesLang = "state_wise_avg_growth_rates";
 String kStateWiseRecRateLang = "state_wise_recovery_rates";
 String kGrowthRateDisclaimerLang = "growth_rate_disclaimer";
 String kStateWiseMortalityRateLang = "state_wise_mortality_rates";
+String kSnackBarInfo = "snackbar_info";
+String kLoading = "loading";

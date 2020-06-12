@@ -113,7 +113,9 @@
   "increase": "Increase",
   "spread_trends": "Spread Trends",
   "loading_message": "This might take some time...",
+  "loading": "Loading...",
   "no_updates": "No new updates for today",
+  "snackbar_info": "Only available for today's data",
 
   "all_districts": "All Districts",
   "jagdalpur": "Jagdalpur",
@@ -171,7 +173,7 @@
   "transportation": "Transportation",
   "critical": "Critical",
   "affected_countries": "Affected Countries",
-  "worst_affected_countries": "WORST AFFECTED COUNTRIES",
+  "worst_affected_countries": "Worst Affected Countries",
   "complete_list": "Complete List",
   "country": "Country",
   "global_ratio": "Global Ratio",

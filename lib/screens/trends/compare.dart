@@ -30,6 +30,7 @@ class _CompareScreenState extends State<CompareScreen>{
   ThemeData theme;
   Size size;
   double scaleFactor = 1;
+  bool _loading = false;
 
 
 
@@ -40,7 +41,11 @@ class _CompareScreenState extends State<CompareScreen>{
   }
 
   void _getData(){
-    _data = _networkHandler.getCompareResult(_countryOne.toLowerCase(), _countryTwo.toLowerCase());
+    _data = _networkHandler.getCompareResult(_countryOne.toLowerCase(), _countryTwo.toLowerCase()).whenComplete(() {
+      setState(() {
+        _loading = false;
+      });
+    });
   }
 
   @override
@@ -57,291 +62,293 @@ class _CompareScreenState extends State<CompareScreen>{
     }
 
     return SingleChildScrollView(
-      child: Container(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              lang.translate(kEnterCountryNameLang),
-              style: TextStyle(
-                fontFamily: kQuickSand,
-                fontSize: 24*scaleFactor,
-              ),
-            ),
-            SizedBox(height: 10*scaleFactor,),
-            Row(
+      child: Column(
+        children: [
+          _loading?LinearProgressIndicator(
+            minHeight: 3,
+            backgroundColor: theme.scaffoldBackgroundColor,
+          ):SizedBox(height: 2,),
+          Container(
+            padding: EdgeInsets.all(10),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Container(
-                    height: 65*scaleFactor,
-                    child: TextField(
-                      cursorColor: theme.accentColor,
-                      cursorWidth: 1,
-                      textAlign: TextAlign.center,
-                      onChanged: (String value){
-                          _countryOne = value;
-                      },
-                      onSubmitted: (String value){
-                        _countryOne = value;
-                      },
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 5,vertical: 0,),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(5),
-                          ),
-                          borderSide: BorderSide(
-                            width: 1,
-                            color: theme.accentColor,
-                          ),
-                        ),
-                      ),
-                      style: TextStyle(
-                        fontFamily: kQuickSand,
-                        fontSize: 20*scaleFactor,
-                      ),
-                    ),
+                Text(
+                  lang.translate(kEnterCountryNameLang),
+                  style: TextStyle(
+                    fontFamily: kQuickSand,
+                    fontSize: 24*scaleFactor,
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10,vertical: 8*scaleFactor),
-                  child: Text(
-                    lang.translate(kVSLang),
-                    style: TextStyle(
-                      fontFamily: kQuickSand,
-                      fontSize: 24*scaleFactor,
-                      color: theme.accentColor,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    height: 65*scaleFactor,
-                    child: TextField(
-                      textAlign: TextAlign.center,
-                      cursorColor: theme.accentColor,
-                      cursorWidth: 1,
-                      onChanged: (String value){
-                        _countryTwo = value;
-                      },
-                      onSubmitted: (String value){
-                        _countryTwo = value;
-                      },
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.symmetric(horizontal: 5,vertical: 0,),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(5),
+                SizedBox(height: 10*scaleFactor,),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Container(
+                        height: 65*scaleFactor,
+                        child: TextField(
+                          cursorColor: theme.accentColor,
+                          cursorWidth: 1,
+                          textAlign: TextAlign.center,
+                          onChanged: (String value){
+                              _countryOne = value;
+                          },
+                          onSubmitted: (String value){
+                            _countryOne = value;
+                          },
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(horizontal: 5,vertical: 0,),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(5),
+                              ),
+                              borderSide: BorderSide(
+                                width: 1,
+                                color: theme.accentColor,
+                              ),
                             ),
-                            borderSide: BorderSide(
-                              width: 1,
-                              color: theme.accentColor,
-                            )
+                          ),
+                          style: TextStyle(
+                            fontFamily: kQuickSand,
+                            fontSize: 20*scaleFactor,
+                          ),
                         ),
                       ),
-                      style: TextStyle(
-                        fontFamily: kQuickSand,
-                        fontSize: 20*scaleFactor,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10,vertical: 8*scaleFactor),
+                      child: Text(
+                        lang.translate(kVSLang),
+                        style: TextStyle(
+                          fontFamily: kQuickSand,
+                          fontSize: 24*scaleFactor,
+                          color: theme.accentColor,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        height: 65*scaleFactor,
+                        child: TextField(
+                          textAlign: TextAlign.center,
+                          cursorColor: theme.accentColor,
+                          cursorWidth: 1,
+                          onChanged: (String value){
+                            _countryTwo = value;
+                          },
+                          onSubmitted: (String value){
+                            _countryTwo = value;
+                          },
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(horizontal: 5,vertical: 0,),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(5),
+                                ),
+                                borderSide: BorderSide(
+                                  width: 1,
+                                  color: theme.accentColor,
+                                )
+                            ),
+                          ),
+                          style: TextStyle(
+                            fontFamily: kQuickSand,
+                            fontSize: 20*scaleFactor,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 16*scaleFactor,),
+                Center(
+                  child: Container(
+                    height: 40*scaleFactor,
+                    child: RaisedButton(
+                      color: theme.accentColor,
+                      onPressed: (){
+                        if(_countryOne != null && _countryTwo != null){
+                          setState(() {
+                            _loading = true;
+                            _getData();
+                          });
+                        }
+                      },
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(20),
+                        ),
+                      ),
+                      child: Text(
+                        lang.translate(kCompareLang),
+                        style: TextStyle(
+                          fontFamily: kQuickSand,
+                          color: theme.brightness == Brightness.light?Colors.white:Colors.black,
+                          fontSize: 18*scaleFactor,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ],
-            ),
-            SizedBox(height: 16*scaleFactor,),
-            Center(
-              child: Container(
-                height: 40*scaleFactor,
-                child: RaisedButton(
-                  color: theme.accentColor,
-                  onPressed: (){
-                    if(_countryOne != null && _countryTwo != null){
-                      setState(() {
-                        _getData();
-                      });
+                SizedBox(height: 20*scaleFactor,),
+                FutureBuilder(
+                  future: _data,
+                  builder: (BuildContext context, snapshot){
+                    if(snapshot.connectionState == ConnectionState.waiting){
+                      return SizedBox();
                     }
-                  },
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(20),
-                    ),
-                  ),
-                  child: Text(
-                    lang.translate(kCompareLang),
-                    style: TextStyle(
-                      fontFamily: kQuickSand,
-                      color: theme.brightness == Brightness.light?Colors.white:Colors.black,
-                      fontSize: 18*scaleFactor,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(height: 20*scaleFactor,),
-            FutureBuilder(
-              future: _data,
-              builder: (BuildContext context, snapshot){
-                if(snapshot.connectionState == ConnectionState.waiting){
-                  return Container(
-                    height: 200*scaleFactor,
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  );
-                }
 
-                if(snapshot.hasError){
-                  print(snapshot.data);
-                  return Text(
-                    lang.translate(kCompareErrorLang),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: kQuickSand,
-                      color: kGreyColor,
-                      fontSize: 16*scaleFactor,
-                    ),
-                  );
-                }
-
-                if(!snapshot.hasData){
-                  return Text(
-                    lang.translate(kHowToCompareLang),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: kQuickSand,
-                      color: kGreyColor,
-                      fontSize: 16*scaleFactor,
-                    ),
-                  );
-                }
-
-                Map dataOne = snapshot.data[0];
-                Map dataTwo = snapshot.data[1];
-                print(dataOne);
-                if(dataOne.containsKey('result')){
-                  if(dataOne['result'] == null){
-                    return Container(
-                      child: Center(
-                        child: Text(
-                          "$_countryOne ${lang.translate(kCountryNameError)}",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontFamily: kQuickSand,
-                            color: kGreyColor,
-                            fontSize: 16*scaleFactor,
-                          ),
+                    if(snapshot.hasError){
+                      print(snapshot.data);
+                      return Text(
+                        lang.translate(kCompareErrorLang),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontFamily: kQuickSand,
+                          color: kGreyColor,
+                          fontSize: 16*scaleFactor,
                         ),
-                      ),
-                    );
-                  }
-                }
-                if(dataTwo.containsKey('result')){
-                  if(dataTwo['result'] == null){
-                    return Container(
-                      child: Center(
-                        child: Text(
-                          "$_countryOne ${lang.translate(kCountryNameError)}",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontFamily: kQuickSand,
-                            color: kGreyColor,
-                            fontSize: 16*scaleFactor,
-                          ),
+                      );
+                    }
+
+                    if(!snapshot.hasData){
+                      return Text(
+                        lang.translate(kHowToCompareLang),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontFamily: kQuickSand,
+                          color: kGreyColor,
+                          fontSize: 16*scaleFactor,
                         ),
-                      ),
-                    );
-                  }
-                }
-                if(dataOne.containsKey('country')){
-                  if(dataOne['country'] == "error"){
-                    return Container(
-                      child: Center(
-                        child: Text(
-                          "$_countryOne ${lang.translate(kCountryNameError)}",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontFamily: kQuickSand,
-                            color: kGreyColor,
-                            fontSize: 16*scaleFactor,
+                      );
+                    }
+
+                    Map dataOne = snapshot.data[0];
+                    Map dataTwo = snapshot.data[1];
+                    print(dataOne);
+                    if(dataOne.containsKey('result')){
+                      if(dataOne['result'] == null){
+                        return Container(
+                          child: Center(
+                            child: Text(
+                              "$_countryOne ${lang.translate(kCountryNameError)}",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: kQuickSand,
+                                color: kGreyColor,
+                                fontSize: 16*scaleFactor,
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    );
-                  }
-                }
-                if(dataTwo.containsKey('country')){
-                  if(dataTwo['country'] == "error"){
-                    return Container(
-                      child: Center(
-                        child: Text(
-                          "$_countryTwo ${lang.translate(kCountryNameError)}",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontFamily: kQuickSand,
-                            color: kGreyColor,
-                            fontSize: 16*scaleFactor,
+                        );
+                      }
+                    }
+                    if(dataTwo.containsKey('result')){
+                      if(dataTwo['result'] == null){
+                        return Container(
+                          child: Center(
+                            child: Text(
+                              "$_countryOne ${lang.translate(kCountryNameError)}",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: kQuickSand,
+                                color: kGreyColor,
+                                fontSize: 16*scaleFactor,
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    );
-                  }
-                }
+                        );
+                      }
+                    }
+                    if(dataOne.containsKey('country')){
+                      if(dataOne['country'] == "error"){
+                        return Container(
+                          child: Center(
+                            child: Text(
+                              "$_countryOne ${lang.translate(kCountryNameError)}",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: kQuickSand,
+                                color: kGreyColor,
+                                fontSize: 16*scaleFactor,
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                    }
+                    if(dataTwo.containsKey('country')){
+                      if(dataTwo['country'] == "error"){
+                        return Container(
+                          child: Center(
+                            child: Text(
+                              "$_countryTwo ${lang.translate(kCountryNameError)}",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: kQuickSand,
+                                color: kGreyColor,
+                                fontSize: 16*scaleFactor,
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+                    }
 
-                Map countryOneTimeSeries = dataOne['result'];
-                Map countryOneData = dataOne['details'];
-                Map countryTwoTimeSeries = dataTwo['result'];
-                Map countryTwoData = dataTwo['details'];
+                    Map countryOneTimeSeries = dataOne['result'];
+                    Map countryOneData = dataOne['details'];
+                    Map countryTwoTimeSeries = dataTwo['result'];
+                    Map countryTwoData = dataTwo['details'];
 
-                Country countryOne = Country.fromMap(context, countryOneData);
-                Country countryTwo = Country.fromMap(context, countryTwoData);
-                countryOne.generateList(countryOneTimeSeries);
-                countryTwo.generateList(countryTwoTimeSeries);
-
-
-                List<EntryData> countryOneEntries = List();
-                List<EntryData> countryTwoEntries = List();
+                    Country countryOne = Country.fromMap(context, countryOneData);
+                    Country countryTwo = Country.fromMap(context, countryTwoData);
+                    countryOne.generateList(countryOneTimeSeries);
+                    countryTwo.generateList(countryTwoTimeSeries);
 
 
-                List<FlSpot> countryOneCnfSpots = List();
-                List<FlSpot> countryTwoCnfSpots = List();
+                    List<EntryData> countryOneEntries = List();
+                    List<EntryData> countryTwoEntries = List();
 
-                List<FlSpot> countryOneActSpots = List();
-                List<FlSpot> countryTwoActSpots = List();
 
-                List<FlSpot> countryOneRecSpots = List();
-                List<FlSpot> countryTwoRecSpots = List();
+                    List<FlSpot> countryOneCnfSpots = List();
+                    List<FlSpot> countryTwoCnfSpots = List();
 
-                List<FlSpot> countryOneDetSpots = List();
-                List<FlSpot> countryTwoDetSpots = List();
+                    List<FlSpot> countryOneActSpots = List();
+                    List<FlSpot> countryTwoActSpots = List();
 
-                MathFunctions functions = MathFunctions();
+                    List<FlSpot> countryOneRecSpots = List();
+                    List<FlSpot> countryTwoRecSpots = List();
 
-                List<double> countryOneGF = functions.growthFactor(countryOne.cnfCasesSeries);
-                List<double> countryTwoGF = functions.growthFactor(countryTwo.cnfCasesSeries);
+                    List<FlSpot> countryOneDetSpots = List();
+                    List<FlSpot> countryTwoDetSpots = List();
 
-                List<double> countryOneGr = functions.growthRatio(countryOne.cnfCasesSeries);
-                List<double> countryTwoGr = functions.growthRatio(countryTwo.cnfCasesSeries);
+                    MathFunctions functions = MathFunctions();
 
-                List<double> countryOneGR = functions.gradient(functions.getLog(countryOne.cnfCasesSeries));
-                List<double> countryTwoGR = functions.gradient(functions.getLog(countryTwo.cnfCasesSeries));
+                    List<double> countryOneGF = functions.growthFactor(countryOne.cnfCasesSeries);
+                    List<double> countryTwoGF = functions.growthFactor(countryTwo.cnfCasesSeries);
 
-                List<double> countryOneSD = functions.gradient(functions.gradient(countryOne.cnfCasesSeries));
-                List<double> countryTwoSD = functions.gradient(functions.gradient(countryTwo.cnfCasesSeries));
+                    List<double> countryOneGr = functions.growthRatio(countryOne.cnfCasesSeries);
+                    List<double> countryTwoGr = functions.growthRatio(countryTwo.cnfCasesSeries);
 
-                List<double> countryOneMR = functions.mortalityRate(countryOne.detCasesSeries, countryOne.cnfCasesSeries);
-                List<double> countryTwoMR = functions.mortalityRate(countryTwo.detCasesSeries, countryTwo.cnfCasesSeries);
+                    List<double> countryOneGR = functions.gradient(functions.getLog(countryOne.cnfCasesSeries));
+                    List<double> countryTwoGR = functions.gradient(functions.getLog(countryTwo.cnfCasesSeries));
 
-                List<double> countryOneRR = functions.mortalityRate(countryOne.recCasesSeries, countryOne.cnfCasesSeries);
-                List<double> countryTwoRR = functions.mortalityRate(countryTwo.recCasesSeries, countryTwo.cnfCasesSeries);
+                    List<double> countryOneSD = functions.gradient(functions.gradient(countryOne.cnfCasesSeries));
+                    List<double> countryTwoSD = functions.gradient(functions.gradient(countryTwo.cnfCasesSeries));
 
-                //Map<String,int> countryOneCases = functions.getCases(countryOne.cnfCasesSeries);
-                //Map<String,int> countryTwoCases = functions.getCases(countryTwo.cnfCasesSeries);
+                    List<double> countryOneMR = functions.mortalityRate(countryOne.detCasesSeries, countryOne.cnfCasesSeries);
+                    List<double> countryTwoMR = functions.mortalityRate(countryTwo.detCasesSeries, countryTwo.cnfCasesSeries);
 
-                //List<CaseModel> countryOneCaseModel = List();
-                //List<CaseModel> countryTwoCaseModel = List();
+                    List<double> countryOneRR = functions.mortalityRate(countryOne.recCasesSeries, countryOne.cnfCasesSeries);
+                    List<double> countryTwoRR = functions.mortalityRate(countryTwo.recCasesSeries, countryTwo.cnfCasesSeries);
+
+                    //Map<String,int> countryOneCases = functions.getCases(countryOne.cnfCasesSeries);
+                    //Map<String,int> countryTwoCases = functions.getCases(countryTwo.cnfCasesSeries);
+
+                    //List<CaseModel> countryOneCaseModel = List();
+                    //List<CaseModel> countryTwoCaseModel = List();
 
 //                countryOneCases.forEach((key, value) {
 //                  if(value != 0 && key != "100"){
@@ -368,577 +375,577 @@ class _CompareScreenState extends State<CompareScreen>{
 //                countryTwoCaseModel.length;
 
 
-                List<FlSpot> countryOneGFSpots = List();
-                List<FlSpot> countryTwoGFSpots = List();
+                    List<FlSpot> countryOneGFSpots = List();
+                    List<FlSpot> countryTwoGFSpots = List();
 
-                List<FlSpot> countryOneGrSpots = List();
-                List<FlSpot> countryTwoGrSpots = List();
+                    List<FlSpot> countryOneGrSpots = List();
+                    List<FlSpot> countryTwoGrSpots = List();
 
-                List<FlSpot> countryOneGRSpots = List();
-                List<FlSpot> countryTwoGRSpots = List();
+                    List<FlSpot> countryOneGRSpots = List();
+                    List<FlSpot> countryTwoGRSpots = List();
 
-                List<FlSpot> countryOneSDSpots = List();
-                List<FlSpot> countryTwoSDSpots = List();
+                    List<FlSpot> countryOneSDSpots = List();
+                    List<FlSpot> countryTwoSDSpots = List();
 
-                List<FlSpot> countryOneMRSpots = List();
-                List<FlSpot> countryTwoMRSpots = List();
+                    List<FlSpot> countryOneMRSpots = List();
+                    List<FlSpot> countryTwoMRSpots = List();
 
-                List<FlSpot> countryOneRRSpots = List();
-                List<FlSpot> countryTwoRRSpots = List();
+                    List<FlSpot> countryOneRRSpots = List();
+                    List<FlSpot> countryTwoRRSpots = List();
 
-                countryOneTimeSeries.forEach((key, value) {
-                  countryOneEntries.add(
-                    EntryData.fromMap(value),
-                  );
-                });
-                countryTwoTimeSeries.forEach((key, value) {
-                  countryTwoEntries.add(
-                    EntryData.fromMap(value),
-                  );
-                });
+                    countryOneTimeSeries.forEach((key, value) {
+                      countryOneEntries.add(
+                        EntryData.fromMap(value),
+                      );
+                    });
+                    countryTwoTimeSeries.forEach((key, value) {
+                      countryTwoEntries.add(
+                        EntryData.fromMap(value),
+                      );
+                    });
 
 
-                int length =
-                countryOneTimeSeries.length>countryTwoTimeSeries.length?
-                countryOneTimeSeries.length:
-                countryTwoTimeSeries.length;
+                    int length =
+                    countryOneTimeSeries.length>countryTwoTimeSeries.length?
+                    countryOneTimeSeries.length:
+                    countryTwoTimeSeries.length;
 
-                double cnfHighest = 0;
-                double actTotal = 0;
-                double recTotal = 0;
-                double detTotal = 0;
-                double gfHighest = 0;
-                double grHighest = 0;
-                double gRHighest = 0;
-                double sdHighest = 0;
-                double mrHighest = 0;
-                double rrHighest = 0;
+                    double cnfHighest = 0;
+                    double actTotal = 0;
+                    double recTotal = 0;
+                    double detTotal = 0;
+                    double gfHighest = 0;
+                    double grHighest = 0;
+                    double gRHighest = 0;
+                    double sdHighest = 0;
+                    double mrHighest = 0;
+                    double rrHighest = 0;
 
-                for(int i = 0;i<length;i++){
-                  if(countryOneEntries.length-length<=i){
-                    if(countryOneEntries[i].confirmed>cnfHighest){
-                      cnfHighest = countryOneEntries[i].confirmed.toDouble();
+                    for(int i = 0;i<length;i++){
+                      if(countryOneEntries.length-length<=i){
+                        if(countryOneEntries[i].confirmed>cnfHighest){
+                          cnfHighest = countryOneEntries[i].confirmed.toDouble();
+                        }
+
+                        countryOneCnfSpots.add(
+                          FlSpot(
+                            i.toDouble(),
+                            countryOneEntries[i].confirmed.toDouble(),
+                          ),
+                        );
+
+                        if(countryOneEntries[i].confirmed-countryOneEntries[i].recovered-countryOneEntries[i].deaths>actTotal){
+                          actTotal = countryOneEntries[i].confirmed-countryOneEntries[i].recovered-countryOneEntries[i].deaths.toDouble();
+                        }
+
+                        int active = countryOneEntries[i].confirmed-countryOneEntries[i].recovered-countryOneEntries[i].deaths;
+                        if(active <0){
+                          active = 0;
+                        }
+
+                        countryOneActSpots.add(
+                          FlSpot(
+                            i.toDouble(),
+                            active.toDouble(),
+                          )
+                        );
+
+                        if(countryOneEntries[i].recovered>recTotal){
+                          recTotal = countryOneEntries[i].recovered.toDouble();
+                        }
+
+                        countryOneRecSpots.add(
+                          FlSpot(
+                            i.toDouble(),
+                            countryOneEntries[i].recovered.toDouble(),
+                          )
+                        );
+
+                        if(countryOneEntries[i].deaths>detTotal){
+                          detTotal = countryOneEntries[i].deaths.toDouble();
+                        }
+
+                        countryOneDetSpots.add(
+                            FlSpot(
+                              i.toDouble(),
+                              countryOneEntries[i].deaths.toDouble(),
+                            )
+                        );
+
+                        if(countryOneGF[i]>gfHighest){
+                          gfHighest = countryOneGF[i];
+                        }
+                        countryOneGFSpots.add(
+                          FlSpot(
+                            i.toDouble(),
+                            countryOneGF[i],
+                          )
+                        );
+
+                        if(countryOneGr[i]>grHighest){
+                          grHighest = countryOneGr[i];
+                        }
+                        countryOneGrSpots.add(
+                            FlSpot(
+                              i.toDouble(),
+                              countryOneGr[i],
+                            )
+                        );
+
+                        if(countryOneGR[i]>gRHighest){
+                          gRHighest = countryOneGR[i];
+                        }
+                        countryOneGRSpots.add(
+                            FlSpot(
+                              i.toDouble(),
+                              countryOneGR[i],
+                            )
+                        );
+
+                        if(countryOneSD[i]>sdHighest){
+                          sdHighest = countryOneSD[i];
+                        }
+                        countryOneSDSpots.add(
+                            FlSpot(
+                              i.toDouble(),
+                              countryOneSD[i],
+                            )
+                        );
+
+                        if(countryOneMR[i]>mrHighest){
+                          mrHighest = countryOneMR[i];
+                        }
+                        countryOneMRSpots.add(
+                            FlSpot(
+                              i.toDouble(),
+                              countryOneMR[i],
+                            )
+                        );
+
+                        if(countryOneRR[i]>rrHighest){
+                          rrHighest = countryOneRR[i];
+                        }
+                        countryOneRRSpots.add(
+                            FlSpot(
+                              i.toDouble(),
+                              countryOneRR[i],
+                            )
+                        );
+
+                      }
+                      if(countryTwoEntries.length-length<=i){
+                        if(countryTwoEntries[i].confirmed>cnfHighest){
+                          cnfHighest = countryTwoEntries[i].confirmed.toDouble();
+                        }
+
+                        countryTwoCnfSpots.add(
+                          FlSpot(
+                            i.toDouble(),
+                            countryTwoEntries[i].confirmed.toDouble(),
+                          ),
+                        );
+
+                        if(countryTwoEntries[i].confirmed-countryTwoEntries[i].recovered-countryTwoEntries[i].deaths>actTotal){
+                          actTotal = countryTwoEntries[i].confirmed-countryTwoEntries[i].recovered-countryTwoEntries[i].deaths.toDouble();
+                        }
+
+                        int active = countryTwoEntries[i].confirmed-countryTwoEntries[i].recovered-countryTwoEntries[i].deaths;
+                        if(active<0){
+                          active = 0;
+                        }
+                        countryTwoActSpots.add(
+                            FlSpot(
+                              i.toDouble(),
+                              active.toDouble(),
+                            )
+                        );
+
+                        if(countryTwoEntries[i].recovered>recTotal){
+                          recTotal = countryTwoEntries[i].recovered.toDouble();
+                        }
+
+                        countryTwoRecSpots.add(
+                            FlSpot(
+                              i.toDouble(),
+                              countryTwoEntries[i].recovered.toDouble(),
+                            )
+                        );
+
+                        if(countryTwoEntries[i].deaths>detTotal){
+                          detTotal = countryTwoEntries[i].deaths.toDouble();
+                        }
+
+                        countryTwoDetSpots.add(
+                            FlSpot(
+                              i.toDouble(),
+                              countryTwoEntries[i].deaths.toDouble(),
+                            )
+                        );
+
+                        if(countryTwoGF[i]>gfHighest){
+                          gfHighest = countryTwoGF[i];
+                        }
+                        countryTwoGFSpots.add(
+                            FlSpot(
+                              i.toDouble(),
+                              countryTwoGF[i],
+                            )
+                        );
+
+                        if(countryTwoGr[i]>grHighest){
+                          grHighest = countryTwoGr[i];
+                        }
+                        countryTwoGrSpots.add(
+                            FlSpot(
+                              i.toDouble(),
+                              countryTwoGr[i],
+                            )
+                        );
+
+                        if(countryTwoGR[i]>gRHighest){
+                          gRHighest = countryTwoGR[i];
+                        }
+                        countryTwoGRSpots.add(
+                            FlSpot(
+                              i.toDouble(),
+                              countryTwoGR[i],
+                            )
+                        );
+
+                        if(countryTwoSD[i]>sdHighest){
+                          sdHighest = countryTwoSD[i];
+                        }
+                        countryTwoSDSpots.add(
+                            FlSpot(
+                              i.toDouble(),
+                              countryTwoSD[i],
+                            )
+                        );
+
+                        if(countryTwoMR[i]>mrHighest){
+                          mrHighest = countryTwoMR[i];
+                        }
+                        countryTwoMRSpots.add(
+                            FlSpot(
+                              i.toDouble(),
+                              countryTwoMR[i],
+                            )
+                        );
+
+                        if(countryTwoRR[i]>rrHighest){
+                          rrHighest = countryTwoRR[i];
+                        }
+                        countryTwoRRSpots.add(
+                            FlSpot(
+                              i.toDouble(),
+                              countryTwoRR[i],
+                            )
+                        );
+
+                      }
                     }
 
-                    countryOneCnfSpots.add(
-                      FlSpot(
-                        i.toDouble(),
-                        countryOneEntries[i].confirmed.toDouble(),
+
+                    List<Widget> firstGroupCharts = List();
+                    firstGroupCharts.add(
+                      _getLineChartLayout(
+                        lang.translate(kConfirmedCasesLang),
+                        countryOneCnfSpots,
+                        countryTwoCnfSpots,
+                        NumberFormat(",###").format(countryOneCnfSpots[countryOneCnfSpots.length-1].y.toInt()),
+                        NumberFormat(",###").format(countryTwoCnfSpots[countryTwoCnfSpots.length-1].y.toInt()),
+                        countryOne.flagLink,
+                        countryTwo.flagLink,
+                        cnfHighest,
+                        length,
+                      ),
+                    );
+                    firstGroupCharts.add(
+                      _getLineChartLayout(
+                        lang.translate(kActiveCasesLang),
+                        countryOneActSpots,
+                        countryTwoActSpots,
+                        NumberFormat(",###").format(countryOneActSpots[countryOneActSpots.length-1].y.toInt()),
+                        NumberFormat(",###").format(countryTwoActSpots[countryTwoActSpots.length-1].y.toInt()),
+                        countryOne.flagLink,
+                        countryTwo.flagLink,
+                        actTotal,
+                        length,
+                      ),
+                    );
+                    firstGroupCharts.add(
+                      _getLineChartLayout(
+                        lang.translate(kRecoveredLang),
+                        countryOneRecSpots,
+                        countryTwoRecSpots,
+                        NumberFormat(",###").format(countryOneRecSpots[countryOneRecSpots.length-1].y.toInt()),
+                        NumberFormat(",###").format(countryTwoRecSpots[countryTwoRecSpots.length-1].y.toInt()),
+                        countryOne.flagLink,
+                        countryTwo.flagLink,
+                        recTotal,
+                        length,
+                      ),
+                    );
+                    firstGroupCharts.add(
+                      _getLineChartLayout(
+                        lang.translate(kDeceasedCasesLang),
+                        countryOneDetSpots,
+                        countryTwoDetSpots,
+                        NumberFormat(",###").format(countryOneDetSpots[countryOneDetSpots.length-1].y.toInt()),
+                        NumberFormat(",###").format(countryTwoDetSpots[countryTwoDetSpots.length-1].y.toInt()),
+                        countryOne.flagLink,
+                        countryTwo.flagLink,
+                        detTotal,
+                        length,
                       ),
                     );
 
-                    if(countryOneEntries[i].confirmed-countryOneEntries[i].recovered-countryOneEntries[i].deaths>actTotal){
-                      actTotal = countryOneEntries[i].confirmed-countryOneEntries[i].recovered-countryOneEntries[i].deaths.toDouble();
-                    }
-
-                    int active = countryOneEntries[i].confirmed-countryOneEntries[i].recovered-countryOneEntries[i].deaths;
-                    if(active <0){
-                      active = 0;
-                    }
-
-                    countryOneActSpots.add(
-                      FlSpot(
-                        i.toDouble(),
-                        active.toDouble(),
-                      )
+                    List<Widget> secondGroupCharts = List();
+                    secondGroupCharts.add(
+                      _getLineChartLayout(
+                        lang.translate(kGrowthFactorLang),
+                        countryOneGFSpots,
+                        countryTwoGFSpots,
+                        countryOneGFSpots[countryOneGFSpots.length-1].y.toStringAsFixed(2),
+                        countryTwoGFSpots[countryTwoGFSpots.length-1].y.toStringAsFixed(2),
+                        countryOne.flagLink,
+                        countryTwo.flagLink,
+                        gfHighest,
+                        length,
+                        more: true,
+                      ),
                     );
-
-                    if(countryOneEntries[i].recovered>recTotal){
-                      recTotal = countryOneEntries[i].recovered.toDouble();
-                    }
-
-                    countryOneRecSpots.add(
-                      FlSpot(
-                        i.toDouble(),
-                        countryOneEntries[i].recovered.toDouble(),
-                      )
+                    secondGroupCharts.add(
+                      _getLineChartLayout(
+                        lang.translate(kGrowthRatioLang),
+                        countryOneGrSpots,
+                        countryTwoGrSpots,
+                        countryOneGrSpots[countryOneGrSpots.length-1].y.toStringAsFixed(2),
+                        countryTwoGrSpots[countryTwoGrSpots.length-1].y.toStringAsFixed(2),
+                        countryOne.flagLink,
+                        countryTwo.flagLink,
+                        grHighest,
+                        length,
+                        more: true,
+                      ),
                     );
-
-                    if(countryOneEntries[i].deaths>detTotal){
-                      detTotal = countryOneEntries[i].deaths.toDouble();
-                    }
-
-                    countryOneDetSpots.add(
-                        FlSpot(
-                          i.toDouble(),
-                          countryOneEntries[i].deaths.toDouble(),
-                        )
+                    secondGroupCharts.add(
+                      _getLineChartLayout(
+                        lang.translate(kGrowthRateLang),
+                        countryOneGRSpots,
+                        countryTwoGRSpots,
+                        "${(countryOneGRSpots[countryOneGRSpots.length-1].y*100).toStringAsFixed(2)} %",
+                        "${(countryTwoGRSpots[countryTwoGRSpots.length-1].y*100).toStringAsFixed(2)} %",
+                        countryOne.flagLink,
+                        countryTwo.flagLink,
+                        gRHighest,
+                        length,
+                        more: true,
+                      ),
                     );
-
-                    if(countryOneGF[i]>gfHighest){
-                      gfHighest = countryOneGF[i];
-                    }
-                    countryOneGFSpots.add(
-                      FlSpot(
-                        i.toDouble(),
-                        countryOneGF[i],
-                      )
-                    );
-
-                    if(countryOneGr[i]>grHighest){
-                      grHighest = countryOneGr[i];
-                    }
-                    countryOneGrSpots.add(
-                        FlSpot(
-                          i.toDouble(),
-                          countryOneGr[i],
-                        )
-                    );
-
-                    if(countryOneGR[i]>gRHighest){
-                      gRHighest = countryOneGR[i];
-                    }
-                    countryOneGRSpots.add(
-                        FlSpot(
-                          i.toDouble(),
-                          countryOneGR[i],
-                        )
-                    );
-
-                    if(countryOneSD[i]>sdHighest){
-                      sdHighest = countryOneSD[i];
-                    }
-                    countryOneSDSpots.add(
-                        FlSpot(
-                          i.toDouble(),
-                          countryOneSD[i],
-                        )
-                    );
-
-                    if(countryOneMR[i]>mrHighest){
-                      mrHighest = countryOneMR[i];
-                    }
-                    countryOneMRSpots.add(
-                        FlSpot(
-                          i.toDouble(),
-                          countryOneMR[i],
-                        )
-                    );
-
-                    if(countryOneRR[i]>rrHighest){
-                      rrHighest = countryOneRR[i];
-                    }
-                    countryOneRRSpots.add(
-                        FlSpot(
-                          i.toDouble(),
-                          countryOneRR[i],
-                        )
-                    );
-
-                  }
-                  if(countryTwoEntries.length-length<=i){
-                    if(countryTwoEntries[i].confirmed>cnfHighest){
-                      cnfHighest = countryTwoEntries[i].confirmed.toDouble();
-                    }
-
-                    countryTwoCnfSpots.add(
-                      FlSpot(
-                        i.toDouble(),
-                        countryTwoEntries[i].confirmed.toDouble(),
+                    secondGroupCharts.add(
+                      _getLineChartLayout(
+                        lang.translate(kSecondDerivativeLang),
+                        countryOneSDSpots,
+                        countryTwoSDSpots,
+                        countryOneSDSpots[countryOneSDSpots.length-1].y<0?"Negative":"Positive",
+                        countryTwoSDSpots[countryTwoSDSpots.length-1].y<0?"Negative":"Positive",
+                        countryOne.flagLink,
+                        countryTwo.flagLink,
+                        sdHighest,
+                        length,
+                        more: true,
                       ),
                     );
 
-                    if(countryTwoEntries[i].confirmed-countryTwoEntries[i].recovered-countryTwoEntries[i].deaths>actTotal){
-                      actTotal = countryTwoEntries[i].confirmed-countryTwoEntries[i].recovered-countryTwoEntries[i].deaths.toDouble();
-                    }
-
-                    int active = countryTwoEntries[i].confirmed-countryTwoEntries[i].recovered-countryTwoEntries[i].deaths;
-                    if(active<0){
-                      active = 0;
-                    }
-                    countryTwoActSpots.add(
-                        FlSpot(
-                          i.toDouble(),
-                          active.toDouble(),
-                        )
+                    List<Widget> thirdGroupCharts = List();
+                    thirdGroupCharts.add(
+                      _getLineChartLayout(
+                        lang.translate(kMortalityRateLang),
+                        countryOneMRSpots,
+                        countryTwoMRSpots,
+                        "${countryOneMRSpots[countryOneMRSpots.length-1].y.toStringAsFixed(2)} %",
+                        "${countryTwoMRSpots[countryTwoMRSpots.length-1].y.toStringAsFixed(2)} %",
+                        countryOne.flagLink,
+                        countryTwo.flagLink,
+                        mrHighest,
+                        length,
+                        more: true,
+                      ),
+                    );
+                    thirdGroupCharts.add(
+                      _getLineChartLayout(
+                        lang.translate(kRecoveryRateLang),
+                        countryOneRRSpots,
+                        countryTwoRRSpots,
+                        "${countryOneRRSpots[countryOneRRSpots.length-1].y.toStringAsFixed(2)} %",
+                        "${countryTwoRRSpots[countryTwoRRSpots.length-1].y.toStringAsFixed(2)} %",
+                        countryOne.flagLink,
+                        countryTwo.flagLink,
+                        rrHighest,
+                        length,
+                        more: true,
+                      ),
                     );
 
-                    if(countryTwoEntries[i].recovered>recTotal){
-                      recTotal = countryTwoEntries[i].recovered.toDouble();
-                    }
 
-                    countryTwoRecSpots.add(
-                        FlSpot(
-                          i.toDouble(),
-                          countryTwoEntries[i].recovered.toDouble(),
-                        )
-                    );
-
-                    if(countryTwoEntries[i].deaths>detTotal){
-                      detTotal = countryTwoEntries[i].deaths.toDouble();
-                    }
-
-                    countryTwoDetSpots.add(
-                        FlSpot(
-                          i.toDouble(),
-                          countryTwoEntries[i].deaths.toDouble(),
-                        )
-                    );
-
-                    if(countryTwoGF[i]>gfHighest){
-                      gfHighest = countryTwoGF[i];
-                    }
-                    countryTwoGFSpots.add(
-                        FlSpot(
-                          i.toDouble(),
-                          countryTwoGF[i],
-                        )
-                    );
-
-                    if(countryTwoGr[i]>grHighest){
-                      grHighest = countryTwoGr[i];
-                    }
-                    countryTwoGrSpots.add(
-                        FlSpot(
-                          i.toDouble(),
-                          countryTwoGr[i],
-                        )
-                    );
-
-                    if(countryTwoGR[i]>gRHighest){
-                      gRHighest = countryTwoGR[i];
-                    }
-                    countryTwoGRSpots.add(
-                        FlSpot(
-                          i.toDouble(),
-                          countryTwoGR[i],
-                        )
-                    );
-
-                    if(countryTwoSD[i]>sdHighest){
-                      sdHighest = countryTwoSD[i];
-                    }
-                    countryTwoSDSpots.add(
-                        FlSpot(
-                          i.toDouble(),
-                          countryTwoSD[i],
-                        )
-                    );
-
-                    if(countryTwoMR[i]>mrHighest){
-                      mrHighest = countryTwoMR[i];
-                    }
-                    countryTwoMRSpots.add(
-                        FlSpot(
-                          i.toDouble(),
-                          countryTwoMR[i],
-                        )
-                    );
-
-                    if(countryTwoRR[i]>rrHighest){
-                      rrHighest = countryTwoRR[i];
-                    }
-                    countryTwoRRSpots.add(
-                        FlSpot(
-                          i.toDouble(),
-                          countryTwoRR[i],
-                        )
-                    );
-
-                  }
-                }
-
-
-                List<Widget> firstGroupCharts = List();
-                firstGroupCharts.add(
-                  _getLineChartLayout(
-                    lang.translate(kConfirmedCasesLang),
-                    countryOneCnfSpots,
-                    countryTwoCnfSpots,
-                    NumberFormat(",###").format(countryOneCnfSpots[countryOneCnfSpots.length-1].y.toInt()),
-                    NumberFormat(",###").format(countryTwoCnfSpots[countryTwoCnfSpots.length-1].y.toInt()),
-                    countryOne.flagLink,
-                    countryTwo.flagLink,
-                    cnfHighest,
-                    length,
-                  ),
-                );
-                firstGroupCharts.add(
-                  _getLineChartLayout(
-                    lang.translate(kActiveCasesLang),
-                    countryOneActSpots,
-                    countryTwoActSpots,
-                    NumberFormat(",###").format(countryOneActSpots[countryOneActSpots.length-1].y.toInt()),
-                    NumberFormat(",###").format(countryTwoActSpots[countryTwoActSpots.length-1].y.toInt()),
-                    countryOne.flagLink,
-                    countryTwo.flagLink,
-                    actTotal,
-                    length,
-                  ),
-                );
-                firstGroupCharts.add(
-                  _getLineChartLayout(
-                    lang.translate(kRecoveredLang),
-                    countryOneRecSpots,
-                    countryTwoRecSpots,
-                    NumberFormat(",###").format(countryOneRecSpots[countryOneRecSpots.length-1].y.toInt()),
-                    NumberFormat(",###").format(countryTwoRecSpots[countryTwoRecSpots.length-1].y.toInt()),
-                    countryOne.flagLink,
-                    countryTwo.flagLink,
-                    recTotal,
-                    length,
-                  ),
-                );
-                firstGroupCharts.add(
-                  _getLineChartLayout(
-                    lang.translate(kDeceasedCasesLang),
-                    countryOneDetSpots,
-                    countryTwoDetSpots,
-                    NumberFormat(",###").format(countryOneDetSpots[countryOneDetSpots.length-1].y.toInt()),
-                    NumberFormat(",###").format(countryTwoDetSpots[countryTwoDetSpots.length-1].y.toInt()),
-                    countryOne.flagLink,
-                    countryTwo.flagLink,
-                    detTotal,
-                    length,
-                  ),
-                );
-
-                List<Widget> secondGroupCharts = List();
-                secondGroupCharts.add(
-                  _getLineChartLayout(
-                    lang.translate(kGrowthFactorLang),
-                    countryOneGFSpots,
-                    countryTwoGFSpots,
-                    countryOneGFSpots[countryOneGFSpots.length-1].y.toStringAsFixed(2),
-                    countryTwoGFSpots[countryTwoGFSpots.length-1].y.toStringAsFixed(2),
-                    countryOne.flagLink,
-                    countryTwo.flagLink,
-                    gfHighest,
-                    length,
-                    more: true,
-                  ),
-                );
-                secondGroupCharts.add(
-                  _getLineChartLayout(
-                    lang.translate(kGrowthRatioLang),
-                    countryOneGrSpots,
-                    countryTwoGrSpots,
-                    countryOneGrSpots[countryOneGrSpots.length-1].y.toStringAsFixed(2),
-                    countryTwoGrSpots[countryTwoGrSpots.length-1].y.toStringAsFixed(2),
-                    countryOne.flagLink,
-                    countryTwo.flagLink,
-                    grHighest,
-                    length,
-                    more: true,
-                  ),
-                );
-                secondGroupCharts.add(
-                  _getLineChartLayout(
-                    lang.translate(kGrowthRateLang),
-                    countryOneGRSpots,
-                    countryTwoGRSpots,
-                    "${(countryOneGRSpots[countryOneGRSpots.length-1].y*100).toStringAsFixed(2)} %",
-                    "${(countryTwoGRSpots[countryTwoGRSpots.length-1].y*100).toStringAsFixed(2)} %",
-                    countryOne.flagLink,
-                    countryTwo.flagLink,
-                    gRHighest,
-                    length,
-                    more: true,
-                  ),
-                );
-                secondGroupCharts.add(
-                  _getLineChartLayout(
-                    lang.translate(kSecondDerivativeLang),
-                    countryOneSDSpots,
-                    countryTwoSDSpots,
-                    countryOneSDSpots[countryOneSDSpots.length-1].y<0?"Negative":"Positive",
-                    countryTwoSDSpots[countryTwoSDSpots.length-1].y<0?"Negative":"Positive",
-                    countryOne.flagLink,
-                    countryTwo.flagLink,
-                    sdHighest,
-                    length,
-                    more: true,
-                  ),
-                );
-
-                List<Widget> thirdGroupCharts = List();
-                thirdGroupCharts.add(
-                  _getLineChartLayout(
-                    lang.translate(kMortalityRateLang),
-                    countryOneMRSpots,
-                    countryTwoMRSpots,
-                    "${countryOneMRSpots[countryOneMRSpots.length-1].y.toStringAsFixed(2)} %",
-                    "${countryTwoMRSpots[countryTwoMRSpots.length-1].y.toStringAsFixed(2)} %",
-                    countryOne.flagLink,
-                    countryTwo.flagLink,
-                    mrHighest,
-                    length,
-                    more: true,
-                  ),
-                );
-                thirdGroupCharts.add(
-                  _getLineChartLayout(
-                    lang.translate(kRecoveryRateLang),
-                    countryOneRRSpots,
-                    countryTwoRRSpots,
-                    "${countryOneRRSpots[countryOneRRSpots.length-1].y.toStringAsFixed(2)} %",
-                    "${countryTwoRRSpots[countryTwoRRSpots.length-1].y.toStringAsFixed(2)} %",
-                    countryOne.flagLink,
-                    countryTwo.flagLink,
-                    rrHighest,
-                    length,
-                    more: true,
-                  ),
-                );
-
-
-                return Container(
-                  child: Column(
-                    children: [
-                      Row(
+                    return Container(
+                      child: Column(
                         children: [
-                          Expanded(
-                            child: Container(
-                              height:60*scaleFactor,
-                              child: Center(
-                                child: Image(
-                                  image: NetworkImage(
-                                    countryOne.flagLink,
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  height:60*scaleFactor,
+                                  child: Center(
+                                    child: Image(
+                                      image: NetworkImage(
+                                        countryOne.flagLink,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Container(
-                              height:20*scaleFactor,
-                              width:20*scaleFactor,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                                color: kGreenColor,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Container(
-                              height:20*scaleFactor,
-                              width:20*scaleFactor,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
-                                color: kRedColor,
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              height:60*scaleFactor,
-                              child: Center(
-                                child: Image(
-                                  image: NetworkImage(
-                                    countryTwo.flagLink,
+                              Padding(
+                                padding: EdgeInsets.all(10),
+                                child: Container(
+                                  height:20*scaleFactor,
+                                  width:20*scaleFactor,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
+                                    color: kGreenColor,
                                   ),
                                 ),
                               ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              height:50*scaleFactor,
-                              child: Center(
-                                child: Text(
-                                  lang.locale.languageCode=="en"?
-                                  countryOne.countryName:
-                                  countryOne.countryNameHI,
-                                  style: TextStyle(
-                                    fontFamily: kQuickSand,
-                                    fontSize: 18*scaleFactor,
+                              Padding(
+                                padding: EdgeInsets.all(10),
+                                child: Container(
+                                  height:20*scaleFactor,
+                                  width:20*scaleFactor,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(10),
+                                    ),
+                                    color: kRedColor,
                                   ),
                                 ),
                               ),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 30),
-                            child: Container(
-                              child: Center(
-                                child: Text(
-                                  lang.translate(kVSLang),
-                                  style: TextStyle(
-                                    fontFamily: kQuickSand,
-                                    fontSize: 20*scaleFactor,
-                                    color: theme.accentColor,
+                              Expanded(
+                                child: Container(
+                                  height:60*scaleFactor,
+                                  child: Center(
+                                    child: Image(
+                                      image: NetworkImage(
+                                        countryTwo.flagLink,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
+                            ],
                           ),
-                          Expanded(
-                            child: Container(
-                              height:50*scaleFactor,
-                              child: Center(
-                                child: Text(
-                                  lang.locale.languageCode=="en"?
-                                  countryTwo.countryName:
-                                  countryTwo.countryNameHI,
-                                  textAlign:TextAlign.center,
-                                  style: TextStyle(
-                                    fontFamily: kQuickSand,
-                                    fontSize: 20*scaleFactor,
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  height:50*scaleFactor,
+                                  child: Center(
+                                    child: Text(
+                                      lang.locale.languageCode=="en"?
+                                      countryOne.countryName:
+                                      countryOne.countryNameHI,
+                                      style: TextStyle(
+                                        fontFamily: kQuickSand,
+                                        fontSize: 18*scaleFactor,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 30),
+                                child: Container(
+                                  child: Center(
+                                    child: Text(
+                                      lang.translate(kVSLang),
+                                      style: TextStyle(
+                                        fontFamily: kQuickSand,
+                                        fontSize: 20*scaleFactor,
+                                        color: theme.accentColor,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Container(
+                                  height:50*scaleFactor,
+                                  child: Center(
+                                    child: Text(
+                                      lang.locale.languageCode=="en"?
+                                      countryTwo.countryName:
+                                      countryTwo.countryNameHI,
+                                      textAlign:TextAlign.center,
+                                      style: TextStyle(
+                                        fontFamily: kQuickSand,
+                                        fontSize: 20*scaleFactor,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            height: size.width*0.8,
+                            child: Center(
+                              child: PageView.builder(
+                                itemCount: firstGroupCharts.length,
+                                controller: PageController(
+                                  initialPage: 0,
+                                  viewportFraction: 0.95,
+                                ),
+                                itemBuilder: (BuildContext context,int index){
+                                  return firstGroupCharts[index];
+                                },
+                              ),
                             ),
                           ),
-                        ],
-                      ),
-                      Container(
-                        height: size.width*0.8,
-                        child: Center(
-                          child: PageView.builder(
-                            itemCount: firstGroupCharts.length,
-                            controller: PageController(
-                              initialPage: 0,
-                              viewportFraction: 0.95,
+                          Container(
+                            height: size.width*0.8,
+                            child: Center(
+                              child: PageView.builder(
+                                itemCount: secondGroupCharts.length,
+                                controller: PageController(
+                                  initialPage: 0,
+                                  viewportFraction: 0.95,
+                                ),
+                                itemBuilder: (BuildContext context,int index){
+                                  return secondGroupCharts[index];
+                                },
+                              ),
                             ),
-                            itemBuilder: (BuildContext context,int index){
-                              return firstGroupCharts[index];
-                            },
                           ),
-                        ),
-                      ),
-                      Container(
-                        height: size.width*0.8,
-                        child: Center(
-                          child: PageView.builder(
-                            itemCount: secondGroupCharts.length,
-                            controller: PageController(
-                              initialPage: 0,
-                              viewportFraction: 0.95,
+                          Container(
+                            height: size.width*0.8,
+                            width:size.width,
+                            child: Center(
+                              child: PageView.builder(
+                                controller: PageController(
+                                  initialPage: 0,
+                                  viewportFraction: 0.95
+                                ),
+                                scrollDirection: Axis.horizontal,
+                                itemCount: thirdGroupCharts.length,
+                                itemBuilder: (BuildContext context,int index){
+                                  return thirdGroupCharts[index];
+                                },
+                              ),
                             ),
-                            itemBuilder: (BuildContext context,int index){
-                              return secondGroupCharts[index];
-                            },
                           ),
-                        ),
-                      ),
-                      Container(
-                        height: size.width*0.8,
-                        width:size.width,
-                        child: Center(
-                          child: PageView.builder(
-                            controller: PageController(
-                              initialPage: 0,
-                              viewportFraction: 0.95
-                            ),
-                            scrollDirection: Axis.horizontal,
-                            itemCount: thirdGroupCharts.length,
-                            itemBuilder: (BuildContext context,int index){
-                              return thirdGroupCharts[index];
-                            },
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 16*scaleFactor,),
+                          SizedBox(height: 16*scaleFactor,),
 //                      Material(
 //                        borderRadius: BorderRadius.all(
 //                          Radius.circular(10)
@@ -1083,13 +1090,15 @@ class _CompareScreenState extends State<CompareScreen>{
 //                          ),
 //                        ),
 //                      ),
-                    ],
-                  ),
-                );
-              },
-            )
-          ],
-        ),
+                        ],
+                      ),
+                    );
+                  },
+                )
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

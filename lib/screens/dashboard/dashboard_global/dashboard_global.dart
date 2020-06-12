@@ -77,7 +77,23 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
       future: _data,
       builder: (context,snapshot){
         if(snapshot.connectionState == ConnectionState.waiting){
-          return Center(child: CircularProgressIndicator(),);
+          return Column(
+            children: [
+              LinearProgressIndicator(
+                minHeight: 3,
+                backgroundColor: theme.scaffoldBackgroundColor,
+              ),
+              SizedBox(
+                height: size.height*0.4,
+              ),
+              Text(
+                lang.translate(kLoading),
+                style: TextStyle(
+                  fontFamily: kQuickSand,
+                ),
+              ),
+            ],
+          );
         }
         if(snapshot.hasError){
           return Center(
@@ -249,7 +265,6 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                     ),
                     SizedBox(height: 16*scaleFactor,),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 6),
                       child: Column(
                         children: <Widget>[
                           Row(
@@ -314,52 +329,49 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                       ),
                     ),
                     SizedBox(height: 10*scaleFactor,),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 6),
-                      child: Material(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                        elevation: 2,
-                        color: theme.backgroundColor,
-                        child: Container(
-                          decoration:BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10),
-                            ),
+                    Material(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                      elevation: 2,
+                      color: theme.backgroundColor,
+                      child: Container(
+                        decoration:BoxDecoration(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10),
                           ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: <Widget>[
-                                Row(
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Text(
-                                        lang.translate(kTotalTestedLang),
-                                        style: TextStyle(
-                                          fontFamily: kQuickSand,
-                                          fontSize: 24*scaleFactor,
-                                          color: kDarkBlueColor,
-                                        ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: <Widget>[
+                              Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Text(
+                                      lang.translate(kTotalTestedLang),
+                                      style: TextStyle(
+                                        fontFamily: kQuickSand,
+                                        fontSize: 24*scaleFactor,
+                                        color: kDarkBlueColor,
                                       ),
                                     ),
-                                    Expanded(
-                                      child: Text(
-                                        NumberFormat(",###").format(double.parse(worldData[kCountryTests].toString())),
-                                        textAlign: TextAlign.end,
-                                        style: TextStyle(
-                                          color: kDarkBlueColor,
-                                          fontSize: 24*scaleFactor,
-                                          fontFamily: kQuickSand,
-                                        ),
+                                  ),
+                                  Expanded(
+                                    child: Text(
+                                      NumberFormat(",###").format(double.parse(worldData[kCountryTests].toString())),
+                                      textAlign: TextAlign.end,
+                                      style: TextStyle(
+                                        color: kDarkBlueColor,
+                                        fontSize: 24*scaleFactor,
+                                        fontFamily: kQuickSand,
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -391,7 +403,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                                     textAlign: TextAlign.start,
                                     style: TextStyle(
                                       color: kGreyColor,
-                                      fontFamily: kNotoSansSc,
+                                      fontFamily: kQuickSand,
                                       fontSize: 24*scaleFactor,
                                     ),
                                   ),

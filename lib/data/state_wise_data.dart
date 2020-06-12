@@ -4,6 +4,7 @@ class StateWiseData{
 
   static Future _data;
   static Future _dashboard;
+  static Future onDate;
   static NetworkHandler _networkHandler = NetworkHandler.getInstance();
 
   static Future getIndiaTimeSeries(){
@@ -20,7 +21,7 @@ class StateWiseData{
     return _dashboard;
   }
 
-  static void refresh(){
+  static Future refresh()async{
     _data = _networkHandler.getNationalTimeSeries();
     _dashboard = _networkHandler.getIndiaDashboard();
   }
