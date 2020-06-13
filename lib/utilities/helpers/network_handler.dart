@@ -46,6 +46,9 @@ class NetworkHandler{
 
   Future getCasesOnDate(String date)async{
     var res = await http.get("$BASE_API/india/on_date/$date");
+    if(res.statusCode != 200){
+      return jsonDecode("{\"message\": \"Data Not Available\"}");
+    }
     return jsonDecode(res.body);
   }
 

@@ -230,5 +230,9 @@
   "active_cases": "एक्टिव केस",
   "recovered_cases": "स्वस्थ मामले",
   "deceased_cases": "मृतक मामले",
-  "vs": "बनाम"
+  "vs": "बनाम",
+  "source_code": "सोर्स कोड",
+  "api": "एपीआई",
+  "today": "आज का दिन",
+  "data_not_available": "डेटा उपलब्ध नहीं"
 }

@@ -121,7 +121,7 @@ class _DashboardIndiaState extends State<DashboardIndia> with SingleTickerProvid
                 height: size.height*0.4,
               ),
               Text(
-                lang.translate(kLoading),
+                lang.translate(kLoadingLang),
                 style: TextStyle(
                   fontFamily: kQuickSand,
                 ),
@@ -174,14 +174,17 @@ class _DashboardIndiaState extends State<DashboardIndia> with SingleTickerProvid
 
         Map tested = map[kTotalTested];
         String dateStr = tested[kUpdateTimeStamp];
-        DateTime testedLastUpdate = DateTime(
-          int.parse(dateStr.substring(6,10)),
-          int.parse(dateStr.substring(3,5)),
-          int.parse(dateStr.substring(0,2)),
-          int.parse(dateStr.substring(11,13)),
-          int.parse(dateStr.substring(14,16)),
-          int.parse(dateStr.substring(17,19)),
-        );
+        DateTime testedLastUpdate;
+        if(dateStr != ""){
+          testedLastUpdate = DateTime(
+            int.parse(dateStr.substring(6,10)),
+            int.parse(dateStr.substring(3,5)),
+            int.parse(dateStr.substring(0,2)),
+            int.parse(dateStr.substring(11,13)),
+            int.parse(dateStr.substring(14,16)),
+            int.parse(dateStr.substring(17,19)),
+          );
+        }
 
         List stateWise = map[kStateWise];
         List<StateInfo> stateList = List();
@@ -320,8 +323,25 @@ class _DashboardIndiaState extends State<DashboardIndia> with SingleTickerProvid
                                     .then((value){
                                       setState(() {
                                         refresh = false;
-                                        map = value;
-                                        lastUpdateStr = map[kStateWise][0][kLastUpdated].toString();
+                                        try{
+                                          map = value;
+                                          lastUpdateStr = map[kStateWise][0][kLastUpdated].toString();
+                                        }catch(e){
+                                          _selectedDate = _todayDate;
+                                          Scaffold.of(context).showSnackBar(
+                                            SnackBar(
+                                              duration: Duration(seconds: 2),
+                                              content: Text(
+                                                lang.translate(kDataNotAvailableLang),
+                                                style: TextStyle(
+                                                  fontFamily: kQuickSand,
+                                                  color: theme.brightness==Brightness.light?Colors.white:Colors.black,
+                                                ),
+                                              ),
+                                              backgroundColor: theme.accentColor,
+                                            ),
+                                          );
+                                        }
                                       });
                                     });
                                   }
@@ -331,7 +351,7 @@ class _DashboardIndiaState extends State<DashboardIndia> with SingleTickerProvid
                                   height: _dateSelectorHeight,
                                   child: Center(
                                     child: Text(
-                                      today?"Today":DateFormat("d MMM yyyy").format(_dateList[index]),
+                                      today?lang.translate(kTodayLang):DateFormat("d MMM yyyy").format(_dateList[index]),
                                       style: TextStyle(
                                         fontFamily: kQuickSand,
                                         fontSize: 14*scaleFactor,
@@ -422,7 +442,9 @@ class _DashboardIndiaState extends State<DashboardIndia> with SingleTickerProvid
                                       Expanded(
                                         child: Text(
                                           tested[kTotalIndividualTested]==""?
-                                          NumberFormat(",##,###","hi_IN").format(double.parse(tested[kTotalSamplesTested].toString())):
+                                          tested[kTotalSamplesTested]==""?
+                                            "N/A":
+                                            NumberFormat(",##,###","hi_IN").format(double.parse(tested[kTotalSamplesTested].toString())):
                                           NumberFormat(",##,###","hi_IN").format(double.parse(tested[kTotalIndividualTested].toString())),
                                           textAlign: TextAlign.end,
                                           style: TextStyle(
@@ -440,7 +462,7 @@ class _DashboardIndiaState extends State<DashboardIndia> with SingleTickerProvid
                                       Expanded(
                                         flex: 2,
                                         child: Text(
-                                          '${lang.translate(kLastUpdatedAtLang)} ${testedLastUpdate.millisecondsSinceEpoch>DateTime.now().millisecondsSinceEpoch?"\t--\t":DateFormat("d MMM, ").add_jm().format(testedLastUpdate)}',
+                                          '${lang.translate(kLastUpdatedAtLang)} ${testedLastUpdate==null?"--/--/----":testedLastUpdate.millisecondsSinceEpoch>DateTime.now().millisecondsSinceEpoch?"\t--\t":DateFormat("d MMM, ").add_jm().format(testedLastUpdate)}',
                                           style: TextStyle(
                                             fontFamily: kQuickSand,
                                             fontSize: 14*scaleFactor,
@@ -648,7 +670,7 @@ class _DashboardIndiaState extends State<DashboardIndia> with SingleTickerProvid
                                             SnackBar(
                                               duration: Duration(seconds: 2),
                                               content: Text(
-                                                lang.translate(kSnackBarInfo),
+                                                lang.translate(kSnackBarInfoLang),
                                                 style: TextStyle(
                                                   fontFamily: kQuickSand,
                                                   color: theme.brightness==Brightness.light?Colors.white:Colors.black,

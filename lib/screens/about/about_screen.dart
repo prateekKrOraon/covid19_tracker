@@ -331,7 +331,7 @@ class _AboutScreenState extends State<AboutScreen>{
                       ):SizedBox(),
                       SizedBox(width: 5*scaleFactor,),
                       Text(
-                        '1.6.0',
+                        '1.7.0',
                         style: TextStyle(
                           fontFamily: kQuickSand,
                           fontSize: 16*scaleFactor,
@@ -509,7 +509,7 @@ class _AboutScreenState extends State<AboutScreen>{
                       SizedBox(width: 20*scaleFactor,),
                       Expanded(
                         child: Text(
-                          "Source Code",//lang.translate(kDeveloperNameLang),
+                          lang.translate(kSourceCodeLang),//lang.translate(kDeveloperNameLang),
                           style: TextStyle(
                             fontFamily: kQuickSand,
                             fontSize: 16*scaleFactor,
@@ -545,7 +545,7 @@ class _AboutScreenState extends State<AboutScreen>{
                       SizedBox(width: 20*scaleFactor,),
                       Expanded(
                         child: Text(
-                          "API",//lang.translate(kDeveloperNameLang),
+                          lang.translate(kAPILang),//lang.translate(kDeveloperNameLang),
                           style: TextStyle(
                             fontFamily: kQuickSand,
                             fontSize: 16*scaleFactor,

@@ -49,7 +49,7 @@ class _PredictionState extends State<Predictions>{
                 height: size.height*0.4,
               ),
               Text(
-                lang.translate(kLoading),
+                lang.translate(kLoadingLang),
                 style: TextStyle(
                   fontFamily: kQuickSand,
                 ),

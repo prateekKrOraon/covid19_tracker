@@ -245,7 +245,7 @@ class _CountryDataScreen extends State<CountryDataScreen>{
                                 height: size.height*0.1,
                               ),
                               Text(
-                                lang.translate(kLoading),
+                                lang.translate(kLoadingLang),
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontFamily: kQuickSand,

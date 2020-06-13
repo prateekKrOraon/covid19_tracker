@@ -13,6 +13,7 @@ APK can be downloaded from [here](https://github.com/prateekKrOraon/covid-19-tra
 * State wise and district wise data available.
 * Global data available (added in v1.4.2).
 * Total number of tested people available (Source ICMR).
+* Can check data for any previous date.
 * Sorting of data available.
 * Graphical representation of total confirmed, recovered and deceased cases and state wise graphical representation also available.
 * Data represented through pie charts (added in v1.4.2) line charts and bar graphs for 14 days, 30 days and since beginning.

@@ -176,7 +176,7 @@ class _StateDataState extends State<StateData>{
                                 height: size.height*0.2,
                               ),
                               Text(
-                                lang.translate(kLoading),
+                                lang.translate(kLoadingLang),
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontFamily: kQuickSand,

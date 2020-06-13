@@ -87,7 +87,7 @@ class _DashboardGlobalState extends State<DashboardGlobal>{
                 height: size.height*0.4,
               ),
               Text(
-                lang.translate(kLoading),
+                lang.translate(kLoadingLang),
                 style: TextStyle(
                   fontFamily: kQuickSand,
                 ),
