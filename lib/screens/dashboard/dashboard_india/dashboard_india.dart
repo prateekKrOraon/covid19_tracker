@@ -163,14 +163,28 @@ class _DashboardIndiaState extends State<DashboardIndia> with SingleTickerProvid
           lastUpdateStr = map[kStateWise][0][kLastUpdated].toString();
         }
 
-        DateTime lastUpdate = DateTime(
-          int.parse(lastUpdateStr.substring(6,10)),
-          int.parse(lastUpdateStr.substring(3,5)),
-          int.parse(lastUpdateStr.substring(0,2)),
-          int.parse(lastUpdateStr.substring(11,13)),
-          int.parse(lastUpdateStr.substring(14,16)),
-          int.parse(lastUpdateStr.substring(17,19)),
-        );
+
+        DateTime lastUpdate;
+
+        if(lastUpdateStr.length > 18) {
+          lastUpdate = DateTime(
+            int.parse(lastUpdateStr.substring(6,10)),
+            int.parse(lastUpdateStr.substring(3,5)),
+            int.parse(lastUpdateStr.substring(0,2)),
+            int.parse(lastUpdateStr.substring(11,13)),
+            int.parse(lastUpdateStr.substring(14,16)),
+            int.parse(lastUpdateStr.substring(17,19)),
+          );
+        }else{
+          lastUpdate = DateTime(
+            int.parse(lastUpdateStr.substring(5,9)),
+            int.parse(lastUpdateStr.substring(2,4)),
+            int.parse(lastUpdateStr.substring(0,1)),
+            int.parse(lastUpdateStr.substring(10,12)),
+            int.parse(lastUpdateStr.substring(13,15)),
+            int.parse(lastUpdateStr.substring(16,18)),
+          );
+        }
 
         Map tested = map[kTotalTested];
         String dateStr = tested[kUpdateTimeStamp];

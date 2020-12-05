@@ -25,6 +25,7 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
   bool uniformScale = true;
   String dataRange = DataRange.MONTH;
   double scaleFactor = 1;
+  int range = 0;
 
   int touchedIndex;
   ThemeData theme;
@@ -103,14 +104,38 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
         double totalDet = 0.0;
         double totalAct = 0.0;
 
-        int range = 0;
+        String dataRangeStr = "";
 
         if(dataRange == DataRange.BEGINNING){
           range = caseTime.length;
+          dataRangeStr = lang.translate(kSinceBeginningLang);
+        }else if(dataRange == DataRange.SIX_MONTHS){
+          DateTime now = DateTime.now();
+          DateTime sixMonthsAgo = DateTime(
+            2020,
+            now.month-6,
+            now.day+1,
+          );
+          int time = (now.millisecondsSinceEpoch-sixMonthsAgo.millisecondsSinceEpoch).toInt();
+          range = (time/(1000*60*60*24)).round();
+          String str = DateFormat("d MMM yyyy").format(
+            DateTime(
+              2020,
+              DateTime.now().month-6,
+              DateTime.now().day+1,
+            ),
+          );
+          if(lang.locale.languageCode == "hi"){
+            dataRangeStr = "$str से";
+          }else{
+            dataRangeStr = "Since $str";
+          }
         }else if(dataRange == DataRange.MONTH){
           range = 32;
+          dataRangeStr = lang.translate(kLast30DaysLang);
         }else if(dataRange == DataRange.TWO_WEEK){
           range = 15;
+          dataRangeStr = lang.translate(kLast14DaysLang);
         }
 
         String lastUpdate = "";
@@ -140,17 +165,21 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
           double currentRec = double.parse(map[kTotalRecovered]);
           double currentDet = double.parse(map[kTotalDeaths]);
           double currentAct = currentCnf-currentDet-currentRec;
-          if(i==caseTime.length-2 && max==caseTime.length-1){
+
+          if(totalCnf < currentCnf){
             totalCnf = currentCnf;
-            totalRec = currentRec;
-            totalDet = currentDet;
-            totalAct = currentAct;
-          }else if(i==caseTime.length-1 && max==caseTime.length){
-            totalCnf = currentCnf;
-            totalRec = currentRec;
-            totalDet = currentDet;
-            totalAct = currentAct;
           }
+          if(totalRec < currentRec){
+            totalRec = currentRec;
+          }
+          if(totalDet < currentDet){
+            totalDet = currentDet;
+          }
+          if(totalAct < currentAct){
+            totalAct = currentAct;
+            print(totalAct);
+          }
+
           totalCnfSpots.add(
               FlSpot(
                 i.toDouble(),
@@ -179,16 +208,6 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
             lastUpdate = map[kDate];
           }
 
-        }
-
-        String dataRangeStr = "";
-
-        if(dataRange == DataRange.BEGINNING){
-          dataRangeStr = lang.translate(kSinceBeginningLang);
-        }else if(dataRange == DataRange.MONTH){
-          dataRangeStr = lang.translate(kLast30DaysLang);
-        }else if(dataRange == DataRange.TWO_WEEK){
-          dataRangeStr = lang.translate(kLast14DaysLang);
         }
 
 
@@ -385,127 +404,154 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                   ],
                 ),
                 SizedBox(height: 5*scaleFactor,),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Text(
-                        lang.translate(kShowingDataLang),
-                        style: TextStyle(
-                          color: kGreyColor,
-                          fontFamily: kNotoSansSc,
-                          fontSize: 16*scaleFactor,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 10*scaleFactor,),
-                    Material(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(10),
-                      ),
-                      elevation: 2,
-                      child: Container(
-                        child: Row(
-                          children: <Widget>[
-                            InkWell(
-                              onTap: (){
-                                setState(() {
-                                  if(dataRange != DataRange.BEGINNING){
-                                    dataRange = DataRange.BEGINNING;
-                                  }
-                                });
-                              },
-                              child: Container(
-                                height: 35*scaleFactor,
-                                padding: EdgeInsets.symmetric(horizontal: 8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                    topLeft:Radius.circular(10),
-                                    bottomLeft: Radius.circular(10)
-                                  ),
-                                  color: dataRange != DataRange.BEGINNING?theme.backgroundColor:theme.accentColor,
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    lang.translate(kBeginningLang),
-                                    style: TextStyle(
-                                      fontFamily: kQuickSand,
-                                      fontSize: 14*scaleFactor,
-                                      color: dataRange != DataRange.BEGINNING?
-                                      theme.brightness == Brightness.light?Colors.black:Colors.white:
-                                      theme.brightness == Brightness.light?Colors.white:Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: (){
-                                setState(() {
-                                  if(dataRange != DataRange.MONTH){
-                                    dataRange = DataRange.MONTH;
-                                  }
-                                });
-                              },
-                              child: Container(
-                                height: 35*scaleFactor,
-                                padding: EdgeInsets.symmetric(horizontal: 8),
-                                decoration: BoxDecoration(
-                                  color: dataRange != DataRange.MONTH?theme.backgroundColor:theme.accentColor,
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    lang.translate(k1MonthLang),
-                                    style: TextStyle(
-                                      fontFamily: kQuickSand,
-                                      fontSize: 14*scaleFactor,
-                                      color: dataRange != DataRange.MONTH?
-                                      theme.brightness == Brightness.light?Colors.black:Colors.white:
-                                      theme.brightness == Brightness.light?Colors.white:Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: (){
-                                setState(() {
-                                  if(dataRange != DataRange.TWO_WEEK){
-                                    dataRange = DataRange.TWO_WEEK;
-                                  }
-                                });
-                              },
-                              child: Container(
-                                height: 35*scaleFactor,
-                                padding: EdgeInsets.symmetric(horizontal: 8),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                    bottomRight: Radius.circular(10),
-                                    topRight: Radius.circular(10),
-                                  ),
-                                  color: dataRange != DataRange.TWO_WEEK?theme.backgroundColor:theme.accentColor,
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    lang.translate(k2WeekLang),
-                                    style: TextStyle(
-                                      fontFamily: kQuickSand,
-                                      fontSize: 14*scaleFactor,
-                                      color: dataRange != DataRange.TWO_WEEK?
-                                      theme.brightness == Brightness.light?Colors.black:Colors.white:
-                                      theme.brightness == Brightness.light?Colors.white:Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 10*scaleFactor,),
-                  ],
+                Text(
+                  lang.translate(kShowingDataLang),
+                  style: TextStyle(
+                    color: kGreyColor,
+                    fontFamily: kNotoSansSc,
+                    fontSize: 16*scaleFactor,
+                  ),
                 ),
-                SizedBox(height: 10*scaleFactor,),
+                SizedBox(height: 20*scaleFactor,),
+                Material(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                  elevation: 2,
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: InkWell(
+                          onTap: (){
+                            setState(() {
+                              if(dataRange != DataRange.BEGINNING){
+                                dataRange = DataRange.BEGINNING;
+                              }
+                            });
+                          },
+                          child: Container(
+                            height: 35*scaleFactor,
+                            padding: EdgeInsets.symmetric(horizontal: 8),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topLeft:Radius.circular(10),
+                                  bottomLeft: Radius.circular(10)
+                              ),
+                              color: dataRange != DataRange.BEGINNING?theme.backgroundColor:theme.accentColor,
+                            ),
+                            child: Center(
+                              child: Text(
+                                lang.translate(kBeginningLang),
+                                style: TextStyle(
+                                  fontFamily: kQuickSand,
+                                  fontSize: 14*scaleFactor,
+                                  color:dataRange != DataRange.BEGINNING?
+                                  theme.brightness == Brightness.light?Colors.black:Colors.white:
+                                  theme.brightness == Brightness.light?Colors.white:Colors.black,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: InkWell(
+                          onTap: (){
+                            setState(() {
+                              if(dataRange != DataRange.SIX_MONTHS){
+                                dataRange = DataRange.SIX_MONTHS;
+                              }
+                            });
+                          },
+                          child: Container(
+                            height: 35*scaleFactor,
+                            padding: EdgeInsets.symmetric(horizontal: 8),
+                            decoration: BoxDecoration(
+                              color: dataRange != DataRange.SIX_MONTHS?theme.backgroundColor:theme.accentColor,
+                            ),
+                            child: Center(
+                              child: Text(
+                                lang.translate(kSixMonths),
+                                style: TextStyle(
+                                  fontFamily: kQuickSand,
+                                  fontSize: 14*scaleFactor,
+                                  color:dataRange != DataRange.SIX_MONTHS?
+                                  theme.brightness == Brightness.light?Colors.black:Colors.white:
+                                  theme.brightness == Brightness.light?Colors.white:Colors.black,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: InkWell(
+                          onTap: (){
+                            setState(() {
+                              if(dataRange != DataRange.MONTH){
+                                dataRange = DataRange.MONTH;
+                              }
+                            });
+                          },
+                          child: Container(
+                            height: 35*scaleFactor,
+                            padding: EdgeInsets.symmetric(horizontal: 8),
+                            decoration: BoxDecoration(
+                              color: dataRange != DataRange.MONTH?theme.backgroundColor:theme.accentColor,
+                            ),
+                            child: Center(
+                              child: Text(
+                                lang.translate(k1MonthLang),
+                                style: TextStyle(
+                                  fontFamily: kQuickSand,
+                                  fontSize: 14*scaleFactor,
+                                  color: dataRange != DataRange.MONTH?
+                                  theme.brightness == Brightness.light?Colors.black:Colors.white:
+                                  theme.brightness == Brightness.light?Colors.white:Colors.black,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: InkWell(
+                          onTap: (){
+                            setState(() {
+                              if(dataRange != DataRange.TWO_WEEK){
+                                dataRange = DataRange.TWO_WEEK;
+                              }
+                            });
+                          },
+                          child: Container(
+                            height: 35*scaleFactor,
+                            padding: EdgeInsets.symmetric(horizontal: 8),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                bottomRight: Radius.circular(10),
+                                topRight: Radius.circular(10),
+                              ),
+                              color: dataRange != DataRange.TWO_WEEK?theme.backgroundColor:theme.accentColor,
+                            ),
+                            child: Center(
+                              child: Text(
+                                lang.translate(k2WeekLang),
+                                style: TextStyle(
+                                  fontFamily: kQuickSand,
+                                  fontSize: 14*scaleFactor,
+                                  color: dataRange != DataRange.TWO_WEEK?
+                                  theme.brightness == Brightness.light?Colors.black:Colors.white:
+                                  theme.brightness == Brightness.light?Colors.white:Colors.black,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 20*scaleFactor,),
                 Text(
                   "${lang.translate(kLastUpdatedAtLang)}: $lastUpdate\2020",
                   style: TextStyle(
@@ -573,7 +619,7 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
                           Text(
-                            "Active",
+                            lang.translate(kActiveCasesLang),
                             style: TextStyle(
                               fontFamily: kQuickSand,
                               fontSize: 25*scaleFactor,
@@ -758,14 +804,22 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
     double bottomTitleInterval = 0;
     double sideInterval = 0;
     double multiplier = 0;
+    double dotSize = 2;
+
+//    print(total);
 
     if(dataRange == DataRange.BEGINNING){
-      bottomTitleInterval = (maxX/10).roundToDouble();
+      bottomTitleInterval = (maxX/15).roundToDouble();
+      dotSize = 0;
+    }else if(dataRange == DataRange.SIX_MONTHS){
+      bottomTitleInterval = 10;
+      dotSize = 0;
     }else if(dataRange == DataRange.MONTH){
       bottomTitleInterval = 3;
     }else if(dataRange == DataRange.TWO_WEEK){
       bottomTitleInterval = 2;
     }
+
 
     sideInterval = (total/10);
 
@@ -876,7 +930,7 @@ class _TotalCaseTimeChartState extends State<TotalCaseTimeChart>{
             lineBarsData: [
               LineChartBarData(
                 dotData: FlDotData(
-                  dotSize: dataRange == DataRange.BEGINNING?0:2,
+                  dotSize: dotSize,
                   strokeWidth: 0,
                 ),
                 isCurved: true,

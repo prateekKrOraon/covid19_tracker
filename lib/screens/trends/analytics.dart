@@ -160,7 +160,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
         for(int i=0;i<stateInfo.length;i++){
 
           StateInfo state = stateInfo[i];
-          if(state.stateCode != "UN"){
+          if(state.stateCode != "UN" && state.confirmed != 0){
             stateList.add(
               state,
             );
@@ -226,12 +226,14 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
             }
             int confirmedCasesToday = casesToday-casesWeekAgo;
             int confirmedCaseWeekAgo = casesWeekAgo;
+
             if(confirmedCaseWeekAgo==0){
               confirmedCaseWeekAgo=1;
             }
             if(((confirmedCasesToday/confirmedCaseWeekAgo)*100)/7>stateGrowthHighest){
               stateGrowthHighest = ((confirmedCasesToday/confirmedCaseWeekAgo)*100)/7;
             }
+
 
             stateGrowthRates.add(
               BarChartGroupData(
@@ -255,6 +257,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
             if(state.confirmed>cnfHighest){
               cnfHighest = state.confirmed.toDouble();
             }
+
 
             stateCnfBarGroup.add(
               BarChartGroupData(
@@ -1099,8 +1102,12 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
 
   Widget _getBarChart(List<BarChartGroupData> barGroups,double highest,List<StateInfo> list,{bool rotated=false,bool numberData=false,int category}){
 
-
-    double sideInterval = (highest/10).roundToDouble();
+    double sideInterval = 10;
+    if(highest > 10){
+      sideInterval = (highest/10).roundToDouble();
+    }else{
+      sideInterval = (highest/10);
+    }
 
     return Padding(
       padding: const EdgeInsets.all(6),
@@ -1184,30 +1191,12 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
                       getTitles: (double value){
                         String str = "";
                         if(numberData){
-                          if(value<1 && value>=0){
-                            if(value.toString().length>=4){
-                              str = value.toString().substring(0,4);
-                            }
-                          }else{
-                            if(value>=100){
-                              str = value.toString().substring(0,3);
-                            }else if(value>=10&& value<100){
-                              str = value.toString().substring(0,2);
-                            }else if(value<10){
-                              str = value.toString().substring(0,1);
-                            }else if(value == 0){
-                              str = "0";
-                            }else{
-                              str = value.toString().substring(0,3);
-                            }
-                          }
+                          str = value.toStringAsFixed(1);
                         }else{
                           if(value >= 100000){
-                            str = "${value.toString().substring(0,1)}L";
-                          }else if(value>=10000){
-                            str = "${value.toString().substring(0,2)}K";
+                            str = "${(value/100000).toStringAsFixed(1)}L";
                           }else if(value>=1000){
-                            str = "${value.toString().substring(0,1)}K";
+                            str = "${(value/1000).toStringAsFixed(1)}K";
                           }else{
                             str = value.toString();
                           }
@@ -1407,30 +1396,12 @@ class _AnalyticsScreenState extends State<AnalyticsScreen>{
               getTitles: (double value){
                 String str = "";
                 if(numberData){
-                  if(value<1 && value>=0){
-                    if(value.toString().length>=4){
-                      str = value.toString().substring(0,4);
-                    }
-                  }else{
-                    if(value>=100){
-                      str = value.toString().substring(0,3);
-                    }else if(value>=10&& value<100){
-                      str = value.toString().substring(0,2);
-                    }else if(value<10){
-                      str = value.toString().substring(0,1);
-                    }else if(value == 0){
-                      str = "0";
-                    }else{
-                      str = value.toString().substring(0,3);
-                    }
-                  }
+                  str = value.toStringAsFixed(1);
                 }else{
                   if(value >= 100000){
-                    str = "${value.toString().substring(0,1)}L";
-                  }else if(value>=10000){
-                    str = "${value.toString().substring(0,2)}K";
+                    str = "${(value/100000).toStringAsFixed(1)}L";
                   }else if(value>=1000){
-                    str = "${value.toString().substring(0,1)}K";
+                    str = "${(value/1000).toStringAsFixed(1)}K";
                   }else{
                     str = value.toString();
                   }

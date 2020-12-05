@@ -158,3 +158,4 @@ String kSourceCodeLang = "source_code";
 String kAPILang = "api";
 String kTodayLang = "today";
 String kDataNotAvailableLang = "data_not_available";
+String kSixMonths = "6_months";

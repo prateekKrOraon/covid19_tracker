@@ -24,6 +24,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
 
   String dataRange = DataRange.MONTH;
   double scaleFactor = 1;
+  int range = 0;
 
   ThemeData theme;
 
@@ -101,14 +102,42 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
         List<BarChartGroupData> dailyDetChartGroup = List();
         List<BarChartGroupData> dailyActChartGroup = List();
 
-        int range = 0;
-
+        int barWidth = 1;
+        String dataRangeStr = "";
         if(dataRange == DataRange.BEGINNING){
           range = caseTime.length;
+          barWidth = 1;
+          dataRangeStr = lang.translate(kSinceBeginningLang);
+        }else if(dataRange == DataRange.SIX_MONTHS){
+          DateTime now = DateTime.now();
+          DateTime sixMonthsAgo = DateTime(
+            2020,
+            now.month-6,
+            now.day+1,
+          );
+          int time = (now.millisecondsSinceEpoch-sixMonthsAgo.millisecondsSinceEpoch).toInt();
+          range = (time~/(1000*60*60*24)).round();
+          barWidth = 2;
+          String str = DateFormat("d MMM yyyy").format(
+            DateTime(
+              2020,
+              DateTime.now().month-6,
+              DateTime.now().day+1,
+            ),
+          );
+          if(lang.locale.languageCode == "hi"){
+            dataRangeStr = "$str से";
+          }else{
+            dataRangeStr = "Since $str";
+          }
         }else if(dataRange == DataRange.MONTH){
           range = 30;
+          barWidth = 6;
+          dataRangeStr = lang.translate(kLast30DaysLang);
         }else if(dataRange == DataRange.TWO_WEEK){
           range = 14;
+          barWidth = 10;
+          dataRangeStr = lang.translate(kLast14DaysLang);
         }
 
         String lastUpdate = "";
@@ -173,7 +202,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
                         topLeft: Radius.circular(10),
                       ),
                     color: theme.accentColor,
-                    width: dataRange == DataRange.BEGINNING?2*scaleFactor:6*scaleFactor,
+                    width: barWidth*scaleFactor,
                   ),
                 ],
             ),
@@ -191,7 +220,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
                     topLeft: Radius.circular(10),
                   ),
                   color: theme.accentColor,
-                  width: dataRange == DataRange.BEGINNING?2*scaleFactor:6*scaleFactor,
+                  width: barWidth*scaleFactor,
                 ),
               ],
             ),
@@ -209,7 +238,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
                         topLeft: Radius.circular(10),
                       ),
                     color: theme.accentColor,
-                    width: dataRange == DataRange.BEGINNING?2*scaleFactor:6*scaleFactor,
+                    width: barWidth*scaleFactor,
                   ),
                 ],
             ),
@@ -227,7 +256,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
                         topLeft: Radius.circular(10),
                       ),
                     color: theme.accentColor,
-                    width: dataRange == DataRange.BEGINNING?2*scaleFactor:6*scaleFactor,
+                    width: barWidth*scaleFactor,
                   ),
                 ],
             ),
@@ -238,16 +267,6 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
           }
         }
 
-        String dataRangeStr = "";
-
-        if(dataRange == DataRange.BEGINNING){
-          dataRangeStr = lang.translate(kSinceBeginningLang);
-        }else if(dataRange == DataRange.MONTH){
-          dataRangeStr = lang.translate(kLast30DaysLang);
-        }else if(dataRange == DataRange.TWO_WEEK){
-          dataRangeStr = lang.translate(kLast14DaysLang);
-        }
-
         return SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(10),
@@ -255,133 +274,6 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 SizedBox(height: 8*scaleFactor,),
-                Text(
-                  lang.translate(kScalingModesLang),
-                  style: TextStyle(
-                    fontFamily: kQuickSand,
-                    fontSize: 25*scaleFactor,
-                  ),
-                ),
-                SizedBox(height: 10*scaleFactor,),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Text(
-                        lang.translate(kShowingDataLang),
-                        style: TextStyle(
-                          color: kGreyColor,
-                          fontFamily: kNotoSansSc,
-                          fontSize: 16*scaleFactor,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 10*scaleFactor,),
-                    Material(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(10),
-                      ),
-                      elevation: 2,
-                      child: Row(
-                        children: <Widget>[
-                          InkWell(
-                            onTap: (){
-                              setState(() {
-                                if(dataRange != DataRange.BEGINNING){
-                                  dataRange = DataRange.BEGINNING;
-                                }
-                              });
-                            },
-                            child: Container(
-                              height: 35*scaleFactor,
-                              padding: EdgeInsets.symmetric(horizontal: 8),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                    topLeft:Radius.circular(10),
-                                    bottomLeft: Radius.circular(10)
-                                ),
-                                color: dataRange != DataRange.BEGINNING?theme.backgroundColor:theme.accentColor,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  lang.translate(kBeginningLang),
-                                  style: TextStyle(
-                                    fontFamily: kQuickSand,
-                                    fontSize: 14*scaleFactor,
-                                    color:dataRange != DataRange.BEGINNING?
-                                    theme.brightness == Brightness.light?Colors.black:Colors.white:
-                                    theme.brightness == Brightness.light?Colors.white:Colors.black,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          InkWell(
-                            onTap: (){
-                              setState(() {
-                                if(dataRange != DataRange.MONTH){
-                                  dataRange = DataRange.MONTH;
-                                }
-                              });
-                            },
-                            child: Container(
-                              height: 35*scaleFactor,
-                              padding: EdgeInsets.symmetric(horizontal: 8),
-                              decoration: BoxDecoration(
-                                color: dataRange != DataRange.MONTH?theme.backgroundColor:theme.accentColor,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  lang.translate(k1MonthLang),
-                                  style: TextStyle(
-                                    fontFamily: kQuickSand,
-                                    fontSize: 14*scaleFactor,
-                                    color: dataRange != DataRange.MONTH?
-                                    theme.brightness == Brightness.light?Colors.black:Colors.white:
-                                    theme.brightness == Brightness.light?Colors.white:Colors.black,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          InkWell(
-                            onTap: (){
-                              setState(() {
-                                if(dataRange != DataRange.TWO_WEEK){
-                                  dataRange = DataRange.TWO_WEEK;
-                                }
-                              });
-                            },
-                            child: Container(
-                              height: 35*scaleFactor,
-                              padding: EdgeInsets.symmetric(horizontal: 8),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                  bottomRight: Radius.circular(10),
-                                  topRight: Radius.circular(10),
-                                ),
-                                color: dataRange != DataRange.TWO_WEEK?theme.backgroundColor:theme.accentColor,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  lang.translate(k2WeekLang),
-                                  style: TextStyle(
-                                    fontFamily: kQuickSand,
-                                    fontSize: 14*scaleFactor,
-                                    color: dataRange != DataRange.TWO_WEEK?
-                                    theme.brightness == Brightness.light?Colors.black:Colors.white:
-                                    theme.brightness == Brightness.light?Colors.white:Colors.black,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(width: 10*scaleFactor,),
-                  ],
-                ),
-                SizedBox(height: 20*scaleFactor,),
                 Text(
                   "${lang.translate(kLastUpdatedAtLang)}: $lastUpdate\2020",
                   style: TextStyle(
@@ -391,6 +283,162 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
                   ),
                 ),
                 SizedBox(height: 10*scaleFactor,),
+                Text(
+                  lang.translate(kScalingModesLang),
+                  style: TextStyle(
+                    fontFamily: kQuickSand,
+                    fontSize: 25*scaleFactor,
+                  ),
+                ),
+                SizedBox(height: 10*scaleFactor,),
+                Text(
+                  lang.translate(kShowingDataLang),
+                  style: TextStyle(
+                    color: kGreyColor,
+                    fontFamily: kNotoSansSc,
+                    fontSize: 16*scaleFactor,
+                  ),
+                ),
+                SizedBox(height: 20*scaleFactor,),
+                Material(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                  elevation: 2,
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: InkWell(
+                          onTap: (){
+                            setState(() {
+                              if(dataRange != DataRange.BEGINNING){
+                                dataRange = DataRange.BEGINNING;
+                              }
+                            });
+                          },
+                          child: Container(
+                            height: 35*scaleFactor,
+                            padding: EdgeInsets.symmetric(horizontal: 8),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topLeft:Radius.circular(10),
+                                  bottomLeft: Radius.circular(10)
+                              ),
+                              color: dataRange != DataRange.BEGINNING?theme.backgroundColor:theme.accentColor,
+                            ),
+                            child: Center(
+                              child: Text(
+                                lang.translate(kBeginningLang),
+                                style: TextStyle(
+                                  fontFamily: kQuickSand,
+                                  fontSize: 14*scaleFactor,
+                                  color:dataRange != DataRange.BEGINNING?
+                                  theme.brightness == Brightness.light?Colors.black:Colors.white:
+                                  theme.brightness == Brightness.light?Colors.white:Colors.black,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: InkWell(
+                          onTap: (){
+                            setState(() {
+                              if(dataRange != DataRange.SIX_MONTHS){
+                                dataRange = DataRange.SIX_MONTHS;
+                              }
+                            });
+                          },
+                          child: Container(
+                            height: 35*scaleFactor,
+                            padding: EdgeInsets.symmetric(horizontal: 8),
+                            decoration: BoxDecoration(
+                              color: dataRange != DataRange.SIX_MONTHS?theme.backgroundColor:theme.accentColor,
+                            ),
+                            child: Center(
+                              child: Text(
+                                lang.translate(kSixMonths),
+                                style: TextStyle(
+                                  fontFamily: kQuickSand,
+                                  fontSize: 14*scaleFactor,
+                                  color:dataRange != DataRange.SIX_MONTHS?
+                                  theme.brightness == Brightness.light?Colors.black:Colors.white:
+                                  theme.brightness == Brightness.light?Colors.white:Colors.black,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: InkWell(
+                          onTap: (){
+                            setState(() {
+                              if(dataRange != DataRange.MONTH){
+                                dataRange = DataRange.MONTH;
+                              }
+                            });
+                          },
+                          child: Container(
+                            height: 35*scaleFactor,
+                            padding: EdgeInsets.symmetric(horizontal: 8),
+                            decoration: BoxDecoration(
+                              color: dataRange != DataRange.MONTH?theme.backgroundColor:theme.accentColor,
+                            ),
+                            child: Center(
+                              child: Text(
+                                lang.translate(k1MonthLang),
+                                style: TextStyle(
+                                  fontFamily: kQuickSand,
+                                  fontSize: 14*scaleFactor,
+                                  color: dataRange != DataRange.MONTH?
+                                  theme.brightness == Brightness.light?Colors.black:Colors.white:
+                                  theme.brightness == Brightness.light?Colors.white:Colors.black,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: InkWell(
+                          onTap: (){
+                            setState(() {
+                              if(dataRange != DataRange.TWO_WEEK){
+                                dataRange = DataRange.TWO_WEEK;
+                              }
+                            });
+                          },
+                          child: Container(
+                            height: 35*scaleFactor,
+                            padding: EdgeInsets.symmetric(horizontal: 8),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                bottomRight: Radius.circular(10),
+                                topRight: Radius.circular(10),
+                              ),
+                              color: dataRange != DataRange.TWO_WEEK?theme.backgroundColor:theme.accentColor,
+                            ),
+                            child: Center(
+                              child: Text(
+                                lang.translate(k2WeekLang),
+                                style: TextStyle(
+                                  fontFamily: kQuickSand,
+                                  fontSize: 14*scaleFactor,
+                                  color: dataRange != DataRange.TWO_WEEK?
+                                  theme.brightness == Brightness.light?Colors.black:Colors.white:
+                                  theme.brightness == Brightness.light?Colors.white:Colors.black,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 20*scaleFactor,),
                 Material(
                   borderRadius: BorderRadius.all(
                     Radius.circular(10),
@@ -565,14 +613,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
     if(sideInterval < 0.001){
       sideInterval = 1;
     }
-    int maxX = 30;
-    if(dataRange == DataRange.BEGINNING){
-      maxX = barGroups.length;
-    }else if(dataRange == DataRange.MONTH){
-      maxX = 30;
-    }else if(dataRange == DataRange.TWO_WEEK){
-      maxX = 14;
-    }
+    int maxX = range;
 
     return Padding(
       padding: const EdgeInsets.all(6),
@@ -653,7 +694,7 @@ class _DailyCaseTimeChartState extends State<DailyCaseTimeChart>{
               ),
               bottomTitles: SideTitles(
                   rotateAngle: math.pi*90,
-                  showTitles: dataRange==DataRange.BEGINNING?false:true,
+                  showTitles: dataRange==DataRange.BEGINNING || dataRange == DataRange.SIX_MONTHS?false:true,
                   getTitles: (double value){
                     DateTime now = DateTime.now();
                     DateTime returnDate = DateTime(
